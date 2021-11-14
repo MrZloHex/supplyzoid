@@ -5,6 +5,9 @@
 
 #include "../../include/RCC.h"
 #include "../../include/GPIO.h"
+@ #include "../../include/delay.h"
+
+.global delay
 
 .section .text
 
@@ -38,24 +41,14 @@ loop:
 	LDR R5, =0x00000010
 	STR R5, [R6]
 
-delay1:
-	MOV R0, 0
-	LDR R1, =0xFFFFFFFF
-	CMP R0, R1
-	BNE delay1
-
+	BL delay
 
 	@ set PA_4 to high
 	LDR R6, =GPIOA_ODR
 	LDR R5, =0x00000000
 	STR R5, [R6]
 
-delay2:
-	MOV R0, 0
-	LDR R1, =0xFFFFFFFF
-	CMP R0, R1
-	BNE delay2
-
+	BL delay
 
 	B 	loop
 

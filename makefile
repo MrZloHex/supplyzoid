@@ -31,11 +31,11 @@ C_OBJS   = $(patsubst $(SRC_DIR)/$(C_DIR)/%.c, $(OBJ_DIR)/%.o, $(C_SRC))
 all: clean $(TARGET).bin 
 
 $(ASM_OBJS): $(ASM_SRC)
-	$(CC) $(AS_FLAGS) $^ -o $@
+	$(CC) $(AS_FLAGS) $< -o $@
 
 
 $(C_OBJS): $(C_SRC)
-	$(CC) -c $(C_FLAGS) $^ -o $@
+	$(CC) -c $< -o $@
 
 
 $(TARGET).elf: $(ASM_OBJS) $(C_OBJS)
