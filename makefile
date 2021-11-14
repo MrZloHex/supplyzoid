@@ -7,7 +7,11 @@ OS = arm-none-eabi-size
 
 MCU_SPEC  = cortex-m3
 
-AS_FLAGS := -c -mcpu=$(MCU_SPEC) -mthumb -Wall -x assembler-with-cpp
+INC_DIR = include
+
+AS_FLAGS := -c -mcpu=$(MCU_SPEC) -mthumb -Wall -x assembler-with-cpp -I$(INC_DIR)
+
+C_FLAGS := -c -Wall -pedantic -I$(INC_DIR)
 
 LSCRIPT = $(LD_SCRIPT)
 L_FLAGS = -mcpu=$(MCU_SPEC) -mthumb -Wall -nostdlib -lgcc -T$(LSCRIPT)
@@ -31,11 +35,11 @@ C_OBJS   = $(patsubst $(SRC_DIR)/$(C_DIR)/%.c, $(OBJ_DIR)/%.o, $(C_SRC))
 all: clean $(TARGET).bin 
 
 $(ASM_OBJS): $(ASM_SRC)
-	$(CC) $(AS_FLAGS) $< -o $@
+	$(CC) $(AS_FLAGS) $(patsubst $(OBJ_DIR)/%.o, $(SRC_DIR)/$(ASM_DIR)/%.S, $@) -o $@
 
 
 $(C_OBJS): $(C_SRC)
-	$(CC) -c $< -o $@
+	$(CC) $(C_FLAGS) $(patsubst $(OBJ_DIR)/%.o, $(SRC_DIR)/$(C_DIR)/%.c, $@) -o $@
 
 
 $(TARGET).elf: $(ASM_OBJS) $(C_OBJS)

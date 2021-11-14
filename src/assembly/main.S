@@ -3,11 +3,10 @@
 .fpu softvfp
 .thumb
 
-#include "../../include/RCC.h"
-#include "../../include/GPIO.h"
-@ #include "../../include/delay.h"
+#include "GPIO.h"
 
 .global delay
+.include "src/assembly/RSS.S"
 
 .section .text
 
@@ -20,14 +19,9 @@
 .word	_usage_fault  + 1 
 
 
-
 _start:
 	@ enabling clock for PORTA
-	LDR R6, =RCC_APB2ENR
-	LDR R5, [R6]
-	ORR R5, 0x000000004 @ R E D C  B |A| R O    p.146 RM0008
-				 		@ 0 0 0 0  0 |0| 0 0
-	STR R5, [R6]
+	BL rcc_clck_port
 
 
 	@ setting mode to PA_4
