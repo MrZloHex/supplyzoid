@@ -47,7 +47,7 @@ _elif_portg:
     MOV R2, 0x000000100
     B   _after_if
 _else:
-    MOV R0, #1
+    MOV R0, 1
     B   _ret
 
 

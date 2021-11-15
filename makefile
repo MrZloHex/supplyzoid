@@ -28,18 +28,18 @@ OBJ_DIR = obj
 
 ASM_SRC  = $(wildcard $(SRC_DIR)/$(ASM_DIR)/*S)
 C_SRC    = $(wildcard $(SRC_DIR)/$(C_DIR)/*.c)
-ASM_OBJS = $(patsubst $(SRC_DIR)/$(ASM_DIR)/%.S, $(OBJ_DIR)/%.o, $(ASM_SRC))
-C_OBJS   = $(patsubst $(SRC_DIR)/$(C_DIR)/%.c, $(OBJ_DIR)/%.o, $(C_SRC))
+ASM_OBJS = $(patsubst $(SRC_DIR)/$(ASM_DIR)/%.S, $(OBJ_DIR)/%.asm.o, $(ASM_SRC))
+C_OBJS   = $(patsubst $(SRC_DIR)/$(C_DIR)/%.c, $(OBJ_DIR)/%.c.o, $(C_SRC))
 
 .PHONY: all
 all: clean $(TARGET).bin 
 
 $(ASM_OBJS): $(ASM_SRC)
-	$(CC) $(AS_FLAGS) $(patsubst $(OBJ_DIR)/%.o, $(SRC_DIR)/$(ASM_DIR)/%.S, $@) -o $@
+	$(CC) $(AS_FLAGS) $(patsubst $(OBJ_DIR)/%.asm.o, $(SRC_DIR)/$(ASM_DIR)/%.S, $@) -o $@
 
 
 $(C_OBJS): $(C_SRC)
-	$(CC) $(C_FLAGS) $(patsubst $(OBJ_DIR)/%.o, $(SRC_DIR)/$(C_DIR)/%.c, $@) -o $@
+	$(CC) $(C_FLAGS) $(patsubst $(OBJ_DIR)/%.c.o, $(SRC_DIR)/$(C_DIR)/%.c, $@) -o $@
 
 
 $(TARGET).elf: $(ASM_OBJS) $(C_OBJS)
