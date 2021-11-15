@@ -8,4 +8,5 @@
 #define PORTC 3
 #define PORTD 4
 #define PORTE 5
-#define PORTG 6
+#define PORTF 6
+#define PORTG 7

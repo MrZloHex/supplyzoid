@@ -4,9 +4,9 @@
 .thumb
 
 #include "GPIO.h"
+#include "RCC.h"
 
 .global delay
-.include "src/assembly/RSS.S"
 
 .section .text
 
@@ -21,8 +21,10 @@
 
 _start:
 	@ enabling clock for PORTA
-	BL rcc_clck_port
-
+	MOV R0, PORTA
+	BL rcc_apb2enr_clck_port
+	CMP R0, 1
+	BEQ exit
 
 	@ setting mode to PA_4
 	LDR R6, =GPIOA_CRL
