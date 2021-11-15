@@ -1,0 +1,2 @@
+#define GPIOA_CRL   0x40010800
+#define GPIOA_ODR   0x4001080C

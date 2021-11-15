@@ -7,7 +7,11 @@ OS = arm-none-eabi-size
 
 MCU_SPEC  = cortex-m3
 
-AS_FLAGS := -c -mcpu=$(MCU_SPEC) -mthumb -Wall
+INC_DIR = include
+
+AS_FLAGS := -c -mcpu=$(MCU_SPEC) -mthumb -Wall -x assembler-with-cpp -I$(INC_DIR)
+
+C_FLAGS := -c -Wall -pedantic -I$(INC_DIR)
 
 LSCRIPT = $(LD_SCRIPT)
 L_FLAGS = -mcpu=$(MCU_SPEC) -mthumb -Wall -nostdlib -lgcc -T$(LSCRIPT)
@@ -18,19 +22,27 @@ LD_SCRIPT = stm32f103.ld
 TARGET = supplyzoid
 
 SRC_DIR = src
+ASM_DIR = assembly
+C_DIR   = c
 OBJ_DIR = obj
 
-ASM_SRC = $(wildcard $(SRC_DIR)/*s)
-OBJS    = $(patsubst $(SRC_DIR)/%.s, $(OBJ_DIR)/%.o, $(ASM_SRC))
+ASM_SRC  = $(wildcard $(SRC_DIR)/$(ASM_DIR)/*S)
+C_SRC    = $(wildcard $(SRC_DIR)/$(C_DIR)/*.c)
+ASM_OBJS = $(patsubst $(SRC_DIR)/$(ASM_DIR)/%.S, $(OBJ_DIR)/%.asm.o, $(ASM_SRC))
+C_OBJS   = $(patsubst $(SRC_DIR)/$(C_DIR)/%.c, $(OBJ_DIR)/%.c.o, $(C_SRC))
 
 .PHONY: all
 all: clean $(TARGET).bin 
 
-$(OBJS): $(ASM_SRC)
-	$(CC) -x assembler-with-cpp $(AS_FLAGS) $^ -o $@
+$(ASM_OBJS): $(ASM_SRC)
+	$(CC) $(AS_FLAGS) $(patsubst $(OBJ_DIR)/%.asm.o, $(SRC_DIR)/$(ASM_DIR)/%.S, $@) -o $@
 
 
-$(TARGET).elf: $(OBJS)
+$(C_OBJS): $(C_SRC)
+	$(CC) $(C_FLAGS) $(patsubst $(OBJ_DIR)/%.c.o, $(SRC_DIR)/$(C_DIR)/%.c, $@) -o $@
+
+
+$(TARGET).elf: $(ASM_OBJS) $(C_OBJS)
 	$(CC) $^ $(L_FLAGS) -o $@
 
 $(TARGET).bin: $(TARGET).elf
