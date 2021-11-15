@@ -11,47 +11,47 @@
 rcc_apb2enr_clck_port:
     PUSH {FP, LR}
 
-_if_porta:
+_if_porta_rcc_apb2enr_clck_port:
     CMP R0, PORTA
-    BNE _elif_portb
+    BNE _elif_portb_rcc_apb2enr_clck_port
     MOV R2, 0x000000004
-    B   _after_if
-_elif_portb:
+    B   _end_if_rcc_apb2enr_clck_port
+_elif_portb_rcc_apb2enr_clck_port:
     CMP R0, PORTB
-    BNE _elif_portc
+    BNE _elif_portc_rcc_apb2enr_clck_port
     MOV R2, 0x000000008
-    B   _after_if
-_elif_portc:
+    B   _end_if_rcc_apb2enr_clck_port
+_elif_portc_rcc_apb2enr_clck_port:
     CMP R0, PORTC
-    BNE _elif_portd
+    BNE _elif_portd_rcc_apb2enr_clck_port
     MOV R2, 0x000000010
-    B   _after_if
-_elif_portd:
+    B   _end_if_rcc_apb2enr_clck_port
+_elif_portd_rcc_apb2enr_clck_port:
     CMP R0, PORTD
-    BNE _elif_porte
+    BNE _elif_porte_rcc_apb2enr_clck_port
     MOV R2, 0x000000020
-    B   _after_if
-_elif_porte:
+    B   _end_if_rcc_apb2enr_clck_port
+_elif_porte_rcc_apb2enr_clck_port:
     CMP R0, PORTE
-    BNE _elif_portf
+    BNE _elif_portf_rcc_apb2enr_clck_port
     MOV R2, 0x000000040
-    B   _after_if
-_elif_portf:
+    B   _end_if_rcc_apb2enr_clck_port
+_elif_portf_rcc_apb2enr_clck_port:
     CMP R0, PORTF
-    BNE _elif_portg
+    BNE _elif_portg_rcc_apb2enr_clck_port
     MOV R2, 0x000000080
-    B   _after_if
-_elif_portg:
+    B   _end_if_rcc_apb2enr_clck_port
+_elif_portg_rcc_apb2enr_clck_port:
     CMP R0, PORTG
-    BNE _else
+    BNE _else_rcc_apb2enr_clck_port
     MOV R2, 0x000000100
-    B   _after_if
-_else:
+    B   _end_if_rcc_apb2enr_clck_port
+_else_rcc_apb2enr_clck_port:
     MOV R0, 1
-    B   _ret
+    B   _ret_rcc_apb2enr_clck_port
 
 
-_after_if:
+_end_if_rcc_apb2enr_clck_port:
     LDR R6, =RCC_APB2ENR
 	LDR R5, [R6]
 	ORR R5, R2
@@ -59,7 +59,7 @@ _after_if:
 
     MOV R0, 0
 
-_ret:
+_ret_rcc_apb2enr_clck_port:
     POP {FP, LR}
     BX  LR
 

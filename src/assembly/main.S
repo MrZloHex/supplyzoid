@@ -5,6 +5,7 @@
 
 #include "GPIO.h"
 #include "RCC.h"
+#include "gmods.h"
 
 .global delay
 
@@ -26,6 +27,14 @@ _start:
 	CMP R0, 1
 	BEQ exit
 
+
+	MOV R0, PORTA
+	MOV R1, PIN_4
+	MOV R2, OUTPUT
+	ADD R2, R2, GP_PUSH_PULL
+	BL cfg_prt_p_mode
+	CMP R0, 1
+	BEQ exit
 	@ setting mode to PA_4
 	LDR R6, =GPIOA_CRL
 	LDR R5, =0x00020000
@@ -39,7 +48,7 @@ loop:
 
 	BL delay
 
-	@ set PA_4 to high
+	@ set PA_4 to low
 	LDR R6, =GPIOA_ODR
 	LDR R5, =0x00000000
 	STR R5, [R6]
