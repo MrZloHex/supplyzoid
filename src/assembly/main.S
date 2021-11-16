@@ -8,6 +8,7 @@
 #include "gmods.h"
 
 .global delay
+.global cfg_prt_pl_mode
 
 .section .text
 
@@ -32,7 +33,7 @@ _start:
 	MOV R1, PIN_4
 	MOV R2, OUTPUT
 	ADD R2, R2, GP_PUSH_PULL
-	BL cfg_prt_p_mode
+	BL cfg_prt_pl_mode
 	CMP R0, 1
 	BEQ exit
 	@ setting mode to PA_4

@@ -8,5 +8,5 @@ MEMORY
 
 SECTIONS
 {
-    .text : { obj/main.asm.o}
+    .text : { obj/main.asm.o }
 }
