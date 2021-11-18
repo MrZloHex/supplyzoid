@@ -49,6 +49,7 @@ parse_call
                 break;
             default:
                 buffer[index_buf++] = ch;
+                printf("%s\n", buffer);
                 break;
         }
         if (data_in < 0)
