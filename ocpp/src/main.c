@@ -6,19 +6,22 @@ int
 main()
 {
     // TEST CALL REQUEST
-    char call[] = "[2,\"19223201\",\"BootNotification\",{\"reason\":\"PowerUp\",\"chargingStation\":{\"model\":\"SingleSocketCharger\",\"vendorName\":\"VendorX\"}}]";
+    char check_call[] = "[2,\"19223201\",\"BootNotification\",{\"reason\":\"PowerUp\",\"chargingStation\":{\"model\":\"SingleSocketCharger\",\"vendorName\":\"VendorX\"}}]";
     // printf("%s\n", call);
 
-    OCPPConfig config = {
-        .smth = 69
+    OCPPCall call_cfg = {
+        .messageID = 19223201,
+        .action    = "BootNotification",
+        .payload   = "{\"reason\":\"PowerUp\",\"chargingStation\":{\"model\":\"SingleSocketCharger\",\"vendorName\":\"VendorX\"}}"
     };
 
-    handle_call(&config, call);
-    // if (res != 0)
-    // {
-    //     fprintf(stderr, "FAILED TO HANDLE CALL\n");
-    //     return 1;
-    // }
+    char *call = (char*)malloc(sizeof(char)*1024);
+    make_call(call_cfg, call);
 
+    
+    if (strcmp(call, check_call))
+        printf("%s\n", call);
+
+    free(call);
     return 0;
 }

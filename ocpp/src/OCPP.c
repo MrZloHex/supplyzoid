@@ -43,10 +43,8 @@ parse_call
         char ch = _call[i];
 
         if (ch == ',')
-        {
             next_data_field(&field);
-            continue;
-        }
+
 
         if (data_in < 0)
         {
@@ -54,8 +52,12 @@ parse_call
             exit(1);
         }
         else if (data_in > 0)
-        {
-            buffer[index_buf++] = ch;
+        {   
+            if (field != PAYLOAD && ch == ',')
+                {}
+            else
+                buffer[index_buf++] = ch;
+            
             if (field == MESSAGE_TYPE_ID)
             {
                 message_type_id = buffer[index_buf-1] - '0';
@@ -144,6 +146,36 @@ parse_call
     return call;
 }
 
+
+
+
+void
+make_call
+(
+    OCPPCall call_cfg,
+    char    *_dest
+)
+{
+    char buf[512] = "[";
+    buf[1] = CALL + '0';
+    strcpy(buf+2, ",\"");
+
+    char m_id[36];
+    int size_id = int_to_charset(call_cfg.messageID, m_id, 0);
+    strcpy(buf+4, m_id);
+    strcpy(buf+4+size_id, "\",\"");
+
+    int size_act = strlen(call_cfg.action);
+    strcpy(buf+7+size_id, call_cfg.action);
+    strcpy(buf+7+size_id+size_act, "\",");
+
+    int size_payload = strlen(call_cfg.payload);
+    strcpy(buf+9+size_id+size_act, call_cfg.payload);
+    strcpy(buf+9+size_id+size_act+size_payload, "]\0");
+
+
+    strcpy(_dest, buf);
+}
 
 
 

@@ -8,6 +8,8 @@
 #include <stdbool.h>
 #include <string.h>
 
+#include "conver.h"
+
 
 #ifndef OCPP
 #define OCPP
@@ -29,7 +31,7 @@ typedef struct
 
 typedef struct
 {
-    const char messageID[36];
+    const int  messageID;
 
     const char *action;
 
@@ -54,6 +56,13 @@ parse_call
     const char *_call
 );
 
+
+OCPP void
+make_call
+(
+    OCPPCall call_cfg,
+    char    *_dest
+);
 
 
 
