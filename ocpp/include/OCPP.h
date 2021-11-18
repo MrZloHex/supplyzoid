@@ -12,10 +12,10 @@
 #endif
 
 
-#define MESSAGE_TYPE_ID 0
-#define MESSAGE_ID      1
-#define ACTION          2
-#define PAYLOAD         3
+#define MESSAGE_TYPE_ID 1
+#define MESSAGE_ID      2
+#define ACTION          3
+#define PAYLOAD         4
 
 #define CALL       2
 #define CALLRESULT 3
