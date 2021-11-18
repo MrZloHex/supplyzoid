@@ -18,9 +18,8 @@ main()
     char *call = (char*)malloc(sizeof(char)*1024);
     make_call(call_cfg, call);
 
-    
-    if (strcmp(call, check_call))
-        printf("%s\n", call);
+    printf("%s\n", call);
+        
 
     free(call);
     return 0;
