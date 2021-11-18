@@ -13,12 +13,12 @@ main()
         .smth = 69
     };
 
-    result res = handle_call(&config, call);
-    if (res != 0)
-    {
-        fprintf(stderr, "FAILED TO HANDLE CALL\n");
-        return 1;
-    }
+    handle_call(&config, call);
+    // if (res != 0)
+    // {
+    //     fprintf(stderr, "FAILED TO HANDLE CALL\n");
+    //     return 1;
+    // }
 
     return 0;
 }
