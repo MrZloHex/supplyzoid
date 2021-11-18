@@ -2,13 +2,13 @@
 
 #define OCPP_H_
 
-#include <stdio.h>
+// #include <stdio.h>
 #include <stdlib.h>
-#include <stdint.h>
+// #include <stdint.h>
 #include <stdbool.h>
-#include <string.h>
 
-#include "conver.h"
+#include "stringg.h"
+#include "convert.h"
 
 
 #ifndef OCPP
@@ -42,19 +42,19 @@ typedef struct
 
 // typedef unsigned char result;
 
-OCPP void
-handle_call
-(
-    OCPPConfig *_cfg,
-    const char *_call
-);
+// OCPP void
+// handle_call
+// (
+//     OCPPConfig *_cfg,
+//     const char *_call
+// );
 
 
-OCPP OCPPCall
-parse_call
-(
-    const char *_call
-);
+// OCPP OCPPCall
+// parse_call
+// (
+//     const char *_call
+// );
 
 
 OCPP void

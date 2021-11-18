@@ -1,4 +1,5 @@
 CC = gcc
+# CC = arm-none-eabi-gcc
 
 INC_DIR = include
 
