@@ -20,8 +20,9 @@ main()
     // free(call);
 
 
-    char call_resultp[] = "[3,\"19223201\",{\"currentTime\":\"2013-02-01T20:53:32.486Z\",\"interval\":300,\"status\":\"Accepted\"}]";
+    char call_result[] = "[3,\"19223201\",{\"currentTime\":\"2013-02-01T20:53:32.486Z\",\"interval\":300,\"status\":\"Accepted\"}]";
 
-    // handle_response();
+    OCPPResponse response;
+    int error = handle_response(call_result, &response);
     return 0;
 }

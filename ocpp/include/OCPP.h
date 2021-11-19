@@ -82,10 +82,11 @@ make_call
     char       *_dest
 );
 
-OCPP OCPPResponse
+OCPP int
 handle_response
 (
-    const char *_resp
+    const char *_resp,
+    OCPPResponse *response
 );
 
 

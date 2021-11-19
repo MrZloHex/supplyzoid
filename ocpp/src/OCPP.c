@@ -179,10 +179,11 @@ make_call
 }
 
 
-OCPPResponse
+int
 handle_response
 (
-    const char *_resp
+    const char *_resp.
+    OCPPResponse *response
 )
 {
     OCPPResponse response;
@@ -308,7 +309,7 @@ handle_response
         
     }
 
-    return response;
+    return 1;
 }
 
 
