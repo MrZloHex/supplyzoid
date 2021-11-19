@@ -48,21 +48,24 @@ typedef struct
 
 typedef struct
 {
-    const int   messageID;
+    const unsigned int   messageID;
     const char *action;
     const char *payload; // JSON
 
 } OCPPCall;
 
+#define OCPPCallResult_Fmt "%d  %s"
+#define OCPPCallResult_Arg(cr) (cr).messageID, (cr).payload
+
 typedef struct
 {
-    const int   messageID;
+    const unsigned int   messageID;
     const char *payload;
 } OCPPCallResult;
 
 typedef struct
 {
-    const int   messageID;
+    const unsigned int   messageID;
     const char  error_code[30];
     const char  error_dscr[255];
     const char *error_details;

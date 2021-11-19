@@ -1,5 +1,6 @@
 #include "stringg.h"
 
+
 void
 strcpyy
 (
@@ -16,8 +17,6 @@ strcpyy
     _dest[i] = '\0';
 }
 
-
-
 unsigned int
 strlenn
 (
@@ -32,4 +31,19 @@ strlenn
     }
 
     return len;
+}
+
+
+void
+memsett
+(
+    char *_str,
+    int value,
+    unsigned int size
+)
+{
+    for (unsigned int i = 0; i < size; ++i)
+    {
+        _str[i] = value;
+    }
 }

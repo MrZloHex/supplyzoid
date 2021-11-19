@@ -25,9 +25,13 @@ main()
     OCPPResponse response_r;
     int error_r = handle_response(call_result, &response_r);
     if      (error_r == CALLERROR)
+    {
         printf("GOT CALLERROR\n");
+    }
     else if (error_r == CALLRESULT)
+    {
         printf("GOT CALLRESULT\n");
+    }
 
 
     char call_error[] = "[4,\"19223201\",\"ProtocolError\",\"Payload for Action is not conform the PDU structure\",{}]";

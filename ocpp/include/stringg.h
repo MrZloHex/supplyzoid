@@ -16,8 +16,9 @@ strlenn
     char *_str
 );
 
+
 void
-erase
+memsett
 (
     char *_str,
     int value,
