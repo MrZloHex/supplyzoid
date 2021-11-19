@@ -182,12 +182,10 @@ make_call
 int
 handle_response
 (
-    const char *_resp.
+    const char *_resp,
     OCPPResponse *response
 )
 {
-    OCPPResponse response;
-
     expected_data field = MESSAGE_TYPE_ID;
 
     int      message_type_id;
@@ -227,7 +225,7 @@ handle_response
             if (field == MESSAGE_TYPE_ID)
             {
                 message_type_id = buffer[index_buf-1] - '0';
-                if (message_type_id != CALL)
+                if (message_type_id == CALL)
                 {
                     // fprintf(stderr, "INVALID MESSAGE TYPE %c\n", message_type_id + '0');
                     exit(1);
@@ -309,7 +307,7 @@ handle_response
         
     }
 
-    return 1;
+    return 0;
 }
 
 

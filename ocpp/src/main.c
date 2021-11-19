@@ -24,5 +24,9 @@ main()
 
     OCPPResponse response;
     int error = handle_response(call_result, &response);
+    if (error == 1)
+        printf("GOT CALLERROR\n");
+    else
+        printf("GOT CALLRESULT\n");
     return 0;
 }
