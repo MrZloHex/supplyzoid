@@ -1,5 +1,5 @@
 CC = gcc
-# CC = arm-none-eabi-gcc
+# CC = arm-none-eabi-gcc -mcpu=cortex-m3 -mthumb
 
 INC_DIR = include
 

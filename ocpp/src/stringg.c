@@ -13,12 +13,22 @@ strcpyy
         _dest[i] = _src[i];
         ++i;
     }
-    // printf("%c\n", _dest);
+}
 
-    unsigned int z = 0;
-    while (z < 5)
+
+
+unsigned int
+strlenn
+(
+    char *_str
+)
+{
+    unsigned int len = 0;
+
+    while (_str[len] != 0)
     {
-        printf("%d\n", _dest[z]);
-        ++z;
+        ++len;
     }
+
+    return len;
 }

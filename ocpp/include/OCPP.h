@@ -2,8 +2,8 @@
 
 #define OCPP_H_
 
-// #include <stdio.h>
-#include <stdlib.h>
+#include <stdio.h>
+// #include <stdlib.h>
 // #include <stdint.h>
 #include <stdbool.h>
 
@@ -31,13 +31,31 @@ typedef struct
 
 typedef struct
 {
-    const int  messageID;
-
+    const int   messageID;
     const char *action;
-
     const char *payload; // JSON
 
 } OCPPCall;
+
+typedef struct
+{
+    const int   messageID;
+    const char *payload;
+} OCPPCallResult;
+
+typedef struct
+{
+    const int   messageID;
+    const char *error_code;
+    const char  error_dscr[255];
+    const char *payload;
+} OCPPCallError;
+
+typedef union
+{
+    OCPPCallResult call_result;
+    OCPPCallError  call_error;
+} OCPPResponse;
 
 
 // typedef unsigned char result;
@@ -61,10 +79,14 @@ OCPP void
 make_call
 (
     OCPPCall call_cfg,
-    char    *_dest
+    char       *_dest
 );
 
-
+OCPP OCPPResponse
+handle_response
+(
+    const char *_resp
+);
 
 
 

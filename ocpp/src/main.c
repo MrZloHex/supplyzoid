@@ -1,4 +1,4 @@
-// #include <stdio.h>
+#include <stdio.h>
 
 #include "OCPP.h"
 
@@ -15,7 +15,7 @@ main()
     char call[1024];
     make_call(call_cfg, call);
 
-    // printf("%s\n", call);
+    printf("%s\n", call);
 
     // free(call);
 

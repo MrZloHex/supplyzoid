@@ -2,13 +2,18 @@
 
 #define STRING_H_
 
-#include <stdio.h>
 
 void
 strcpyy
 (
     char *_dest,
     char *_src
+);
+
+unsigned int
+strlenn
+(
+    char *_str
 );
 
 
