@@ -182,24 +182,29 @@ make_call
 int
 handle_response
 (
-    const char *_resp,
+    const char   *_resp,
     OCPPResponse *response
 )
 {
+    int result;
+
     expected_data field = MESSAGE_TYPE_ID;
 
-    int      message_type_id;
-    char    message_id[36];
-    char    action[100];
-    char    *json = (char*) malloc(sizeof(char)*1024);
+    OCPPType message_type_id;
+    char     message_id[36];
+    char     action[100];
+    char    *json   = (char*) malloc(sizeof(char)*1024);
 
-    char    *buffer = (char *) malloc(sizeof(char)*1024);
+    char    *buffer = (char*) malloc(sizeof(char)*1024);
     unsigned int index_buf = 0;
 
 
     int data_in = 0;
-    int block = 0;
-    bool  json_started = false;
+    int block   = 0;
+    int json_started = 0;
+
+
+    printf("NEW RESPONSE: `%s`\n", _resp);
 
 
     for (unsigned int i = 0; i < strlen(_resp); ++i)
@@ -207,17 +212,17 @@ handle_response
         char ch = _resp[i];
 
         if (ch == ',')
-            next_data_field(&field);
+            next_data_field(&field, message_type_id);
 
 
         if (data_in < 0)
         {
-            // fprintf(stderr, "INVALID REQUEST\n");
-            // exit(1);
+            fprintf(stderr, "INVALID REQUEST\n");
+            exit(1);
         }
         else if (data_in > 0)
         {   
-            if (field != PAYLOAD && ch == ',')
+            if (field != C_PAYLOAD && ch == ',')
                 {}
             else
                 buffer[index_buf++] = ch;
@@ -225,15 +230,18 @@ handle_response
             if (field == MESSAGE_TYPE_ID)
             {
                 message_type_id = buffer[index_buf-1] - '0';
-                if (message_type_id == CALL)
+
+                if (message_type_id != CALLRESULT && message_type_id != CALLERROR)
                 {
-                    // fprintf(stderr, "INVALID MESSAGE TYPE %c\n", message_type_id + '0');
+                    fprintf(stderr, "INVALID MESSAGE TYPE %c\n", message_type_id + '0');
                     exit(1);
                 }
+
+                result = message_type_id;
                 index_buf = 0;
                 memset(buffer, 0, 1024);
 
-                // printf("MESSAGE TYPE ID: `%d`\n", message_type_id);
+                printf("MESSAGE TYPE ID: `%d`\n", message_type_id);
             }
             else if (field == MESSAGE_ID)
             {
@@ -243,15 +251,15 @@ handle_response
                 if (block == 2)
                 {
                     buffer[index_buf-1] = '\0';
-                    // strcpy(message_id, buffer+1);
+                    strcpyy(message_id, buffer+1);
                     index_buf = 0;
                     memset(buffer, 0, 1024);
                     block = 0;
 
-                    // printf("MESSAGE ID: `%s`\n", message_id);
+                    printf("MESSAGE ID: `%s`\n", message_id);
                 }
             }
-            else if (field == ACTION)
+            else if (field == C_ACTION)
             {
                 if (ch == '"')
                     ++block;
@@ -259,20 +267,20 @@ handle_response
                 if (block == 2)
                 {
                     buffer[index_buf-1] = '\0';
-                    // strcpy(action, buffer+1);
+                    strcpyy(action, buffer+1);
                     index_buf = 0;
                     memset(buffer, 0, 1024);
                     block = 0;
 
-                    // printf("ACTION: `%s`\n", action);
+                    printf("ACTION: `%s`\n", action);
                 }
             }
-            else if(field == PAYLOAD)
+            else if(field == C_PAYLOAD)
             {
                 if      (ch == '{')
                 {
                     ++block;
-                    json_started = true;
+                    json_started = 1;
                 }
                 else if (ch == '}')
                 {
@@ -282,12 +290,12 @@ handle_response
                 if (block == 0 && json_started)
                 {
                     buffer[index_buf-1] = '\0';
-                    // strcpy(action, buffer);
+                    strcpyy(action, buffer);
                     index_buf = 0;
-                    // memset(buffer, 0, 1024);
+                    memset(buffer, 0, 1024);
                     block = 0;
 
-                    // printf("PAYLOAD: `%s`\n", action);
+                    printf("PAYLOAD: `%s`\n", action);
                 }
             }
         }
@@ -307,16 +315,40 @@ handle_response
         
     }
 
-    return 0;
+    free(json);
+    free(buffer);
+
+    return result;
 }
 
 
 
 void
-next_data_field(expected_data *data)
+next_data_field
+(
+    expected_data *data,
+    OCPPType type
+)
 {
-    if (*data != PAYLOAD)
-        *data += 1;
-    else
-        *data = PAYLOAD;
+    if (type == CALL)
+    {
+        if (*data != C_PAYLOAD)
+            *data += 1;
+        else
+            *data = C_PAYLOAD;
+    }
+    else if (type == CALLRESULT)
+    {
+        if (*data != R_PAYLOAD)
+            *data += 1;
+        else
+            *data = R_PAYLOAD;
+    }
+    else if (type == CALLERROR)
+    {
+        if (*data != ERROR_DETAILS)
+            *data += 1;
+        else
+            *data = ERROR_DETAILS;
+    }
 }

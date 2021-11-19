@@ -15,18 +15,30 @@ main()
     char call[1024];
     make_call(call_cfg, call);
 
-    printf("%s\n", call);
+    printf("NEW CALL: `%s`\n", call);
 
     // free(call);
 
 
     char call_result[] = "[3,\"19223201\",{\"currentTime\":\"2013-02-01T20:53:32.486Z\",\"interval\":300,\"status\":\"Accepted\"}]";
 
-    OCPPResponse response;
-    int error = handle_response(call_result, &response);
-    if (error == 1)
+    OCPPResponse response_r;
+    int error_r = handle_response(call_result, &response_r);
+    if      (error_r == CALLERROR)
         printf("GOT CALLERROR\n");
-    else
+    else if (error_r == CALLRESULT)
         printf("GOT CALLRESULT\n");
+
+
+    char call_error[] = "[4,\"19223201\",\"ProtocolError\",\"Payload for Action is not conform the PDU structure\",{}]";
+
+    OCPPResponse response_e;
+    int error_e = handle_response(call_error, &response_e);
+    if      (error_e == CALLERROR)
+        printf("GOT CALLERROR\n");
+    else if (error_e == CALLRESULT)
+        printf("GOT CALLRESULT\n");
+
     return 0;
 }
+

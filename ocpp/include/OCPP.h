@@ -5,7 +5,7 @@
 #include <stdio.h>
 // #include <stdlib.h>
 // #include <stdint.h>
-#include <stdbool.h>
+// #include <stdbool.h>
 
 #include "stringg.h"
 #include "convert.h"
@@ -20,6 +20,23 @@
 #define CALL       2
 #define CALLRESULT 3
 #define CALLERROR  4
+typedef unsigned char OCPPType;
+
+#define MESSAGE_TYPE_ID 1
+#define MESSAGE_ID      2
+// CALL
+#define C_ACTION        3
+#define C_PAYLOAD       4
+// CALLRESULT
+#define R_PAYLOAD       3
+// CALLERROR
+#define ERROR_CODE      3
+#define ERROR_DSCR      4
+#define ERROR_DETAILS   5
+
+typedef unsigned char expected_data;
+void
+next_data_field(expected_data *data, OCPPType type);
 
 
 
@@ -46,9 +63,9 @@ typedef struct
 typedef struct
 {
     const int   messageID;
-    const char *error_code;
+    const char  error_code[30];
     const char  error_dscr[255];
-    const char *payload;
+    const char *error_details;
 } OCPPCallError;
 
 typedef union
@@ -90,14 +107,5 @@ handle_response
 );
 
 
-
-#define MESSAGE_TYPE_ID 1
-#define MESSAGE_ID      2
-#define ACTION          3
-#define PAYLOAD         4
-
-typedef unsigned char expected_data;
-void
-next_data_field(expected_data *data);
 
 #endif /* OCPP_H_ */
