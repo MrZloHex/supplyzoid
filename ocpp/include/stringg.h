@@ -16,5 +16,12 @@ strlenn
     char *_str
 );
 
+void
+erase
+(
+    char *_str,
+    int value,
+    unsigned int size
+);
 
 #endif /* STRING_H_ */

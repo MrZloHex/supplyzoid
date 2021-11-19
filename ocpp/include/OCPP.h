@@ -3,7 +3,7 @@
 #define OCPP_H_
 
 #include <stdio.h>
-// #include <stdlib.h>
+#include <stdlib.h>
 // #include <stdint.h>
 // #include <stdbool.h>
 

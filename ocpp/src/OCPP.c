@@ -199,6 +199,7 @@ handle_response
     char    *buffer = (char*) malloc(sizeof(char)*1024);
     unsigned int index_buf = 0;
 
+    short ready = 0;
 
     int data_in = 0;
     int block   = 0;
@@ -208,7 +209,7 @@ handle_response
     printf("NEW RESPONSE: `%s`\n", _resp);
 
 
-    for (unsigned int i = 0; i < strlen(_resp); ++i)
+    for (unsigned int i = 0; i < strlenn(_resp); ++i)
     {
         char ch = _resp[i];
 
@@ -216,12 +217,11 @@ handle_response
             next_data_field(&field, message_type_id);
 
 
-        if (data_in < 0)
-        {
-            fprintf(stderr, "INVALID REQUEST\n");
-            exit(1);
-        }
-        else if (data_in > 0)
+        if (ready == 1)
+            break;
+
+        
+        if (data_in > 0)
         {   
             if (field != C_PAYLOAD && ch == ',')
                 {}
@@ -249,6 +249,7 @@ handle_response
                         index_buf = 0;
                         memset(buffer, 0, 1024);
                         block = 0;
+                        ready = 1;
 
                         printf("RESULT PAYLOAD: `%s`\n", json);
                     }
@@ -256,7 +257,39 @@ handle_response
             }
             else if (message_type_id == CALLERROR)
             {
-                if(field == ERROR_DETAILS)
+                if (field == ERROR_CODE)
+                {
+                    if (ch == '"')
+                        ++block;
+    
+                    if (block == 2)
+                    {
+                        buffer[index_buf-1] = '\0';
+                        strcpyy(message_id, buffer+1);
+                        index_buf = 0;
+                        memset(buffer, 0, 1024);
+                        block = 0;
+    
+                        printf("ERROR CODE: `%s`\n", message_id);
+                    }
+                }
+                else if (field == ERROR_DSCR)
+                {
+                    if (ch == '"')
+                        ++block;
+    
+                    if (block == 2)
+                    {
+                        buffer[index_buf-1] = '\0';
+                        strcpyy(message_id, buffer+1);
+                        index_buf = 0;
+                        memset(buffer, 0, 1024);
+                        block = 0;
+    
+                        printf("ERROR DESCRIPTION: `%s`\n", message_id);
+                    }
+                }
+                else if(field == ERROR_DETAILS)
                 {
                     if      (ch == '{')
                     {
@@ -275,8 +308,9 @@ handle_response
                         index_buf = 0;
                         memset(buffer, 0, 1024);
                         block = 0;
+                        ready = 1;
 
-                        printf("RESULT PAYLOAD: `%s`\n", json);
+                        printf("ERROR DETAILS: `%s`\n", json);
                     }
                 }
             }
@@ -326,6 +360,11 @@ handle_response
             default:
                 
                 break;
+        }
+        if (data_in < 0)
+        {
+            fprintf(stderr, "INVALID REQUEST\n");
+            exit(1);
         }
         
     }

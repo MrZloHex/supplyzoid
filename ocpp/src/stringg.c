@@ -13,6 +13,7 @@ strcpyy
         _dest[i] = _src[i];
         ++i;
     }
+    _dest[i] = '\0';
 }
 
 
