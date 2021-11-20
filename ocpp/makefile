@@ -1,9 +1,9 @@
 CC = gcc
 # CC = arm-none-eabi-gcc -mcpu=cortex-m3 -mthumb
 
-INC_DIR = include
+INC_DIR = -Iinclude
 
-C_FLAGS := -Wall -pedantic -I$(INC_DIR)
+C_FLAGS := -Wall -pedantic $(INC_DIR)
 
 
 SRC_DIR = src

@@ -1,6 +1,42 @@
 #include "OCPP.h"
 
 
+
+
+void
+ocpp_init()
+{
+
+}
+
+
+void
+ocpp_update
+(
+    EVSE *evse
+)
+{
+    static char buffer[256];
+    static size_t index;
+
+    char ch = (char) getc(stdin);
+    if (ch != '\n')
+        buffer[index++] = ch;
+    
+    if (check_json(buffer, index))
+    {
+        buffer[index] = '\0';
+        printf("NEW MESSAGE: `%s`\n", buffer);
+        memsett(buffer, 0, index);
+        index = 0;
+        
+    }
+
+}
+
+
+
+
 void
 make_call
 (
@@ -32,7 +68,7 @@ make_call
 
 
 int
-handle_response
+handle_message
 (
     const char   *_resp,
     OCPPResponse *response

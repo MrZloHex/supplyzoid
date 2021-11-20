@@ -3,12 +3,11 @@
 #define OCPP_H_
 
 #include <stdio.h>
-#include <stdlib.h>
-// #include <stdint.h>
-// #include <stdbool.h>
 
 #include "stringg.h"
 #include "convert.h"
+#include "JSON.h"
+#include "EVSE.h"
 
 
 #ifndef OCPP
@@ -39,11 +38,6 @@ void
 next_data_field(expected_data *data, OCPPType type);
 
 
-
-typedef struct
-{
-    int smth;
-} OCPPConfig;
 
 
 typedef struct
@@ -93,6 +87,21 @@ typedef union
 // (
 //     const char *_call
 // );
+
+
+
+
+
+
+OCPP void
+ocpp_init();
+
+OCPP void
+ocpp_update
+(
+    EVSE *evse
+);
+
 
 
 OCPP void
