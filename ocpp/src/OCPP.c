@@ -13,6 +13,7 @@ ocpp_init()
 void
 ocpp_update
 (
+    OCPP *ocpp,
     EVSE *evse
 )
 {
@@ -23,20 +24,17 @@ ocpp_update
     if (ch != '\n')
         buffer[index++] = ch;
     
-    if (check_json(buffer, index))
+    
+
+    if (determine_message(buffer, index, &(ocpp->now)) != ERROR)
     {
         buffer[index] = '\0';
-        printf("NEW MESSAGE: `%s`\n", buffer);
-
-        OCPPMessage *mes = (OCPPMessage *) malloc(sizeof(OCPPMessage));
-        determine_message(buffer, index, mes);
+        // printf("NEW MESSAGE: `%n", buffer);
 
         memsett(buffer, 0, index);
         index = 0;
-        
-
-        
     }
+    printf("\n\n");
 
 }
 

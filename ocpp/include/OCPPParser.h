@@ -3,7 +3,7 @@
 #define OCPP_PARSER_H_
 
 #include <stdio.h>
-
+#include <stdlib.h>
 
 #include "stdtypes.h"
 
@@ -25,7 +25,7 @@
 
 typedef unsigned char expected_data;
 void
-next_data_field(expected_data *data, OCPPType type);
+next_data_field(expected_data *data, OCPPMessageType type);
 
 
 
@@ -50,7 +50,7 @@ make_call_error
     char         *dest
 );
 
-OCPPType
+OCPPMessageType
 determine_message
 (
     const char  *_resp,

@@ -85,7 +85,7 @@ make_call_error
     strcpyy(dest, buf);
 }
 
-OCPPType
+OCPPMessageType
 determine_message
 (
     const char  *_resp,
@@ -93,17 +93,17 @@ determine_message
     OCPPMessage *message
 )
 {
-    int result;
+    OCPPMessageType result;
 
     expected_data field = MESSAGE_TYPE_ID;
 
-    OCPPType message_type_id;
+    OCPPMessageType message_type_id;
     char     message_id[36];
     char     error_code[30];
     char     error_dscr[255];
-    char    *json   = (char*) malloc(sizeof(char)*1024);
+    char     json[256];
 
-    char    *buffer = (char*) malloc(sizeof(char)*1024);
+    char     buffer[256];
     unsigned int index_buf = 0;
 
     short ready = 0;
@@ -112,7 +112,9 @@ determine_message
     int block   = 0;
     int json_started = 0;
 
-    for (unsigned int i = 0; i < length; ++i)
+    printf("NEW REQUEST: `%s`\n", _resp);
+
+    for (size i = 0; i < length; ++i)
     {
         char ch = _resp[i];
 
@@ -254,15 +256,10 @@ determine_message
         }
         if (data_in < 0)
         {
-            fprintf(stderr, "INVALID REQUEST\n");
-            exit(1);
+            return ERROR;
         }
         
     }
-
-    free(json);
-    free(buffer);
-
     return result;
 }
 
@@ -273,7 +270,7 @@ void
 next_data_field
 (
     expected_data *data,
-    OCPPType type
+    OCPPMessageType type
 )
 {
     if (type == CALL)

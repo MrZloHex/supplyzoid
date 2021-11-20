@@ -5,7 +5,7 @@
 
 
 EVSE evse;
-// OCPP ocpp;
+OCPP ocpp;
 
 
 void
@@ -19,7 +19,7 @@ setup()
 void
 loop()
 {
-    ocpp_update(&evse);
+    ocpp_update(&ocpp, &evse);
 }
 
 
@@ -35,6 +35,3 @@ main()
 
     return 0;
 }
-
-// {"reason":"PowerUp","chargingStation":{"model":"SingleSocketCharger","vendorName":"VendorX"}}
-

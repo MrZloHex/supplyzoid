@@ -13,24 +13,11 @@
 #include "OCPPTypes.h"
 
 
-
-
-// typedef unsigned char result;
-
-// OCPP void
-// handle_call
-// (
-//     OCPPConfig *_cfg,
-//     const char *_call
-// );
-
-
-// OCPP OCPPCall
-// parse_call
-// (
-//     const char *_call
-// );
-
+typedef struct
+{
+    OCPPMessage now;
+    OCPPMessage last;
+} OCPP;
 
 
 void
@@ -39,6 +26,7 @@ ocpp_init();
 void
 ocpp_update
 (
+    OCPP *ocpp,
     EVSE *evse
 );
 
