@@ -4,8 +4,8 @@
 void
 make_call
 (
-    OCPPCall call_cfg,
-    char    *_dest
+    OCPPCall call,
+    char    *dest
 )
 {
     char buf[512] = "[";
@@ -14,22 +14,76 @@ make_call
     strlenn(buf);
 
     char m_id[36];
-    int size_id = int_to_charset(call_cfg.messageID, m_id, 0);
+    size size_id = int_to_charset(call.messageID, m_id, 0);
     strcpyy(buf+4, m_id);
     strcpyy(buf+4+size_id, "\",\"");
 
-    int size_act = strlenn(call_cfg.action);
-    strcpyy(buf+7+size_id, call_cfg.action);
+    size size_act = strlenn(call.action);
+    strcpyy(buf+7+size_id, call.action);
     strcpyy(buf+7+size_id+size_act, "\",");
 
-    int size_payload = strlenn(call_cfg.payload);
-    strcpyy(buf+9+size_id+size_act, call_cfg.payload);
+    size size_payload = strlenn(call.payload);
+    strcpyy(buf+9+size_id+size_act, call.payload);
     strcpyy(buf+9+size_id+size_act+size_payload, "]\0");
 
-
-    strcpyy(_dest, buf);
+    strcpyy(dest, buf);
 }
 
+void
+make_call_result
+(
+    OCPPCallResult call_res,
+    char          *dest
+)
+{
+    char buf[512] = "[";
+    buf[1] = CALLRESULT + '0';
+    strcpyy(buf+2, ",\"");
+    strlenn(buf);
+
+    char m_id[36];
+    size size_id = int_to_charset(call_res.messageID, m_id, 0);
+    strcpyy(buf+4, m_id);
+    strcpyy(buf+4+size_id, "\",\"");
+
+    size size_payload = strlenn(call_res.payload);
+    strcpyy(buf+7+size_id, call_res.payload);
+    strcpyy(buf+7+size_id+size_payload, "]\0");
+
+    strcpyy(dest, buf);
+}
+
+void
+make_call_error
+(
+    OCPPCallError call_err,
+    char         *dest
+)
+{
+    char buf[512] = "[";
+    buf[1] = CALLRESULT + '0';
+    strcpyy(buf+2, ",\"");
+    strlenn(buf);
+
+    char m_id[36];
+    size size_id = int_to_charset(call_err.messageID, m_id, 0);
+    strcpyy(buf+4, m_id);
+    strcpyy(buf+4+size_id, "\",\"");
+
+    size size_err_code = strlenn(call_err.error_code);
+    strcpyy(buf+7+size_id, call_err.error_code);
+    strcpyy(buf+7+size_id+size_err_code, "\",\"");
+
+    size size_err_dscr = strlenn(call_err.error_dscr);
+    strcpyy(buf+10+size_id, call_err.error_dscr);
+    strcpyy(buf+10+size_id+size_err_code+size_err_dscr, "\",");
+
+    size size_err_det = strlenn(call_err.error_details);
+    strcpyy(buf+12+size_id, call_err.error_details);
+    strcpyy(buf+12+size_id+size_err_code+size_err_dscr+size_err_det, "]\0");
+
+    strcpyy(dest, buf);
+}
 
 OCPPType
 determine_message

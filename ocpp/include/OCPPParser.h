@@ -32,8 +32,22 @@ next_data_field(expected_data *data, OCPPType type);
 void
 make_call
 (
-    OCPPCall call_cfg,
-    char       *_dest
+    OCPPCall call,
+    char    *dest
+);
+
+void
+make_call_result
+(
+    OCPPCallResult call_res,
+    char          *dest
+);
+
+void
+make_call_error
+(
+    OCPPCallError call_err,
+    char         *dest
 );
 
 OCPPType
