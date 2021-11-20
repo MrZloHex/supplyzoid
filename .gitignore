@@ -1,3 +1,4 @@
 hal/obj/
 gt.sh
-hal/supplyzoid*
+*/supplyzoid*
+.vscode/

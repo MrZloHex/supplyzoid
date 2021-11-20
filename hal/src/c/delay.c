@@ -1,9 +1,7 @@
+extern void delay_asm(void);
+
 void
-delay(char port)
+delay_c(void)
 {
-    int i = 0;
-    while (i < 0xFFFFFFFF)
-    {
-        i += 1;
-    }
+    
 }
