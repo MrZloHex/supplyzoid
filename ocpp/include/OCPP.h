@@ -9,7 +9,6 @@
 #include "JSON.h"
 #include "EVSE.h"
 
-#include "OCPPParser.h"
 #include "OCPPTypes.h"
 
 
@@ -21,7 +20,10 @@ typedef struct
 
 
 void
-ocpp_init();
+ocpp_init(OCPP *ocpp);
+
+void
+ocpp_free(OCPP *ocpp);
 
 void
 ocpp_update

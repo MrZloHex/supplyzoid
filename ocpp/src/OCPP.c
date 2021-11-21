@@ -4,11 +4,40 @@
 
 
 void
-ocpp_init()
+ocpp_init(OCPP *ocpp)
 {
+    ocpp->now.call.action  = (char *) malloc(sizeof(char)*ACTION_LEN);
+    ocpp->now.call.payload = (char *) malloc(sizeof(char)*JSON_LEN);
+    ocpp->now.call_result.payload      = (char *) malloc(sizeof(char)*JSON_LEN);
+    ocpp->now.call_error.error_code    = (char *) malloc(sizeof(char)*ERR_CODE_LEN);
+    ocpp->now.call_error.error_dscr    = (char *) malloc(sizeof(char)*DSCR_LEN);
+    ocpp->now.call_error.error_details = (char *) malloc(sizeof(char)*JSON_LEN);
 
+    ocpp->last.call.action  = (char *) malloc(sizeof(char)*ACTION_LEN);
+    ocpp->last.call.payload = (char *) malloc(sizeof(char)*JSON_LEN);
+    ocpp->last.call_result.payload      = (char *) malloc(sizeof(char)*JSON_LEN);
+    ocpp->last.call_error.error_code    = (char *) malloc(sizeof(char)*ERR_CODE_LEN);
+    ocpp->last.call_error.error_dscr    = (char *) malloc(sizeof(char)*DSCR_LEN);
+    ocpp->last.call_error.error_details = (char *) malloc(sizeof(char)*JSON_LEN);
 }
 
+void
+ocpp_free(OCPP *ocpp)
+{
+    free(ocpp->now.call.action);
+    free(ocpp->now.call.payload);
+    free(ocpp->now.call_result.payload);
+    free(ocpp->now.call_error.error_code);
+    free(ocpp->now.call_error.error_dscr);
+    free(ocpp->now.call_error.error_details);
+
+    free(ocpp->last.call.action);
+    free(ocpp->last.call.payload);
+    free(ocpp->last.call_result.payload);
+    free(ocpp->last.call_error.error_code);
+    free(ocpp->last.call_error.error_dscr);
+    free(ocpp->last.call_error.error_details);
+}
 
 void
 ocpp_update
@@ -17,24 +46,30 @@ ocpp_update
     EVSE *evse
 )
 {
-    static char buffer[256];
+    #define BUF_LEN 100
+    static char buffer[BUF_LEN];
     static size index;
 
     char ch = (char) getc(stdin);
     if (ch != '\n')
         buffer[index++] = ch;
-    
-    
 
-    if (determine_message(buffer, index, &(ocpp->now)) != ERROR)
+    if (index >= BUF_LEN)
     {
-        buffer[index] = '\0';
-        // printf("NEW MESSAGE: `%n", buffer);
-
         memsett(buffer, 0, index);
         index = 0;
+        return;
     }
-    printf("\n\n");
+    
 
+    if (mjson(buffer, index, NULL, NULL) > 0)
+    {
+        buffer[index] = '\0';
+        printf("NEW MESSAGE: `%s`\n", buffer);
+        memsett(buffer, 0, index);
+        index = 0;
+
+        
+    }
 }
 

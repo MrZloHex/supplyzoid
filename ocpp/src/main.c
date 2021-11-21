@@ -33,5 +33,6 @@ main()
         loop();
     }
 
+    ocpp_free(&ocpp);
     return 0;
 }

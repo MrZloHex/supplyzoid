@@ -12,29 +12,36 @@
 typedef unsigned char OCPPMessageType;
 
 
+
+
+#define ACTION_LEN   30
+#define JSON_LEN     256
+#define DSCR_LEN     255
+#define ERR_CODE_LEN 30
+
 typedef struct
 {
-    const unsigned int messageID;
-    const char         action[30];
-    const char         payload[256]; // JSON
+    unsigned int messageID;
+    char        *action;
+    char        *payload; // JSON
 
 } OCPPCall;
 
 typedef struct
 {
-    const unsigned int messageID;
-    const char         payload[256];
+    unsigned int messageID;
+    char        *payload;
 } OCPPCallResult;
 
 typedef struct
 {
-    const unsigned int messageID;
-    const char         error_code[30];
-    const char         error_dscr[255];
-    const char         error_details[256];
+    unsigned int messageID;
+    char        *error_code;
+    char        *error_dscr;
+    char        *error_details;
 } OCPPCallError;
 
-typedef union
+typedef struct
 {
     OCPPCall       call;
     OCPPCallResult call_result;
