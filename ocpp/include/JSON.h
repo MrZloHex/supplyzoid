@@ -9,8 +9,8 @@
 bool
 check_json
 (
-    char *str,
-    size len
+	char *str,
+	size len
 );
 
 #endif /* JSON_H_ */

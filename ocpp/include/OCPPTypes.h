@@ -21,31 +21,31 @@ typedef unsigned char OCPPMessageType;
 
 typedef struct
 {
-    unsigned int messageID;
-    char        *action;
-    char        *payload; // JSON
+	unsigned int messageID;
+	char        *action;
+	char        *payload; // JSON
 
 } OCPPCall;
 
 typedef struct
 {
-    unsigned int messageID;
-    char        *payload;
+	unsigned int messageID;
+	char        *payload;
 } OCPPCallResult;
 
 typedef struct
 {
-    unsigned int messageID;
-    char        *error_code;
-    char        *error_dscr;
-    char        *error_details;
+	unsigned int messageID;
+	char        *error_code;
+	char        *error_dscr;
+	char        *error_details;
 } OCPPCallError;
 
 typedef struct
 {
-    OCPPCall       call;
-    OCPPCallResult call_result;
-    OCPPCallError  call_error;
+	OCPPCall       call;
+	OCPPCallResult call_result;
+	OCPPCallError  call_error;
 } OCPPMessage;
 
 

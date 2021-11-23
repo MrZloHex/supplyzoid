@@ -5,17 +5,17 @@
 int
 int_to_charset
 (
-    int  value,
-    char set[],
-    int  digits
+	int  value,
+	char set[],
+	int  digits
 );
 
 
 void
 reverse
 (
-    char *set,
-    int len
+	char *set,
+	int len
 );
 
 #endif /* CONVERT_H_ */

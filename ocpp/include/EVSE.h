@@ -17,38 +17,38 @@ typedef unsigned char EVSEState;
 
 typedef struct
 {
-    // NEEDFUL STATES FOR `CORE` IMPLEMENTATION OF OCPPM 1.6
-    // const   bool AuthorizeRemoteTxRequests;
-    //         int  ClockAlignedDataInterval;
-    //         int  ConnectionTimeOut;
-    //              ConnectorPhaseRotation;
-    // const   int  GetConfigurationMaxKeys;
-    //         int  HeartbeatInterval;
-    //         bool LocalAuthorizeOffline;
-    //         bool LocalPreAuthorize;
-    //              MeterValuesAlignedData;
-    //              MeterValuesSampledData;
-    //         int  MeterValueSampleInterval;
-    // const   int  NumberOfConnectors;
-    //         int  ResetRetries;
-    //         bool StopTransactionOnEVSideDisconnect;
-    //         bool StopTransactionOnInvalidId;
-    //              StopTxnAlignedData;
-    //              StopTxnSampledData;
-    // const        SupportedFeatureProfiles;
-    // const   int  SupportedFeatureProfilesMaxLength;
-    //         int  TransactionMessageAttempts;
-    //         int  TransactionMessageRetryInterval;
-    //         bool UnlockConnectorOnEVSideDisconnect;
+	// NEEDFUL STATES FOR `CORE` IMPLEMENTATION OF OCPPM 1.6
+	// const   bool AuthorizeRemoteTxRequests;
+	//         int  ClockAlignedDataInterval;
+	//         int  ConnectionTimeOut;
+	//              ConnectorPhaseRotation;
+	// const   int  GetConfigurationMaxKeys;
+	//         int  HeartbeatInterval;
+	//         bool LocalAuthorizeOffline;
+	//         bool LocalPreAuthorize;
+	//              MeterValuesAlignedData;
+	//              MeterValuesSampledData;
+	//         int  MeterValueSampleInterval;
+	// const   int  NumberOfConnectors;
+	//         int  ResetRetries;
+	//         bool StopTransactionOnEVSideDisconnect;
+	//         bool StopTransactionOnInvalidId;
+	//              StopTxnAlignedData;
+	//              StopTxnSampledData;
+	// const        SupportedFeatureProfiles;
+	// const   int  SupportedFeatureProfilesMaxLength;
+	//         int  TransactionMessageAttempts;
+	//         int  TransactionMessageRetryInterval;
+	//         bool UnlockConnectorOnEVSideDisconnect;
 
-    EVSEState state;
+	EVSEState state;
 } EVSE;
 
 
 void
 evse_init
 (
-    EVSE *evse
+	EVSE *evse
 );
 
 #endif /* EVSE_H_ */

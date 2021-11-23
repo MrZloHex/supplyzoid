@@ -11,15 +11,15 @@ OCPP ocpp;
 void
 setup()
 {
-    evse_init(&evse);
-    // ocpp_init(&ocpp);
+	evse_init(&evse);
+	// ocpp_init(&ocpp);
 }
 
 
 void
 loop()
 {
-    ocpp_update(&ocpp, &evse);
+	ocpp_update(&ocpp, &evse);
 }
 
 
@@ -27,12 +27,12 @@ int
 main()
 {
 
-    setup();
-    while(1)
-    {
-        loop();
-    }
+	setup();
+	while(1)
+	{
+		loop();
+	}
 
-    ocpp_free(&ocpp);
-    return 0;
+	ocpp_free(&ocpp);
+	return 0;
 }

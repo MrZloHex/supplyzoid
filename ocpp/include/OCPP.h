@@ -14,8 +14,8 @@
 
 typedef struct
 {
-    OCPPMessage now;
-    OCPPMessage last;
+	OCPPMessage now;
+	OCPPMessage last;
 } OCPP;
 
 
@@ -28,8 +28,17 @@ ocpp_free(OCPP *ocpp);
 void
 ocpp_update
 (
-    OCPP *ocpp,
-    EVSE *evse
+	OCPP *ocpp,
+	EVSE *evse
+);
+
+void
+ocpp_handle_message
+(
+ 	OCPP *ocpp,
+	EVSE *evse,
+	const char *str,
+	const size length
 );
 
 

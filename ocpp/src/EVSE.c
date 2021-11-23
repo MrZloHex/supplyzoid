@@ -4,8 +4,8 @@
 void
 evse_init
 (
-    EVSE *evse
+	EVSE *evse
 )
 {
-    evse->state = S_AVAILABLE;
+	evse->state = S_AVAILABLE;
 }

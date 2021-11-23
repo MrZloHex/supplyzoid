@@ -4,46 +4,46 @@
 void
 strcpyy
 (
-    char *_dest,
-    char *_src
+	char *_dest,
+	char *_src
 )
 {
-    unsigned int i = 0;
-    while (_src[i] != 0)
-    {
-        _dest[i] = _src[i];
-        ++i;
-    }
-    _dest[i] = '\0';
+	unsigned int i = 0;
+	while (_src[i] != 0)
+	{
+		_dest[i] = _src[i];
+		++i;
+	}
+	_dest[i] = '\0';
 }
 
 unsigned int
 strlenn
 (
-    char *_str
+	char *_str
 )
 {
-    unsigned int len = 0;
+	unsigned int len = 0;
 
-    while (_str[len] != 0)
-    {
-        ++len;
-    }
+	while (_str[len] != 0)
+	{
+		++len;
+	}
 
-    return len;
+	return len;
 }
 
 
 void
 memsett
 (
-    char *_str,
-    int value,
-    unsigned int size
+	char *_str,
+	int value,
+	unsigned int size
 )
 {
-    for (unsigned int i = 0; i < size; ++i)
-    {
-        _str[i] = value;
-    }
+	for (unsigned int i = 0; i < size; ++i)
+	{
+		_str[i] = value;
+	}
 }
