@@ -7,8 +7,9 @@
 #define CALL       2
 // [3,"19223201",{"currentTime":"2013-02-01T20:53:32.486Z","interval":300,"status":"Accepted"}]
 #define CALLRESULT 3
-// [4,"19223201","GenericError","Any other error not covered by the previous ones"{}]
+// [4,"19223201","GenericError","Any other error not covered by the previous ones",{}]
 #define CALLERROR  4
+#define TYPE_POS_MSG "$[0]"
 typedef unsigned char OCPPMessageType;
 
 

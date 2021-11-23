@@ -84,7 +84,31 @@ ocpp_handle_message
 )
 {
 	printf("HANDLE NEW MESSAGE: `%s`\n", str);
-	OCPPMessageType type = ocpp_determine_message_type(ocpp, str);
+	OCPPMessageType type = ocpp_determine_message_type(ocpp, str, length);
 	printf("TYPE: `%d`\n", type);
 }
 
+
+
+
+OCPPMessageType
+ocpp_determine_message_type
+(
+	OCPP *ocpp,
+	const char *str,
+	const size length
+)
+{
+	double type;
+	int res = mjson_get_number(str, length, TYPE_POS_MSG, &type);
+	switch ((int)type) {
+        case CALL:
+            return CALL;
+        case CALLRESULT:
+            return CALLRESULT;
+        case CALLERROR:
+			return CALLERROR;
+        default:
+            return ERROR;
+    }
+}
