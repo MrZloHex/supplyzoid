@@ -27,6 +27,9 @@ void
 ocpp_free(OCPP *ocpp);
 
 void
+ocpp_next(OCPP *ocpp);
+
+void
 ocpp_update
 (
 	OCPP *ocpp,

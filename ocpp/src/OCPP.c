@@ -32,6 +32,19 @@ ocpp_free(OCPP *ocpp)
 }
 
 void
+ocpp_next(OCPP *ocpp)
+{
+	ocpp->last.type = ocpp->now.type;
+	ocpp->last.ID   = ocpp->now.ID;
+	ocpp->last.call.action = ocpp->now.call.action;
+	strcpyy(ocpp->last.call.payload, ocpp->now.call.payload);
+	strcpyy(ocpp->last.call_result.payload, ocpp->now.call_result.payload);
+	ocpp->last.call_error.error_code = ocpp->now.call_error.error_code;
+	strcpyy(ocpp->last.call_error.error_dscr, ocpp->now.call_error.error_dscr);
+	strcpyy(ocpp->last.call_error.error_details, ocpp->now.call_error.error_details);
+}	
+
+void
 ocpp_update
 (
 	OCPP *ocpp,
@@ -82,7 +95,7 @@ ocpp_handle_message
 		return;
 
 	// HANDLING
-	
+	ocpp_next(ocpp);
 }
 
 OCPPResult
