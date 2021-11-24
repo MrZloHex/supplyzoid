@@ -76,15 +76,32 @@ ocpp_handle_message
 )
 {
 	printf("HANDLE NEW MESSAGE: `%s`\n", str);
+
+	OCPPResult res_parse = ocpp_parse_message(ocpp, str, length);
+	if (res_parse == ERROR)
+		return;
+
+	// HANDLING
+	
+}
+
+OCPPResult
+ocpp_parse_message
+(
+	OCPP *ocpp,
+	const char *str,
+	const size length
+)
+{
 	OCPPMessageType msg_type = ocpp_determine_message_type(str, length);
 	if (msg_type == ERROR)
-		return;
+		return ERROR;
 
 	ocpp->now.type = msg_type;
 
 	OCPPMessageID msg_id = ocpp_get_message_id(str, length);
 	if (msg_id == 0)
-		return;
+		return ERROR;
 
 	ocpp->now.ID = msg_id;
 
@@ -92,14 +109,14 @@ ocpp_handle_message
 	{
 		OCPPCallAction action = ocpp_get_action(str, length);
 		if (action == 0)
-			return;
+			return ERROR;
 
 		ocpp->now.call.action = action;
 
 		char payload[PAYLOAD_LEN];
 		OCPPResult res = ocpp_get_payload(CALL, str, length, payload);
 		if (res == ERROR)
-			return;
+			return ERROR;
 
 		strcpyy(ocpp->now.call.payload, payload);
 
@@ -113,7 +130,7 @@ ocpp_handle_message
 		char payload[PAYLOAD_LEN];
 		OCPPResult res = ocpp_get_payload(CALLRESULT, str, length, payload);
 		if (res == ERROR)
-			return;
+			return ERROR;
 
 		strcpyy(ocpp->now.call_result.payload, payload);
 
@@ -129,14 +146,14 @@ ocpp_handle_message
 		char description[DSCR_LEN];
 		OCPPResult res_d = ocpp_get_call_error_descr(str, length, description);
 		if (res_d == ERROR)
-			return;
+			return ERROR;
 
 		strcpyy(ocpp->now.call_error.error_dscr, description);
 
 		char details[PAYLOAD_LEN];
 		OCPPResult res = ocpp_get_payload(CALLERROR, str, length, details);
 		if (res == ERROR)
-			return;
+			return ERROR;
 		strcpyy(ocpp->now.call_error.error_details, details);
 
 		printf("NEW CALL ERROR REQ:\n");
@@ -146,6 +163,21 @@ ocpp_handle_message
 		printf("\tERROR DETAILS: `%s`\n", ocpp->now.call_error.error_details);
 	}
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

@@ -42,6 +42,24 @@ ocpp_handle_message
 	const size length
 );
 
+OCPPResult
+ocpp_parse_message
+(
+	OCPP *ocpp,
+	const char *str,
+	const size length
+);
+
+
+
+
+
+
+
+
+
+
+
 
 
 OCPPMessageType
