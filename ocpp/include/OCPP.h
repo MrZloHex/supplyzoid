@@ -10,6 +10,7 @@
 #include "EVSE.h"
 
 #include "OCPPTypes.h"
+#include "OCPPStates.h"
 
 
 typedef struct
@@ -52,6 +53,14 @@ ocpp_determine_message_type
 
 OCPPMessageID
 ocpp_get_message_id
+(
+	const char *str,
+	const size length
+);
+
+
+OCPPCallAction
+ocpp_get_action
 (
 	const char *str,
 	const size length

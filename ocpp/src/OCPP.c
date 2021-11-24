@@ -6,14 +6,12 @@
 void
 ocpp_init(OCPP *ocpp)
 {
-	ocpp->now.call.action  = (char *) malloc(sizeof(char)*ACTION_LEN);
 	ocpp->now.call.payload = (char *) malloc(sizeof(char)*JSON_LEN);
 	ocpp->now.call_result.payload      = (char *) malloc(sizeof(char)*JSON_LEN);
 	ocpp->now.call_error.error_code    = (char *) malloc(sizeof(char)*ERR_CODE_LEN);
 	ocpp->now.call_error.error_dscr    = (char *) malloc(sizeof(char)*DSCR_LEN);
 	ocpp->now.call_error.error_details = (char *) malloc(sizeof(char)*JSON_LEN);
 
-	ocpp->last.call.action  = (char *) malloc(sizeof(char)*ACTION_LEN);
 	ocpp->last.call.payload = (char *) malloc(sizeof(char)*JSON_LEN);
 	ocpp->last.call_result.payload      = (char *) malloc(sizeof(char)*JSON_LEN);
 	ocpp->last.call_error.error_code    = (char *) malloc(sizeof(char)*ERR_CODE_LEN);
@@ -24,14 +22,12 @@ ocpp_init(OCPP *ocpp)
 void
 ocpp_free(OCPP *ocpp)
 {
-	free(ocpp->now.call.action);
 	free(ocpp->now.call.payload);
 	free(ocpp->now.call_result.payload);
 	free(ocpp->now.call_error.error_code);
 	free(ocpp->now.call_error.error_dscr);
 	free(ocpp->now.call_error.error_details);
 
-	free(ocpp->last.call.action);
 	free(ocpp->last.call.payload);
 	free(ocpp->last.call_result.payload);
 	free(ocpp->last.call_error.error_code);
@@ -86,13 +82,32 @@ ocpp_handle_message
 	printf("HANDLE NEW MESSAGE: `%s`\n", str);
 	OCPPMessageType msg_type = ocpp_determine_message_type(str, length);
 	if (msg_type == ERROR)
-	{
-		printf("INVALID MSG TYPE\n");
 		return;
-	}
-	OCPPMessageID msg_id = ocpp_get_message_id(str, length);
-	printf("%ld\n", msg_id);
 
+	ocpp->now.type = msg_type;
+
+	OCPPMessageID msg_id = ocpp_get_message_id(str, length);
+	if (msg_id == 0)
+		return;
+
+	ocpp->now.ID = msg_id;
+
+	if (msg_type == CALL)
+	{
+		OCPPCallAction action = ocpp_get_action(str, length);
+		if (action == 0)
+			return;
+
+		printf("ACTION: `%d`\n", action);
+	}
+	else if (msg_type == CALLRESULT)
+	{
+
+	}
+	else if (msg_type == CALLERROR)
+	{
+
+	}
 }
 
 
@@ -129,10 +144,26 @@ ocpp_get_message_id
 	const size length
 )
 {
-	char buf[100];
-	int res = mjson_get_string(str, length, POS_MSG_ID, buf, 100);
+	char buf[50];
+	int res = mjson_get_string(str, length, POS_MSG_ID, buf, 50);
+	if (res <= 0)
+		return ERROR;
 	OCPPMessageID id;
 	charset_to_ulong(&id , buf);
-	printf("%ld\n", id);
-	return 123;
+	return id;
+}
+
+OCPPCallAction
+ocpp_get_action
+(
+	const char *str,
+	const size length
+)
+{
+	char buf[ACTION_LEN];
+	int res = mjson_get_string(str, length, POS_CALL_ACT, buf, ACTION_LEN);
+	if (res <= 0)
+		return ERROR;
+	printf("%s\n", buf);
+	return BOOT_NOTIFICATION;
 }

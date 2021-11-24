@@ -2,10 +2,11 @@
 
 #define MATH_H_
 
+
 #include "stdtypes.h"
 
-long
-power
+unsigned long
+upower
 (
     int x,
     unsigned short y

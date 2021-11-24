@@ -1,0 +1,15 @@
+#ifndef OCPP_STATES_H_
+
+#define OCPP_STATES_H_
+
+// ACTIONS
+#define BOOT_NOTIFICATION        1
+#define REMOTE_START_TRANSACTION 2
+#define REMOTE_STOP_TRANSACTION  3
+#define START_TRANSACTION        4
+#define STOP_TRANSACTION         5
+#define STATUS_NOTIFICATION      6
+
+
+
+#endif /* OCPP_STATES_H_ */

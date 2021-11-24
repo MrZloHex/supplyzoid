@@ -15,6 +15,9 @@ typedef unsigned char OCPPMessageType;
 #define POS_MSG_ID   "$[1]"
 typedef unsigned long OCPPMessageID;
 
+#define POS_CALL_ACT "$[2]"
+typedef unsigned char OCPPCallAction;
+
 #define ACTION_LEN   30
 #define JSON_LEN     256
 #define DSCR_LEN     255
@@ -22,21 +25,18 @@ typedef unsigned long OCPPMessageID;
 
 typedef struct
 {
-	unsigned int messageID;
-	char        *action;
-	char        *payload; // JSON
+	OCPPCallAction action;
+	char          *payload; // JSON
 
 } OCPPCall;
 
 typedef struct
 {
-	unsigned int messageID;
 	char        *payload;
 } OCPPCallResult;
 
 typedef struct
 {
-	unsigned int messageID;
 	char        *error_code;
 	char        *error_dscr;
 	char        *error_details;
@@ -44,9 +44,11 @@ typedef struct
 
 typedef struct
 {
-	OCPPCall       call;
-	OCPPCallResult call_result;
-	OCPPCallError  call_error;
+	OCPPMessageType type;
+	OCPPMessageID   ID;
+	OCPPCall       	call;
+	OCPPCallResult 	call_result;
+	OCPPCallError  	call_error;
 } OCPPMessage;
 
 

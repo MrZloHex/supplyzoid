@@ -37,7 +37,7 @@ charset_to_ulong
 	unsigned long res = 0;
 	while (set[i] != 0)
 	{
-		res += set[i] * power(10, (len-i-1));
+		res += (set[i] - '0') * upower(10, (len-i-1));
 		++i;
 	}
 	*dst = res;

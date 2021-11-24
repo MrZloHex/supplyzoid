@@ -1,7 +1,7 @@
 #include "mathh.h"
 
-long
-power
+unsigned long
+upower
 (
     int x,
     unsigned short y
