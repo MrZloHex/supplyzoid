@@ -101,7 +101,7 @@ ocpp_handle_message
 		ocpp->now.call.action = action;
 
 		char payload[PAYLOAD_LEN];
-		OCPPResult res = ocpp_get_payload(str, length, payload);
+		OCPPResult res = ocpp_get_payload(CALL, str, length, payload);
 		if (res == ERROR)
 			return;
 
@@ -114,7 +114,16 @@ ocpp_handle_message
 	}
 	else if (msg_type == CALLRESULT)
 	{
+		char payload[PAYLOAD_LEN];
+		OCPPResult res = ocpp_get_payload(CALLRESULT, str, length, payload);
+		if (res == ERROR)
+			return;
 
+		strcpyy(ocpp->now.call_result.payload, payload);
+
+		printf("NEW CALL RESULT REQ:\n");
+		printf("\tID: `%ld`\n", ocpp->now.ID);
+		printf("\tPAYLOAD: `%s`\n", ocpp->now.call_result.payload);
 	}
 	else if (msg_type == CALLERROR)
 	{
@@ -173,7 +182,7 @@ ocpp_get_action
 )
 {
 	char buf[ACTION_LEN];
-	int res = mjson_get_string(str, length, POS_CALL_ACT, buf, ACTION_LEN);
+	int res = mjson_get_string(str, length, POS_CL_ACT, buf, ACTION_LEN);
 	if (res <= 0)
 		return ERROR;
 	
@@ -186,14 +195,24 @@ ocpp_get_action
 OCPPResult
 ocpp_get_payload
 (
+	OCPPMessageType type,
 	const char *str,
 	const size length,
 	char *dst
 )
 {
+	char path[5];
+	if (type == CALL)
+		strcpyy(path, POS_CL_PAYLOAD);
+	else if (type == CALLRESULT)
+		strcpyy(path, POS_CR_PAYLOAD);
+	else
+		return ERROR;
+
+
 	const char *p;
     int n;
-    if (mjson_find(str, length, POS_CALL_PAYLOAD, &p, &n) != MJSON_TOK_OBJECT)
+    if (mjson_find(str, length, path, &p, &n) != MJSON_TOK_OBJECT)
         return ERROR;
 
 	strncpyy(dst, p, n);

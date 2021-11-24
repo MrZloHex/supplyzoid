@@ -23,8 +23,8 @@ typedef unsigned long OCPPMessageID;
 // [2,"19223201","BootNotification",{"reason":"PowerUp","chargingStation":{"model":"SingleSocketCharger","vendorName":"VendorX"}}]
 #define CALL       2
 
-#define POS_CALL_ACT     "$[2]"
-#define POS_CALL_PAYLOAD "$[3]"
+#define POS_CL_ACT     "$[2]"
+#define POS_CL_PAYLOAD "$[3]"
 typedef unsigned char OCPPCallAction;
 
 typedef struct
@@ -39,22 +39,25 @@ typedef struct
 
 // [3,"19223201",{"currentTime":"2013-02-01T20:53:32.486Z","interval":300,"status":"Accepted"}]
 #define CALLRESULT 3
-// [4,"19223201","GenericError","Any other error not covered by the previous ones",{}]
-#define CALLERROR  4
 
-
-
-
-
-
-
-
-
+#define POS_CR_PAYLOAD "$[2]"
 
 typedef struct
 {
 	char        *payload;
 } OCPPCallResult;
+
+
+
+
+
+
+
+
+
+
+// [4,"19223201","GenericError","Any other error not covered by the previous ones",{}]
+#define CALLERROR  4
 
 typedef struct
 {
@@ -62,6 +65,12 @@ typedef struct
 	char        *error_dscr;
 	char        *error_details;
 } OCPPCallError;
+
+
+
+
+
+
 
 typedef struct
 {

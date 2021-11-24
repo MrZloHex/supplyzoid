@@ -69,6 +69,7 @@ ocpp_get_action
 OCPPResult
 ocpp_get_payload
 (
+	OCPPMessageType type,
 	const char *str,
 	const size length,
 	char *dst
