@@ -50,20 +50,19 @@ typedef struct
 
 
 
-
-
-
-
-
-
 // [4,"19223201","GenericError","Any other error not covered by the previous ones",{}]
 #define CALLERROR  4
 
+#define POS_CE_ERR_CODE "$[2]"
+#define POS_CE_ERR_DSCR "$[3]"
+#define POS_CE_ERR_DETL "$[4]"
+typedef unsigned char OCPPCallErrorCode;
+
 typedef struct
 {
-	char        *error_code;
-	char        *error_dscr;
-	char        *error_details;
+	OCPPCallErrorCode error_code;
+	char        	  *error_dscr;
+	char        	  *error_details;
 } OCPPCallError;
 
 

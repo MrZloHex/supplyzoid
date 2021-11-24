@@ -8,13 +8,11 @@ ocpp_init(OCPP *ocpp)
 {
 	ocpp->now.call.payload = (char *) malloc(sizeof(char)*PAYLOAD_LEN);
 	ocpp->now.call_result.payload      = (char *) malloc(sizeof(char)*PAYLOAD_LEN);
-	ocpp->now.call_error.error_code    = (char *) malloc(sizeof(char)*ERR_CODE_LEN);
 	ocpp->now.call_error.error_dscr    = (char *) malloc(sizeof(char)*DSCR_LEN);
 	ocpp->now.call_error.error_details = (char *) malloc(sizeof(char)*PAYLOAD_LEN);
 
 	ocpp->last.call.payload = (char *) malloc(sizeof(char)*PAYLOAD_LEN);
 	ocpp->last.call_result.payload      = (char *) malloc(sizeof(char)*PAYLOAD_LEN);
-	ocpp->last.call_error.error_code    = (char *) malloc(sizeof(char)*ERR_CODE_LEN);
 	ocpp->last.call_error.error_dscr    = (char *) malloc(sizeof(char)*DSCR_LEN);
 	ocpp->last.call_error.error_details = (char *) malloc(sizeof(char)*PAYLOAD_LEN);
 }
@@ -24,13 +22,11 @@ ocpp_free(OCPP *ocpp)
 {
 	free(ocpp->now.call.payload);
 	free(ocpp->now.call_result.payload);
-	free(ocpp->now.call_error.error_code);
 	free(ocpp->now.call_error.error_dscr);
 	free(ocpp->now.call_error.error_details);
 
 	free(ocpp->last.call.payload);
 	free(ocpp->last.call_result.payload);
-	free(ocpp->last.call_error.error_code);
 	free(ocpp->last.call_error.error_dscr);
 	free(ocpp->last.call_error.error_details);
 }
@@ -127,7 +123,27 @@ ocpp_handle_message
 	}
 	else if (msg_type == CALLERROR)
 	{
+		OCPPCallErrorCode err_code = ocpp_get_call_error_code(str, length);
+		ocpp->now.call_error.error_code = err_code;
 
+		char description[DSCR_LEN];
+		OCPPResult res_d = ocpp_get_call_error_descr(str, length, description);
+		if (res_d == ERROR)
+			return;
+
+		strcpyy(ocpp->now.call_error.error_dscr, description);
+
+		char details[PAYLOAD_LEN];
+		OCPPResult res = ocpp_get_payload(CALLERROR, str, length, details);
+		if (res == ERROR)
+			return;
+		strcpyy(ocpp->now.call_error.error_details, details);
+
+		printf("NEW CALL ERROR REQ:\n");
+		printf("\tID: `%ld`\n", ocpp->now.ID);
+		printf("\tERROR CODE: `%d`\n", ocpp->now.call_error.error_code);
+		printf("\tERROR DESCRIPTION: `%s`\n", ocpp->now.call_error.error_dscr);
+		printf("\tERROR DETAILS: `%s`\n", ocpp->now.call_error.error_details);
 	}
 }
 
@@ -206,6 +222,8 @@ ocpp_get_payload
 		strcpyy(path, POS_CL_PAYLOAD);
 	else if (type == CALLRESULT)
 		strcpyy(path, POS_CR_PAYLOAD);
+	else if (type == CALLERROR)
+		strcpyy(path, POS_CE_ERR_DETL);
 	else
 		return ERROR;
 
@@ -216,4 +234,38 @@ ocpp_get_payload
         return ERROR;
 
 	strncpyy(dst, p, n);
+}
+
+OCPPCallErrorCode
+ocpp_get_call_error_code
+(
+	const char *str,
+	const size length
+)
+{
+	char buf[ERR_CODE_LEN];
+	int res = mjson_get_string(str, length, POS_CE_ERR_CODE, buf, ERR_CODE_LEN);
+	if (res <= 0)
+		return ERROR;
+	
+	if (strcmpp(buf, "GenericError"))
+		return GENERIC_ERROR;
+	else
+		return ERROR;
+}
+
+OCPPResult
+ocpp_get_call_error_descr
+(
+	const char *str,
+	const size length,
+	char *dscr
+)
+{
+	char buf[DSCR_LEN];
+	int res = mjson_get_string(str, length, POS_CE_ERR_DSCR, buf, DSCR_LEN);
+	if (res <= 0)
+		return ERROR;
+
+	strcpyy(dscr, buf);
 }

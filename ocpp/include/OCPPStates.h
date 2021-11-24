@@ -11,5 +11,16 @@
 #define STATUS_NOTIFICATION      6
 
 
+// ERROR CODES
+#define NOT_IMPLEMENTED                1
+#define NOT_SUPPORTED                  2
+#define INTERNAL_ERROR                 3
+#define PROTOCOL_ERROR                 4
+#define SECURITY_ERROR                 5
+#define FORMATION_VIOLATION            6
+#define PROPERTY_CONSTRAINT_VIOLATION  7
+#define OCCURENCE_CONSTRAINT_VIOLATION 8
+#define TYPE_CONSTRAINT_VIOLATION      9
+#define GENERIC_ERROR                  10
 
 #endif /* OCPP_STATES_H_ */

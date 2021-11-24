@@ -75,4 +75,19 @@ ocpp_get_payload
 	char *dst
 );
 
+OCPPCallErrorCode
+ocpp_get_call_error_code
+(
+	const char *str,
+	const size length
+);
+
+OCPPResult
+ocpp_get_call_error_descr
+(
+	const char *str,
+	const size length,
+	char *dscr
+);
+
 #endif /* OCPP_H_ */
