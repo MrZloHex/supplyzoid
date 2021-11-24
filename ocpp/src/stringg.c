@@ -4,11 +4,11 @@
 void
 strcpyy
 (
-	char *_dest,
-	char *_src
+	char       *_dest,
+	const char *_src
 )
 {
-	unsigned int i = 0;
+	size i = 0;
 	while (_src[i] != 0)
 	{
 		_dest[i] = _src[i];
@@ -17,13 +17,30 @@ strcpyy
 	_dest[i] = '\0';
 }
 
-unsigned int
-strlenn
+void
+strncpyy
 (
-	char *_str
+	char       *_dest,
+	const char *_src,
+	const size len
 )
 {
-	unsigned int len = 0;
+	for (size i = 0; i <= len; ++i)
+	{
+		if (i == len)
+			_dest[i] = '\0';
+		else
+			_dest[i] = _src[i];
+	}
+}
+
+size
+strlenn
+(
+	const char *_str
+)
+{
+	size len = 0;
 
 	while (_str[len] != 0)
 	{
@@ -33,16 +50,39 @@ strlenn
 	return len;
 }
 
+bool
+strcmpp
+(
+	const char *str1,
+	const char *str2
+)
+{
+	if (strlenn(str1) != strlenn(str2))
+		return false;
+
+	size i = 0;
+	bool res = true;
+	while (str1[i] != 0)
+	{
+		if (str1[i] != str2[i])
+		{
+			res = false;
+			break;
+		}
+		++i;
+	}
+	return res;
+}
 
 void
 memsett
 (
 	char *_str,
-	int value,
-	unsigned int size
+	const int value,
+	const size len
 )
 {
-	for (unsigned int i = 0; i < size; ++i)
+	for (size i = 0; i < len; ++i)
 	{
 		_str[i] = value;
 	}

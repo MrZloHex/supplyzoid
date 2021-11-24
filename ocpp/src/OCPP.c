@@ -6,17 +6,17 @@
 void
 ocpp_init(OCPP *ocpp)
 {
-	ocpp->now.call.payload = (char *) malloc(sizeof(char)*JSON_LEN);
-	ocpp->now.call_result.payload      = (char *) malloc(sizeof(char)*JSON_LEN);
+	ocpp->now.call.payload = (char *) malloc(sizeof(char)*PAYLOAD_LEN);
+	ocpp->now.call_result.payload      = (char *) malloc(sizeof(char)*PAYLOAD_LEN);
 	ocpp->now.call_error.error_code    = (char *) malloc(sizeof(char)*ERR_CODE_LEN);
 	ocpp->now.call_error.error_dscr    = (char *) malloc(sizeof(char)*DSCR_LEN);
-	ocpp->now.call_error.error_details = (char *) malloc(sizeof(char)*JSON_LEN);
+	ocpp->now.call_error.error_details = (char *) malloc(sizeof(char)*PAYLOAD_LEN);
 
-	ocpp->last.call.payload = (char *) malloc(sizeof(char)*JSON_LEN);
-	ocpp->last.call_result.payload      = (char *) malloc(sizeof(char)*JSON_LEN);
+	ocpp->last.call.payload = (char *) malloc(sizeof(char)*PAYLOAD_LEN);
+	ocpp->last.call_result.payload      = (char *) malloc(sizeof(char)*PAYLOAD_LEN);
 	ocpp->last.call_error.error_code    = (char *) malloc(sizeof(char)*ERR_CODE_LEN);
 	ocpp->last.call_error.error_dscr    = (char *) malloc(sizeof(char)*DSCR_LEN);
-	ocpp->last.call_error.error_details = (char *) malloc(sizeof(char)*JSON_LEN);
+	ocpp->last.call_error.error_details = (char *) malloc(sizeof(char)*PAYLOAD_LEN);
 }
 
 void
@@ -98,7 +98,10 @@ ocpp_handle_message
 		if (action == 0)
 			return;
 
-		printf("ACTION: `%d`\n", action);
+		ocpp->now.call.action = action;
+
+		char payload[PAYLOAD_LEN];
+		ocpp_get_payload(str, length, payload);		
 	}
 	else if (msg_type == CALLRESULT)
 	{
@@ -164,6 +167,26 @@ ocpp_get_action
 	int res = mjson_get_string(str, length, POS_CALL_ACT, buf, ACTION_LEN);
 	if (res <= 0)
 		return ERROR;
-	printf("%s\n", buf);
-	return BOOT_NOTIFICATION;
+	
+	if (strcmpp(buf, "BootNotification"))
+		return BOOT_NOTIFICATION;
+	else
+		return ERROR;
+}
+
+OCPPResult
+ocpp_get_payload
+(
+	const char *str,
+	const size length,
+	char *dst
+)
+{
+	const char *p;
+    int n;
+    if (mjson_find(str, length, POS_CALL_PAYLOAD, &p, &n) != MJSON_TOK_OBJECT)
+        return ERROR;
+
+	char payload[PAYLOAD_LEN];
+	strncpyy(payload, p, n);
 }

@@ -2,26 +2,30 @@
 
 #define OCPP_TYPES_H_
 
-#define ERROR      0
-// [2,"19223201","BootNotification",{"reason":"PowerUp","chargingStation":{"model":"SingleSocketCharger","vendorName":"VendorX"}}]
-#define CALL       2
-// [3,"19223201",{"currentTime":"2013-02-01T20:53:32.486Z","interval":300,"status":"Accepted"}]
-#define CALLRESULT 3
-// [4,"19223201","GenericError","Any other error not covered by the previous ones",{}]
-#define CALLERROR  4
-#define POS_MSG_TYPE "$[0]"
-typedef unsigned char OCPPMessageType;
+#define ERROR 0
+typedef unsigned char OCPPResult;
 
-#define POS_MSG_ID   "$[1]"
-typedef unsigned long OCPPMessageID;
-
-#define POS_CALL_ACT "$[2]"
-typedef unsigned char OCPPCallAction;
 
 #define ACTION_LEN   30
-#define JSON_LEN     256
+#define PAYLOAD_LEN  256
 #define DSCR_LEN     255
 #define ERR_CODE_LEN 30
+
+
+#define POS_MSG_TYPE "$[0]"
+#define POS_MSG_ID   "$[1]"
+
+typedef unsigned char OCPPMessageType;
+typedef unsigned long OCPPMessageID;
+
+
+
+// [2,"19223201","BootNotification",{"reason":"PowerUp","chargingStation":{"model":"SingleSocketCharger","vendorName":"VendorX"}}]
+#define CALL       2
+
+#define POS_CALL_ACT     "$[2]"
+#define POS_CALL_PAYLOAD "$[3]"
+typedef unsigned char OCPPCallAction;
 
 typedef struct
 {
@@ -29,6 +33,23 @@ typedef struct
 	char          *payload; // JSON
 
 } OCPPCall;
+
+
+
+
+// [3,"19223201",{"currentTime":"2013-02-01T20:53:32.486Z","interval":300,"status":"Accepted"}]
+#define CALLRESULT 3
+// [4,"19223201","GenericError","Any other error not covered by the previous ones",{}]
+#define CALLERROR  4
+
+
+
+
+
+
+
+
+
 
 typedef struct
 {

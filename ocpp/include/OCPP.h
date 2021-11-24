@@ -66,4 +66,12 @@ ocpp_get_action
 	const size length
 );
 
+OCPPResult
+ocpp_get_payload
+(
+	const char *str,
+	const size length,
+	char *dst
+);
+
 #endif /* OCPP_H_ */

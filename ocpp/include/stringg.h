@@ -2,27 +2,42 @@
 
 #define STRING_H_
 
+#include "stdtypes.h"
 
 void
 strcpyy
 (
-	char *_dest,
-	char *_src
+	char       *_dest,
+	const char *_src
 );
 
-unsigned int
+void
+strncpyy
+(
+	char       *_dest,
+	const char *_src,
+	const size len
+);
+
+size
 strlenn
 (
-	char *_str
+	const char *_str
 );
 
+bool
+strcmpp
+(
+	const char *str1,
+	const char *str2
+);
 
 void
 memsett
 (
 	char *_str,
-	int value,
-	unsigned int size
+	const int value,
+	const size len
 );
 
 #endif /* STRING_H_ */
