@@ -84,8 +84,15 @@ ocpp_handle_message
 )
 {
 	printf("HANDLE NEW MESSAGE: `%s`\n", str);
-	OCPPMessageType type = ocpp_determine_message_type(ocpp, str, length);
-	printf("TYPE: `%d`\n", type);
+	OCPPMessageType msg_type = ocpp_determine_message_type(str, length);
+	if (msg_type == ERROR)
+	{
+		printf("INVALID MSG TYPE\n");
+		return;
+	}
+	OCPPMessageID msg_id = ocpp_get_message_id(str, length);
+	printf("%ld\n", msg_id);
+
 }
 
 
@@ -94,13 +101,14 @@ ocpp_handle_message
 OCPPMessageType
 ocpp_determine_message_type
 (
-	OCPP *ocpp,
 	const char *str,
 	const size length
 )
 {
 	double type;
-	int res = mjson_get_number(str, length, TYPE_POS_MSG, &type);
+	int res = mjson_get_number(str, length, POS_MSG_TYPE, &type);
+	if (res <= 0)
+		return ERROR;
 	switch ((int)type) {
         case CALL:
             return CALL;
@@ -111,4 +119,20 @@ ocpp_determine_message_type
         default:
             return ERROR;
     }
+}
+
+
+OCPPMessageID
+ocpp_get_message_id
+(
+	const char *str,
+	const size length
+)
+{
+	char buf[100];
+	int res = mjson_get_string(str, length, POS_MSG_ID, buf, 100);
+	OCPPMessageID id;
+	charset_to_ulong(&id , buf);
+	printf("%ld\n", id);
+	return 123;
 }

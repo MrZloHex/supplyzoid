@@ -46,7 +46,13 @@ ocpp_handle_message
 OCPPMessageType
 ocpp_determine_message_type
 (
-	OCPP *ocpp,
+	const char *str,
+	const size length
+);
+
+OCPPMessageID
+ocpp_get_message_id
+(
 	const char *str,
 	const size length
 );

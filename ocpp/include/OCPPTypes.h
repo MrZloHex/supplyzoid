@@ -9,11 +9,11 @@
 #define CALLRESULT 3
 // [4,"19223201","GenericError","Any other error not covered by the previous ones",{}]
 #define CALLERROR  4
-#define TYPE_POS_MSG "$[0]"
+#define POS_MSG_TYPE "$[0]"
 typedef unsigned char OCPPMessageType;
 
-
-
+#define POS_MSG_ID   "$[1]"
+typedef unsigned long OCPPMessageID;
 
 #define ACTION_LEN   30
 #define JSON_LEN     256

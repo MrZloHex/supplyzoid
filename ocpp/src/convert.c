@@ -25,6 +25,24 @@ int_to_charset
 	return i;
 }
 
+void
+charset_to_ulong
+(
+	unsigned long *dst,
+	char set[]
+)
+{
+	size i = 0;
+	size len = strlenn(set);
+	unsigned long res = 0;
+	while (set[i] != 0)
+	{
+		res += set[i] * power(10, (len-i-1));
+		++i;
+	}
+	*dst = res;
+}
+
 
 void
 reverse
