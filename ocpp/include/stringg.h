@@ -4,6 +4,7 @@
 
 #include "stdtypes.h"
 
+
 void
 strcpyy
 (

@@ -12,7 +12,7 @@ void
 setup()
 {
 	evse_init(&evse);
-	// ocpp_init(&ocpp);
+	ocpp_init(&ocpp);
 }
 
 
