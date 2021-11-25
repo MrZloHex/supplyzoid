@@ -13,6 +13,8 @@ setup()
 {
 	evse_init(&evse);
 	ocpp_init(&ocpp);
+
+	ocpp_send_req(&ocpp, BOOT_NOTIFICATION);
 }
 
 

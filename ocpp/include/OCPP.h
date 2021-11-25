@@ -54,7 +54,12 @@ ocpp_parse_message
 );
 
 
-
+void
+ocpp_send_req
+(
+	OCPP *ocpp,
+	OCPPCallAction action
+);
 
 
 

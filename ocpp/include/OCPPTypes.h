@@ -5,6 +5,8 @@
 #define ERROR 0
 typedef unsigned char OCPPResult;
 
+typedef char CiString20[21];
+typedef char CiString25[26];
 
 #define ACTION_LEN   30
 #define PAYLOAD_LEN  256

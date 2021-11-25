@@ -177,7 +177,36 @@ ocpp_parse_message
 	}
 }
 
-
+void
+ocpp_send_req
+(
+	OCPP *ocpp,
+	OCPPCallAction action
+)
+{
+	if (action == BOOT_NOTIFICATION)
+	{
+		char req[512];
+		mjson_snprintf
+		(
+			req, 512, "[%u,%Q,%Q,{%Q:%Q,%Q:%Q}]",
+			CALL,
+			UUID,
+			"BootNotification",
+			"chargePointVendor",
+			VENDOR,
+			"chargePointModel"
+			MODEL
+		);
+		
+		printf("SENDING REQUEST: `%s`\n", req);
+	}
+	else
+	{
+		printf("NO SUCH REQUEST AVAILABLE\n");
+		return;
+	}
+}
 
 
 
