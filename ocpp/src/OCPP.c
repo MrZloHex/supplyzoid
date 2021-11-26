@@ -6,6 +6,7 @@
 void
 ocpp_init(OCPP *ocpp)
 {
+	ocpp->id = 1;
 	ocpp->now.call.payload = (char *) malloc(sizeof(char)*PAYLOAD_LEN);
 	ocpp->now.call_result.payload      = (char *) malloc(sizeof(char)*PAYLOAD_LEN);
 	ocpp->now.call_error.error_dscr    = (char *) malloc(sizeof(char)*DSCR_LEN);
@@ -186,20 +187,42 @@ ocpp_send_req
 {
 	if (action == BOOT_NOTIFICATION)
 	{
+		char payload[PAYLOAD_LEN];
+		mjson_snprintf
+		(
+			payload, PAYLOAD_LEN,
+			"{%Q:%Q,%Q:%Q}",
+			"chargePointVendor",
+			VENDOR,
+			"chargePointModel",
+			MODEL
+		);
+
+
+		char id[37];
+		int_to_charset(ocpp->id, id, 1);
+
 		char req[512];
 		mjson_snprintf
 		(
-			req, 512, "[%u,%Q,%Q,{%Q:%Q,%Q:%Q}]",
+			req, 512,
+			"[%u,%Q,%Q,%s]",
 			CALL,
-			UUID,
+			id,
 			"BootNotification",
-			"chargePointVendor",
-			VENDOR,
-			"chargePointModel"
-			MODEL
+			payload
 		);
 		
+		// SENDING
 		printf("SENDING REQUEST: `%s`\n", req);
+		// SENDING
+
+		ocpp->last.type = CALL;
+		ocpp->last.ID   = ocpp->id;
+		ocpp->last.call.action = action;
+		strcpyy(ocpp->last.call.payload, payload);
+
+		ocpp->id++;
 	}
 	else
 	{

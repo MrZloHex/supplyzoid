@@ -2,6 +2,10 @@
 
 #define OCPP_H_
 
+#define VENDOR "EV Solutions"
+#define MODEL  "PROTOTYPE"
+
+
 #include <stdio.h>
 
 #include "stringg.h"
@@ -15,6 +19,7 @@
 
 typedef struct
 {
+	unsigned int id;
 	OCPPMessage now;
 	OCPPMessage last;
 } OCPP;
