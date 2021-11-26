@@ -4,15 +4,15 @@
 
 #include <stdbool.h>
 
-#define S_AVAILABLE      0
-#define S_PREPARING      1
-#define S_CHARGING       2
-#define S_SUSPENDED_EV   3
-#define S_SUSPENDED_EVSE 4
-#define S_FINISHING      5
-#define S_RESERVED       6
-#define S_UNAVAILABLE    7
-#define S_FAULTED        8
+#define S_AVAILABLE      1
+#define S_PREPARING      2
+#define S_CHARGING       3
+#define S_SUSPENDED_EV   4
+#define S_SUSPENDED_EVSE 5
+#define S_FINISHING      6
+#define S_RESERVED       7
+#define S_UNAVAILABLE    8
+#define S_FAULTED        9
 typedef unsigned char EVSEState;
 
 typedef struct

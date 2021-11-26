@@ -1,5 +1,4 @@
 #ifndef OCPP_H_
-
 #define OCPP_H_
 
 #define VENDOR "EV Solutions"
@@ -20,6 +19,7 @@
 typedef struct
 {
 	unsigned int id;
+	bool waiting_for_resp;
 	OCPPMessage now;
 	OCPPMessage last;
 } OCPP;

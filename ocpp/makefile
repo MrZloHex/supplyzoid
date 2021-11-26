@@ -7,9 +7,10 @@ C_FLAGS := -Wall -pedantic $(INC_DIR)
 
 
 SRC_DIR = src
+SRC_R_DIR = src/requests
 
 TARGET  = supplyzoid
-SRCS    = $(wildcard $(SRC_DIR)/*.c)
+SRCS    = $(wildcard $(SRC_DIR)/*.c) $(wildcard $(SRC_R_DIR)/*.c)
 
 .PHONY: all
 all: clean $(TARGET) run 

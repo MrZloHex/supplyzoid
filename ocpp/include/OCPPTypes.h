@@ -22,7 +22,7 @@ typedef unsigned long OCPPMessageID;
 
 
 
-// [2,"19223201","BootNotification",{"reason":"PowerUp","chargingStation":{"model":"SingleSocketCharger","vendorName":"VendorX"}}]
+// [2,"1","BootNotification",{"chargingStation":{"model":"SingleSocketCharger","vendorName":"VendorX"}}]
 #define CALL       2
 
 #define POS_CL_ACT     "$[2]"
@@ -39,7 +39,7 @@ typedef struct
 
 
 
-// [3,"19223201",{"currentTime":"2013-02-01T20:53:32.486Z","interval":300,"status":"Accepted"}]
+// [3,"1",{"currentTime":"2013-02-01T20:53:32.486Z","interval":300,"status":"Accepted"}]
 #define CALLRESULT 3
 
 #define POS_CR_PAYLOAD "$[2]"

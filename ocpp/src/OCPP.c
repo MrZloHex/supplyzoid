@@ -1,12 +1,14 @@
 #include "OCPP.h"
 
-
+#include "requests/boot_notification.h"
 
 
 void
 ocpp_init(OCPP *ocpp)
 {
 	ocpp->id = 1;
+	ocpp->waiting_for_resp = false;
+
 	ocpp->now.call.payload = (char *) malloc(sizeof(char)*PAYLOAD_LEN);
 	ocpp->now.call_result.payload      = (char *) malloc(sizeof(char)*PAYLOAD_LEN);
 	ocpp->now.call_error.error_dscr    = (char *) malloc(sizeof(char)*DSCR_LEN);
@@ -95,8 +97,18 @@ ocpp_handle_message
 	if (res_parse == ERROR)
 		return;
 
-	// HANDLING
-	ocpp_next(ocpp);
+	if (ocpp->waiting_for_resp)
+	{
+		if (ocpp->last.call.action == BOOT_NOTIFICATION)
+			ocpp_boot_notification_conf(ocpp, evse);
+	}
+	else
+	{
+		if (ocpp->now.type == CALL)
+			ocpp_next(ocpp);
+		
+		if (ocpp->last.call.action == REMOTE_START_TRANSACTION)
+	}
 }
 
 OCPPResult
@@ -223,6 +235,7 @@ ocpp_send_req
 		strcpyy(ocpp->last.call.payload, payload);
 
 		ocpp->id++;
+		ocpp->waiting_for_resp = true;
 	}
 	else
 	{
