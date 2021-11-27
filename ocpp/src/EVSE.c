@@ -24,10 +24,11 @@ evse_update
 	if (!evse->booted && !ocpp->waiting_for_resp)
 	{
 		time_t now = time(NULL);
-		if (now > evse->last_ping + evse->heartbeat_time)
+		if (now >= (evse->last_ping + evse->heartbeat_time))
+		{
 			ocpp_send_req(ocpp, evse, BOOT_NOTIFICATION);
-
-		evse->last_ping = now;
+			evse->last_ping = time(NULL);
+		}
 	}
 
 	if (evse->booted || ocpp->waiting_for_resp)
