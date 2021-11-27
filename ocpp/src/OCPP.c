@@ -235,7 +235,8 @@ ocpp_send_req
 void
 ocpp_send_resp
 (
-	OCPP *ocpp
+	OCPP *ocpp,
+	OCPPCallAction action
 )
 {
 
@@ -248,8 +249,8 @@ ocpp_send_resp
 
 
 /*
-[3,"1",{"currentTime":"2013-02-01T20:53:32.486Z","interval":5,"status":"Rejected"}]
-[3,"2",{"currentTime":"2013-02-01T20:53:32.486Z","interval":5,"status":"Rejected"}]
+[3,"1",{"currentTime":"2013-02-01T20:53:32.486Z","interval":30,"status":"Accepted"}]
+[2,"987","RemoteStartTransaction",{"idTag":"hub"}]
 */
 
 

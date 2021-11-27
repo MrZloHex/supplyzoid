@@ -16,4 +16,10 @@ ocpp_remote_start_transaction_req
 	EVSE *evse
 );
 
+void
+ocpp_remote_start_transaction_conf
+(
+	OCPP *ocpp
+);
+
 #endif /* REMOTE_START_TRANSACTION_H_ */

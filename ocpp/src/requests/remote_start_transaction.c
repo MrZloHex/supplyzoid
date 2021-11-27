@@ -7,5 +7,23 @@ ocpp_remote_start_transaction_req
 	EVSE *evse
 )
 {
-	evse->state = S_PREPARING;
+	printf("REMOTE START TRANSACTION\n");
+	if (evse->is_transaction)
+	{
+		// REJECTED
+		ocpp_send_resp(ocpp, );
+	}	
+	else
+	{
+		// ACCEPTED
+	}
+}
+
+void
+ocpp_remote_start_transaction_conf
+(
+	OCPP *ocpp
+)
+{
+	
 }

@@ -47,6 +47,7 @@ typedef struct
 
 	EVSEState state;
 
+	bool is_transaction;
 
 	unsigned long heartbeat_time;
 	time_t last_ping;

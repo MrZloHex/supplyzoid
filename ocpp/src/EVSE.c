@@ -11,6 +11,8 @@ evse_init
 	evse->last_ping = time(NULL);
 	evse->booted = false;
 
+	evse->is_transaction = false;
+
 	evse->state = S_AVAILABLE;
 }
 

@@ -63,7 +63,8 @@ ocpp_send_req
 void
 ocpp_send_resp
 (
-	OCPP *ocpp
+	OCPP *ocpp,
+	OCPPCallAction action
 );
 
 
