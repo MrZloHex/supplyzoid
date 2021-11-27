@@ -1,6 +1,8 @@
 #include "OCPP.h"
 
 #include "requests/boot_notification.h"
+#include "requests/remote_start_transaction.h"
+#include "requests/start_transaction.h"
 
 
 void
@@ -108,6 +110,7 @@ ocpp_handle_message
 			ocpp_next(ocpp);
 		
 		if (ocpp->last.call.action == REMOTE_START_TRANSACTION)
+			ocpp_remote_start_transaction_req(ocpp, evse);
 	}
 }
 
@@ -312,8 +315,10 @@ ocpp_get_action
 	if (res <= 0)
 		return ERROR;
 	
-	if (strcmpp(buf, "BootNotification"))
-		return BOOT_NOTIFICATION;
+	if (strcmpp(buf, "RemoteStartTransaction"))
+		return REMOTE_START_TRANSACTION;
+	else if (strcmpp(buf, "RemoteStopTransaction"))
+		return REMOTE_STOP_TRANSACTION;
 	else
 		return ERROR;
 }
