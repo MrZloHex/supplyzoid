@@ -41,7 +41,7 @@ typedef struct
 
 
 
-// [3,"1",{"currentTime":"2013-02-01T20:53:32.486Z","interval":300,"status":"Accepted"}]
+// [3,"1",{"currentTime":"2013-02-01T20:53:32.486Z","interval":3,"status":"Accepted"}]
 #define CALLRESULT 3
 
 #define POS_CR_PAYLOAD "$[2]"

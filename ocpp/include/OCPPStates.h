@@ -23,4 +23,10 @@
 #define TYPE_CONSTRAINT_VIOLATION      9
 #define GENERIC_ERROR                  10
 
+
+// REGISTRATION STATUS
+#define ACCEPTED 1
+#define PENDING  2
+#define REJECTED 3
+
 #endif /* OCPP_STATES_H_ */

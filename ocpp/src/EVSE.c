@@ -8,7 +8,7 @@ evse_init
 )
 {
 	evse->heartbeat_time = 0;
-	evse->last_ping = time(NULL) * 1000;
+	evse->last_ping = time(NULL);
 	evse->booted = false;
 
 	evse->state = S_AVAILABLE;
@@ -23,7 +23,7 @@ evse_update
 {
 	if (!evse->booted && !ocpp->waiting_for_resp)
 	{
-		time_t now = time(NULL) * 1000;
+		time_t now = time(NULL);
 		if (now > evse->last_ping + evse->heartbeat_time)
 			ocpp_send_req(ocpp, evse, BOOT_NOTIFICATION);
 

@@ -8,6 +8,9 @@
 
 #include <stdio.h>
 
+#define P_INTERVAL "$.interval"
+#define P_STATUS   "$.status"
+
 void
 ocpp_boot_notification_req
 (

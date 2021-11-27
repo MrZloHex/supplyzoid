@@ -48,8 +48,30 @@ ocpp_boot_notification_conf
 	if (ocpp->last.ID != ocpp->now.ID)
 		return;
 
-	
-	printf("HANDLING BOOT NOTIFICATIOSN CONFIRMATION\n");
-
 	ocpp->waiting_for_resp = false;
+
+	if (ocpp->now.type == CALLERROR)
+	{
+		return;  // TODO: add handling CALLERRROR
+	}
+	
+	size pay_len = strlenn(ocpp->now.call_result.payload);
+
+	double interval;
+	mjson_get_number(ocpp->now.call_result.payload, pay_len, P_INTERVAL, &interval);
+	evse->heartbeat_time = (time_t)interval;
+	printf("INTERVAL: %lu\n", evse->heartbeat_time);
+
+	char status[9];
+	mjson_get_string(ocpp->now.call_result.payload, pay_len, P_STATUS, status, 9);
+
+	if (strcmpp(status, "Accepted"))
+		evse->booted = true;
+	else if (strcmpp(status, "Pending") || strcmpp(status, "Rejected"))
+		evse->booted = false;
+	else
+		return;
+
+	printf("STATUS: %s\n", status);
+
 }
