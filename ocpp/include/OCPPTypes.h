@@ -23,6 +23,7 @@ typedef unsigned long OCPPMessageID;
 
 
 
+
 // [2,"1","BootNotification",{"chargingStation":{"model":"SingleSocketCharger","vendorName":"VendorX"}}]
 #define CALL       2
 
@@ -83,6 +84,14 @@ typedef struct
 	OCPPCallError  	call_error;
 } OCPPMessage;
 
+
+typedef struct
+{
+	unsigned int id;
+	bool waiting_for_resp;
+	OCPPMessage now;
+	OCPPMessage last;
+} OCPP;
 
 
 #endif /* OCPP_TYPES_H_ */

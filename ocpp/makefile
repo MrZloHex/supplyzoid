@@ -3,7 +3,7 @@ CC = gcc
 
 INC_DIR = -Iinclude
 
-C_FLAGS := -Wall -pedantic $(INC_DIR)
+C_FLAGS := -Wall -pedantic $(INC_DIR) -O3
 
 
 SRC_DIR = src

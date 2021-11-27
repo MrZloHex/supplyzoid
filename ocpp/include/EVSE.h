@@ -2,7 +2,11 @@
 
 #define EVSE_H_
 
-#include <stdbool.h>
+#include "stdtypes.h"
+#include "OCPPTypes.h"
+
+#include <time.h>
+#include <stdio.h>
 
 #define S_AVAILABLE      1
 #define S_PREPARING      2
@@ -42,6 +46,12 @@ typedef struct
 	//         bool UnlockConnectorOnEVSideDisconnect;
 
 	EVSEState state;
+
+
+	unsigned long heartbeat_time;
+	time_t last_ping;
+	bool booted;
+	
 } EVSE;
 
 
@@ -49,6 +59,13 @@ void
 evse_init
 (
 	EVSE *evse
+);
+
+void
+evse_update
+(
+	EVSE *evse,
+	OCPP *ocpp
 );
 
 #endif /* EVSE_H_ */

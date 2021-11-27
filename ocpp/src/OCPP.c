@@ -131,7 +131,6 @@ ocpp_parse_message
 	OCPPMessageID msg_id = ocpp_get_message_id(str, length);
 	if (msg_id == 0)
 		return ERROR;
-
 	ocpp->now.ID = msg_id;
 
 	if (msg_type == CALL)
@@ -342,6 +341,7 @@ ocpp_get_payload
         return ERROR;
 
 	strncpyy(dst, p, n);
+	return 1;
 }
 
 OCPPCallErrorCode

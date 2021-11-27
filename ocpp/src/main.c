@@ -12,14 +12,12 @@ setup()
 {
 	ocpp_init(&ocpp);
 	evse_init(&evse);
-
-	ocpp_send_req(&ocpp, &evse, BOOT_NOTIFICATION);
 }
 
 void
 loop()
 {
-	ocpp_update(&ocpp, &evse);
+	evse_update(&evse, &ocpp);
 }
 
 

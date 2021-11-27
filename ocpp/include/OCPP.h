@@ -16,13 +16,6 @@
 #include "OCPPStates.h"
 
 
-typedef struct
-{
-	unsigned int id;
-	bool waiting_for_resp;
-	OCPPMessage now;
-	OCPPMessage last;
-} OCPP;
 
 
 void
