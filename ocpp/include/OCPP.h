@@ -64,7 +64,7 @@ void
 ocpp_send_resp
 (
 	OCPP *ocpp,
-	OCPPCallAction action
+	OCPPMessageType type
 );
 
 

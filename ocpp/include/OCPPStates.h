@@ -25,8 +25,12 @@
 
 
 // REGISTRATION STATUS
-#define ACCEPTED 1
-#define PENDING  2
-#define REJECTED 3
+#define REG_ACCEPTED 1
+#define REG_PENDING  2
+#define REG_REJECTED 3
+
+// REMOTE START STOP STATUS
+#define RSS_ACCEPTED 1
+#define RSS_REJECTED 2
 
 #endif /* OCPP_STATES_H_ */

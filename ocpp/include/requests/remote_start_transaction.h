@@ -2,6 +2,7 @@
 #define REMOTE_START_TRANSACTION_H_
 
 #include "stdtypes.h"
+#include "stringg.h"
 #include "EVSE.h"
 #include "OCPP.h"
 
@@ -19,7 +20,8 @@ ocpp_remote_start_transaction_req
 void
 ocpp_remote_start_transaction_conf
 (
-	OCPP *ocpp
+	OCPP *ocpp,
+	unsigned char status
 );
 
 #endif /* REMOTE_START_TRANSACTION_H_ */

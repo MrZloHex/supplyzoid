@@ -110,7 +110,10 @@ ocpp_handle_message
 			ocpp_next(ocpp);
 		
 		if (ocpp->last.call.action == REMOTE_START_TRANSACTION)
+		{
+			ocpp_next(ocpp);
 			ocpp_remote_start_transaction_req(ocpp, evse);
+		}
 	}
 }
 
@@ -236,10 +239,36 @@ void
 ocpp_send_resp
 (
 	OCPP *ocpp,
-	OCPPCallAction action
+	OCPPMessageType type
 )
 {
+	if (type == CALLRESULT)
+	{
+		char id[37];
+		int_to_charset(ocpp->now.ID, id, 1);
+		char req[REQ_LEN];
+		mjson_snprintf
+		(
+			req, REQ_LEN,
+			"[%u,%Q,%s]",
+			ocpp->now.type,
+			id,
+			ocpp->now.call_result.payload
+		);
 
+
+		// SENDING
+		printf("SENDING RESPONSE: `%s`\n", req);
+		// SENDING
+	}
+	else if (type == CALLERROR)
+	{
+
+	}
+	else
+	{
+		return;
+	}
 }
 
 
