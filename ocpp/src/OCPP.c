@@ -247,8 +247,10 @@ ocpp_send_resp
 
 
 
-
-
+/*
+[3,"1",{"currentTime":"2013-02-01T20:53:32.486Z","interval":5,"status":"Rejected"}]
+[3,"2",{"currentTime":"2013-02-01T20:53:32.486Z","interval":5,"status":"Rejected"}]
+*/
 
 
 
