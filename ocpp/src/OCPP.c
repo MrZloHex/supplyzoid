@@ -197,45 +197,31 @@ void
 ocpp_send_req
 (
 	OCPP *ocpp,
+	EVSE *evse,
 	OCPPCallAction action
 )
 {
 	if (action == BOOT_NOTIFICATION)
 	{
-		char payload[PAYLOAD_LEN];
-		mjson_snprintf
-		(
-			payload, PAYLOAD_LEN,
-			"{%Q:%Q,%Q:%Q}",
-			"chargePointVendor",
-			VENDOR,
-			"chargePointModel",
-			MODEL
-		);
 
+		char req[REQ_LEN];
+		ocpp_boot_notification_req(ocpp, req);
 
-		char id[37];
-		int_to_charset(ocpp->id, id, 1);
-
-		char req[512];
-		mjson_snprintf
-		(
-			req, 512,
-			"[%u,%Q,%Q,%s]",
-			CALL,
-			id,
-			"BootNotification",
-			payload
-		);
-		
 		// SENDING
 		printf("SENDING REQUEST: `%s`\n", req);
 		// SENDING
 
-		ocpp->last.type = CALL;
-		ocpp->last.ID   = ocpp->id;
-		ocpp->last.call.action = action;
-		strcpyy(ocpp->last.call.payload, payload);
+		ocpp->id++;
+		ocpp->waiting_for_resp = true;
+	}
+	else if (action == START_TRANSACTION)
+	{
+		char req[REQ_LEN];
+		ocpp_start_transaction_req(ocpp, evse, req);
+
+		// SENDING
+		printf("SENDING REQUEST: `%s`\n", req);
+		// SENDING
 
 		ocpp->id++;
 		ocpp->waiting_for_resp = true;
@@ -247,7 +233,14 @@ ocpp_send_req
 	}
 }
 
+void
+ocpp_send_resp
+(
+	OCPP *ocpp
+)
+{
 
+}
 
 
 

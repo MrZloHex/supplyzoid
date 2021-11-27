@@ -12,6 +12,7 @@ typedef char CiString25[26];
 #define PAYLOAD_LEN  256
 #define DSCR_LEN     255
 #define ERR_CODE_LEN 30
+#define REQ_LEN 	 512
 
 
 #define POS_MSG_TYPE "$[0]"

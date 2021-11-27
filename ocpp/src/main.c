@@ -4,19 +4,17 @@
 #include "OCPP.h"
 
 
-EVSE evse;
 OCPP ocpp;
-
+EVSE evse;
 
 void
 setup()
 {
-	evse_init(&evse);
 	ocpp_init(&ocpp);
+	evse_init(&evse);
 
-	ocpp_send_req(&ocpp, BOOT_NOTIFICATION);
+	ocpp_send_req(&ocpp, &evse, BOOT_NOTIFICATION);
 }
-
 
 void
 loop()
