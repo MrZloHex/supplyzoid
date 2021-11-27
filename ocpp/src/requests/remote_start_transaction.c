@@ -11,7 +11,6 @@ ocpp_remote_start_transaction_req
 	if (evse->is_transaction)
 	{
 		// REJECTED
-		printf("%d\n",ocpp->now.type);
 		ocpp_remote_start_transaction_conf(ocpp, RSS_REJECTED);
 		ocpp_send_resp(ocpp, CALLRESULT);
 	}	

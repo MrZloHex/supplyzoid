@@ -60,7 +60,6 @@ ocpp_boot_notification_conf
 	double interval;
 	mjson_get_number(ocpp->now.call_result.payload, pay_len, P_INTERVAL, &interval);
 	evse->heartbeat_time = (time_t)interval;
-	printf("INTERVAL: %lu\n", evse->heartbeat_time);
 
 	char status[9];
 	mjson_get_string(ocpp->now.call_result.payload, pay_len, P_STATUS, status, 9);
