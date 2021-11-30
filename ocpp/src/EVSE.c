@@ -64,3 +64,13 @@ evse_start_transaction
 	printf("Start Transaction\n");
 	evse->is_transaction = true;
 }
+
+void
+evse_stop_transaction
+(
+	EVSE *evse
+)
+{
+	printf("Stop Transaction\n");
+	evse->is_transaction = false;
+}

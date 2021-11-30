@@ -77,4 +77,10 @@ evse_start_transaction
 	EVSE *evse
 );
 
+void
+evse_stop_transaction
+(
+	EVSE *evse
+);
+
 #endif /* EVSE_H_ */

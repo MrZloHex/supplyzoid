@@ -110,11 +110,12 @@ ocpp_handle_message
 	}
 	else
 	{
+		ocpp_next(ocpp);
+
 		if (ocpp->last.call.action == REMOTE_START_TRANSACTION)
 			ocpp_remote_start_transaction_req(ocpp, evse);
 		else if (ocpp->last.call.action == REMOTE_STOP_TRANSACTION)
 			ocpp_remote_stop_transaction_req(ocpp, evse);
-		ocpp_next(ocpp);
 	}
 }
 
