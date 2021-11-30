@@ -48,6 +48,7 @@ typedef struct
 	EVSEState state;
 
 	bool is_transaction;
+	int  transactionID;
 
 	unsigned long meter_value;
 

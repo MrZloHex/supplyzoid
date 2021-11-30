@@ -37,8 +37,28 @@ ocpp_start_transaction_req
 void
 ocpp_start_transaction_conf
 (
-	OCPP *ocpp
+	OCPP *ocpp,
+	EVSE *evse
 )
 {
-	printf("HANDLE CONFIRMATION FOR START TRANSACTION\n");
+	if (ocpp->last.ID != ocpp->now.ID)
+		return;
+
+	ocpp->waiting_for_resp = false;
+
+	if (ocpp->now.type == CALLERROR)
+	{
+		return;  // TODO: add handling CALLERRROR
+	}
+	
+	size pay_len = strlenn(ocpp->now.call_result.payload);
+
+	double transaction_id;
+	int res_int = mjson_get_number(ocpp->now.call_result.payload, pay_len, P_TRANSACTION_ID, &transaction_id);
+	if (res_int == 0)
+		return;
+
+	evse->transactionID = (int)transaction_id;
+		
+	printf("TRANSACTION CONFIRMED\n");
 }

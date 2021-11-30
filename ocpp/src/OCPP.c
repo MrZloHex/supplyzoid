@@ -3,6 +3,8 @@
 #include "requests/boot_notification.h"
 #include "requests/remote_start_transaction.h"
 #include "requests/start_transaction.h"
+#include "requests/remote_stop_transaction.h"
+#include "requests/stop_transaction.h"
 
 
 void
@@ -104,18 +106,15 @@ ocpp_handle_message
 		if (ocpp->last.call.action == BOOT_NOTIFICATION)
 			ocpp_boot_notification_conf(ocpp, evse);
 		else if (ocpp->last.call.action == START_TRANSACTION)
-			ocpp_start_transaction_conf(ocpp);
+			ocpp_start_transaction_conf(ocpp, evse);
 	}
 	else
 	{
-		if (ocpp->now.type == CALL)
-			ocpp_next(ocpp);
-		
 		if (ocpp->last.call.action == REMOTE_START_TRANSACTION)
-		{
-			ocpp_next(ocpp);
 			ocpp_remote_start_transaction_req(ocpp, evse);
-		}
+		else if (ocpp->last.call.action == REMOTE_STOP_TRANSACTION)
+			ocpp_remote_stop_transaction_req(ocpp, evse);
+		ocpp_next(ocpp);
 	}
 }
 

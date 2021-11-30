@@ -26,7 +26,7 @@ evse_update
 	OCPP *ocpp
 )
 {
-	static counter = 0;
+	static int counter = 0;
 	if (evse->is_transaction)
 	{
 		evse->meter_value++;

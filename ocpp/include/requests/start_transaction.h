@@ -3,6 +3,8 @@
 
 #include "OCPP.h"
 
+#define P_TRANSACTION_ID "$.transactionId"
+
 void
 ocpp_start_transaction_req
 (
@@ -14,7 +16,8 @@ ocpp_start_transaction_req
 void
 ocpp_start_transaction_conf
 (
-	OCPP *ocpp
+	OCPP *ocpp,
+	EVSE *evse
 );
 
 #endif /* START_TRANSACTION_H_ */
