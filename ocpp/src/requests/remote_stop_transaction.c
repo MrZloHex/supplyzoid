@@ -28,8 +28,8 @@ ocpp_remote_stop_transaction_req
 	// TRANSACTION
 	evse_stop_transaction(evse);
 
-	
-
+	ocpp_stop_transaction_req(ocpp, evse);
+	ocpp_send_req(ocpp, STOP_TRANSACTION);
 }
 
 void

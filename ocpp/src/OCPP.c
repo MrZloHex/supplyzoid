@@ -209,6 +209,8 @@ ocpp_send_req
 		strcpyy(action_str, "BootNotification");
 	else if (action == START_TRANSACTION)
 		strcpyy(action_str, "StartTransaction");
+	else if (action == STOP_TRANSACTION)
+		strcpyy(action_str, "StopTransaction");
 	else
 	{
 		printf("NO SUCH REQUEST AVAILABLE\n");
