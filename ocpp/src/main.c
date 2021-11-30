@@ -28,6 +28,7 @@ main()
 	printf("[2,\"987\",\"RemoteStartTransaction\",{\"idTag\":\"hub\"}]\n");
 	printf("[3,\"2\",{\"idTagInfo\":{\"status\":\"Accepted\"},\"transactionId\":420}]\n");
 	printf("[2,\"988\",\"RemoteStopTransaction\",{\"transactionId\":420}]\n");
+	printf("[3,\"3\",{}]\n");
 
 	printf("\n");
 

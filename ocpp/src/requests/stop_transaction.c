@@ -38,6 +38,16 @@ ocpp_stop_transaction_conf
 	OCPP *ocpp
 )
 {
+	if (ocpp->last.ID != ocpp->now.ID)
+		return;
 
+	ocpp->waiting_for_resp = false;
+
+	if (ocpp->now.type == CALLERROR)
+	{
+		return;  // TODO: add handling CALLERRROR
+	}
+
+	printf("TRANSACTION FINISHED\n");
 }
 

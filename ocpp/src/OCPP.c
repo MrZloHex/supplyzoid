@@ -107,6 +107,10 @@ ocpp_handle_message
 			ocpp_boot_notification_conf(ocpp, evse);
 		else if (ocpp->last.call.action == START_TRANSACTION)
 			ocpp_start_transaction_conf(ocpp, evse);
+		else if (ocpp->last.call.action == STOP_TRANSACTION)
+			ocpp_stop_transaction_conf(ocpp);
+		else
+			printf("NOT IMPLEMETED\n");
 	}
 	else
 	{
@@ -116,6 +120,8 @@ ocpp_handle_message
 			ocpp_remote_start_transaction_req(ocpp, evse);
 		else if (ocpp->last.call.action == REMOTE_STOP_TRANSACTION)
 			ocpp_remote_stop_transaction_req(ocpp, evse);
+		else
+			printf("NOT IMPLEMETED\n");
 	}
 }
 
