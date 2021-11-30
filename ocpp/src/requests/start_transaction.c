@@ -15,14 +15,13 @@ ocpp_start_transaction_req
 	mjson_snprintf
 	(
 		payload, PAYLOAD_LEN,
-		"{%Q:%u,%Q:%Q,%Q:%d,%Q:%Q}",
+		"{%Q:%u,%Q:%Q,%Q:%ld,%Q:%Q}",
 		"connectorId",
 		1,
 		"idTag",
 		id_tag,
 		"meterStart",
-		// METER_STATE,
-		0,
+		evse->meter_value,
 		"timestamp",
 		// TIMESTAMP
 		"18.06.2021.687"

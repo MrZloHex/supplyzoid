@@ -49,6 +49,8 @@ typedef struct
 
 	bool is_transaction;
 
+	unsigned long meter_value;
+
 	time_t last_ping;
 	bool booted;
 	

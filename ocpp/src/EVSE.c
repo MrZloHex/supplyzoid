@@ -14,6 +14,7 @@ evse_init
 	evse->booted = false;
 
 	evse->is_transaction = false;
+	evse->meter_value = 0;
 
 	evse->state = S_AVAILABLE;
 }
