@@ -5,7 +5,7 @@ ocpp_start_transaction_req
 (
 	OCPP *ocpp,
 	EVSE *evse,
-	char req[REQ_LEN]
+	char id_tag[21]
 )
 {
 	char id[37];
@@ -19,8 +19,7 @@ ocpp_start_transaction_req
 		"connectorId",
 		1,
 		"idTag",
-		// IDTAG,
-		"TAG",
+		id_tag,
 		"meterStart",
 		// METER_STATE,
 		0,
@@ -29,18 +28,8 @@ ocpp_start_transaction_req
 		"18.06.2021.687"
 	);
 
-	mjson_snprintf
-	(
-		req, REQ_LEN,
-		"[%u,%Q,%Q,%s]",
-		CALL,
-		id,
-		"StartTransaction",
-		payload
-	);
-
-	ocpp->last.type = CALL;
-	ocpp->last.ID   = ocpp->id;
-	ocpp->last.call.action = START_TRANSACTION;
-	strcpyy(ocpp->last.call.payload, payload);
+	ocpp->now.type = CALL;
+	ocpp->now.ID   = ocpp->id;
+	ocpp->now.call.action = START_TRANSACTION;
+	strcpyy(ocpp->now.call.payload, payload);
 }

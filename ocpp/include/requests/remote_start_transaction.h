@@ -10,6 +10,8 @@
 
 #include <stdio.h>
 
+#define P_ID_TAG "$.idTag"
+
 void
 ocpp_remote_start_transaction_req
 (

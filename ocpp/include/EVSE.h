@@ -69,4 +69,10 @@ evse_update
 	OCPP *ocpp
 );
 
+void
+evse_start_transaction
+(
+	EVSE *evse
+);
+
 #endif /* EVSE_H_ */

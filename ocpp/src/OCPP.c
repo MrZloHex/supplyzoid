@@ -199,40 +199,43 @@ void
 ocpp_send_req
 (
 	OCPP *ocpp,
-	EVSE *evse,
 	OCPPCallAction action
 )
 {
+	char action_str[ACTION_LEN];
 	if (action == BOOT_NOTIFICATION)
-	{
-
-		char req[REQ_LEN];
-		ocpp_boot_notification_req(ocpp, req);
-
-		// SENDING
-		printf("SENDING REQUEST: `%s`\n", req);
-		// SENDING
-
-		ocpp->id++;
-		ocpp->waiting_for_resp = true;
-	}
+		strcpyy(action_str, "BootNotification");
 	else if (action == START_TRANSACTION)
-	{
-		char req[REQ_LEN];
-		ocpp_start_transaction_req(ocpp, evse, req);
-
-		// SENDING
-		printf("SENDING REQUEST: `%s`\n", req);
-		// SENDING
-
-		ocpp->id++;
-		ocpp->waiting_for_resp = true;
-	}
+		strcpyy(action_str, "StartTransaction");
 	else
 	{
 		printf("NO SUCH REQUEST AVAILABLE\n");
 		return;
 	}
+
+	char id[37];
+	int_to_charset(ocpp->id, id, 1);
+
+	char req[REQ_LEN];
+
+	mjson_snprintf
+	(
+		req, REQ_LEN,
+		"[%u,%Q,%Q,%s]",
+		CALL,
+		id,
+		action_str,
+		ocpp->now.call.payload
+	);
+
+	// SENDING
+	printf("SENDING REQUEST: `%s`\n", req);
+	// SENDING
+
+	ocpp->id++;
+	ocpp->waiting_for_resp = true;
+
+	ocpp_next(ocpp);
 }
 
 void
@@ -278,8 +281,6 @@ ocpp_send_resp
 
 
 /*
-[3,"1",{"currentTime":"2013-02-01T20:53:32.486Z","interval":30,"status":"Accepted"}]
-[2,"987","RemoteStartTransaction",{"idTag":"hub"}]
 */
 
 

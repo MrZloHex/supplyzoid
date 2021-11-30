@@ -14,8 +14,7 @@
 void
 ocpp_boot_notification_req
 (
-	OCPP *ocpp,
-	char req[REQ_LEN]
+	OCPP *ocpp
 );
 
 void

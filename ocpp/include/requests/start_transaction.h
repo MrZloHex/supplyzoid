@@ -8,7 +8,7 @@ ocpp_start_transaction_req
 (
 	OCPP *ocpp,
 	EVSE *evse,
-	char req[REQ_LEN]
+	char id_tag[21]
 );
 
 #endif /* START_TRANSACTION_H_ */

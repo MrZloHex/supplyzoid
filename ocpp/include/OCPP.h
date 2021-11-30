@@ -56,7 +56,6 @@ void
 ocpp_send_req
 (
 	OCPP *ocpp,
-	EVSE *evse,
 	OCPPCallAction action
 );
 

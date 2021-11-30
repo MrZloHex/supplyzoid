@@ -4,13 +4,9 @@
 void
 ocpp_boot_notification_req
 (
-	OCPP *ocpp,
-	char req[REQ_LEN]
+	OCPP *ocpp
 )
 {
-	char id[37];
-	int_to_charset(ocpp->id, id, 1);
-
 	char payload[PAYLOAD_LEN];
 	mjson_snprintf
 	(
@@ -22,20 +18,10 @@ ocpp_boot_notification_req
 		MODEL
 	);
 
-	mjson_snprintf
-	(
-		req, REQ_LEN,
-		"[%u,%Q,%Q,%s]",
-		CALL,
-		id,
-		"BootNotification",
-		payload
-	);
-
-	ocpp->last.type = CALL;
-	ocpp->last.ID   = ocpp->id;
-	ocpp->last.call.action = BOOT_NOTIFICATION;
-	strcpyy(ocpp->last.call.payload, payload);
+	ocpp->now.type = CALL;
+	ocpp->now.ID   = ocpp->id;
+	ocpp->now.call.action = BOOT_NOTIFICATION;
+	strcpyy(ocpp->now.call.payload, payload);
 }
 
 void
@@ -58,11 +44,16 @@ ocpp_boot_notification_conf
 	size pay_len = strlenn(ocpp->now.call_result.payload);
 
 	double interval;
-	mjson_get_number(ocpp->now.call_result.payload, pay_len, P_INTERVAL, &interval);
+	int res_int = mjson_get_number(ocpp->now.call_result.payload, pay_len, P_INTERVAL, &interval);
+	if (res_int == 0)
+		return;
+	
 	evse->heartbeat_time = (time_t)interval;
 
 	char status[9];
-	mjson_get_string(ocpp->now.call_result.payload, pay_len, P_STATUS, status, 9);
+	int res_st = mjson_get_string(ocpp->now.call_result.payload, pay_len, P_STATUS, status, 9);
+	if (res_st == -1)
+		return;
 
 	if (strcmpp(status, "Accepted"))
 		evse->booted = true;

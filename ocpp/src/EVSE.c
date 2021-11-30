@@ -1,6 +1,8 @@
 #include "EVSE.h"
 #include "OCPP.h"
 
+#include "requests/boot_notification.h"
+
 void
 evse_init
 (
@@ -28,7 +30,8 @@ evse_update
 		time_t now = time(NULL);
 		if (now >= (evse->last_ping + evse->heartbeat_time))
 		{
-			ocpp_send_req(ocpp, evse, BOOT_NOTIFICATION);
+			ocpp_boot_notification_req(ocpp);
+			ocpp_send_req(ocpp, BOOT_NOTIFICATION);
 			evse->last_ping = time(NULL);
 		}
 	}
