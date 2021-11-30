@@ -61,4 +61,6 @@ ocpp_boot_notification_conf
 		evse->booted = false;
 	else
 		return;
+
+	printf("BOOTED\n");
 }

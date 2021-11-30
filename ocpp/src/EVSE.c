@@ -26,6 +26,18 @@ evse_update
 	OCPP *ocpp
 )
 {
+	static counter = 0;
+	if (evse->is_transaction)
+	{
+		evse->meter_value++;
+		counter++;
+		if (counter == 50)
+		{
+			evse->meter_value -= 49;
+			counter = 0;
+		}
+		
+	}
 	if (!evse->booted && !ocpp->waiting_for_resp)
 	{
 		time_t now = time(NULL);

@@ -103,6 +103,8 @@ ocpp_handle_message
 	{
 		if (ocpp->last.call.action == BOOT_NOTIFICATION)
 			ocpp_boot_notification_conf(ocpp, evse);
+		else if (ocpp->last.call.action == START_TRANSACTION)
+			ocpp_start_transaction_conf(ocpp);
 	}
 	else
 	{

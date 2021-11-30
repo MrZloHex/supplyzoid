@@ -1,5 +1,6 @@
 #include "requests/start_transaction.h"
 
+
 void
 ocpp_start_transaction_req
 (
@@ -31,4 +32,13 @@ ocpp_start_transaction_req
 	ocpp->now.ID   = ocpp->id;
 	ocpp->now.call.action = START_TRANSACTION;
 	strcpyy(ocpp->now.call.payload, payload);
+}
+
+void
+ocpp_start_transaction_conf
+(
+	OCPP *ocpp
+)
+{
+	printf("HANDLE CONFIRMATION FOR START TRANSACTION\n");
 }

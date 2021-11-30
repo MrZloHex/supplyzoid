@@ -11,4 +11,10 @@ ocpp_start_transaction_req
 	char id_tag[21]
 );
 
+void
+ocpp_start_transaction_conf
+(
+	OCPP *ocpp
+);
+
 #endif /* START_TRANSACTION_H_ */
