@@ -12,6 +12,7 @@ ocpp_stop_transaction_req
 	int_to_charset(ocpp->id, id, 1);
 
 	char payload[PAYLOAD_LEN];
+	printf("%ld\n", evse->meter_value);
 	mjson_snprintf
 	(
 		payload, PAYLOAD_LEN,
