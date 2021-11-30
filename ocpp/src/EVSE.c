@@ -9,7 +9,7 @@ evse_init
 	EVSE *evse
 )
 {
-	evse->heartbeat_time = 0;
+	evse->HeartbeatInterval = 0;
 	evse->last_ping = time(NULL);
 	evse->booted = false;
 
@@ -28,7 +28,7 @@ evse_update
 	if (!evse->booted && !ocpp->waiting_for_resp)
 	{
 		time_t now = time(NULL);
-		if (now >= (evse->last_ping + evse->heartbeat_time))
+		if (now >= (evse->last_ping + evse->HeartbeatInterval))
 		{
 			ocpp_boot_notification_req(ocpp);
 			ocpp_send_req(ocpp, BOOT_NOTIFICATION);
@@ -40,4 +40,14 @@ evse_update
 	{
 		ocpp_update(ocpp, evse);
 	}
+}
+
+void
+evse_start_transaction
+(
+	EVSE *evse
+)
+{
+	printf("Start Transaction\n");
+	evse->is_transaction = true;
 }

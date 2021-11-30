@@ -48,7 +48,7 @@ ocpp_boot_notification_conf
 	if (res_int == 0)
 		return;
 	
-	evse->heartbeat_time = (time_t)interval;
+	evse->HeartbeatInterval = (time_t)interval;
 
 	char status[9];
 	int res_st = mjson_get_string(ocpp->now.call_result.payload, pay_len, P_STATUS, status, 9);

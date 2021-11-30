@@ -27,7 +27,7 @@ typedef struct
 	//         int  ConnectionTimeOut;
 	//              ConnectorPhaseRotation;
 	// const   int  GetConfigurationMaxKeys;
-	//         int  HeartbeatInterval;
+	        int  HeartbeatInterval;
 	//         bool LocalAuthorizeOffline;
 	//         bool LocalPreAuthorize;
 	//              MeterValuesAlignedData;
@@ -49,7 +49,6 @@ typedef struct
 
 	bool is_transaction;
 
-	unsigned long heartbeat_time;
 	time_t last_ping;
 	bool booted;
 	
