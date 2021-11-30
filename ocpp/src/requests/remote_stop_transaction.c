@@ -1,4 +1,5 @@
 #include "requests/remote_stop_transaction.h"
+#include "requests/stop_transaction.h"
 
 
 void

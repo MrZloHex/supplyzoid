@@ -6,7 +6,8 @@
 void
 ocpp_stop_transaction_req
 (
-    OCPP *ocpp
+    OCPP *ocpp,
+    EVSE *evse
 );
 
 void
