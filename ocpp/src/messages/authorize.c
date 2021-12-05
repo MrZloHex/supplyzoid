@@ -1,4 +1,4 @@
-#include "requests/authorize.h"
+#include "messages/authorize.h"
 
 void
 ocpp_aithorize_req

@@ -1,4 +1,4 @@
-#include "requests/status_notification.h"
+#include "messages/status_notification.h"
 
 void
 ocpp_status_notification_req

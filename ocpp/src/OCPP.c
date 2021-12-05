@@ -1,10 +1,10 @@
 #include "OCPP.h"
 
-#include "requests/boot_notification.h"
-#include "requests/remote_start_transaction.h"
-#include "requests/start_transaction.h"
-#include "requests/remote_stop_transaction.h"
-#include "requests/stop_transaction.h"
+#include "messages/boot_notification.h"
+#include "messages/remote_start_transaction.h"
+#include "messages/start_transaction.h"
+#include "messages/remote_stop_transaction.h"
+#include "messages/stop_transaction.h"
 
 
 void

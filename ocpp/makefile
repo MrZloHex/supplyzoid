@@ -7,7 +7,7 @@ C_FLAGS := -Wall -pedantic $(INC_DIR) -O3
 
 
 SRC_DIR = src
-SRC_R_DIR = src/requests
+SRC_R_DIR = src/messages
 
 TARGET  = supplyzoid
 SRCS    = $(wildcard $(SRC_DIR)/*.c) $(wildcard $(SRC_R_DIR)/*.c)

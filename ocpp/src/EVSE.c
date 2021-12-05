@@ -1,7 +1,7 @@
 #include "EVSE.h"
 #include "OCPP.h"
 
-#include "requests/boot_notification.h"
+#include "messages/boot_notification.h"
 
 void
 evse_init
