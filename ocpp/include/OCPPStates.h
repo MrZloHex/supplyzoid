@@ -33,4 +33,7 @@
 #define RSS_ACCEPTED 1
 #define RSS_REJECTED 2
 
+// ChargePointErrorCode
+#define NO_ERROR 1
+
 #endif /* OCPP_STATES_H_ */
