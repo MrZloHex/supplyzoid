@@ -27,6 +27,8 @@ ocpp_remote_stop_transaction_req
 
 	// TRANSACTION
 	evse_stop_transaction(evse);
+	// FINISHED
+	evse_change_state(evse, ocpp, S_FINISHING);
 
 	ocpp_stop_transaction_req(ocpp, evse);
 	ocpp_send_req(ocpp, STOP_TRANSACTION);

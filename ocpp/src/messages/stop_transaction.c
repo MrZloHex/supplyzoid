@@ -36,7 +36,8 @@ ocpp_stop_transaction_req
 void
 ocpp_stop_transaction_conf
 (
-	OCPP *ocpp
+	OCPP *ocpp,
+	EVSE *evse
 )
 {
 	if (ocpp->last.ID != ocpp->now.ID)
@@ -48,6 +49,9 @@ ocpp_stop_transaction_conf
 	{
 		return;  // TODO: add handling CALLERRROR
 	}
+
+	// AVAILABLE
+	evse_change_state(evse, ocpp, S_AVAILABLE);
 
 	printf("TRANSACTION FINISHED\n");
 }

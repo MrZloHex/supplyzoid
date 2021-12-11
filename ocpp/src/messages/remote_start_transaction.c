@@ -24,8 +24,12 @@ ocpp_remote_start_transaction_req
 	
 	ocpp_send_resp(ocpp, CALLRESULT);
 	
+	// PREPARING
+	evse_change_state(evse, ocpp, S_PREPARING);
 	// TRANSACTION
 	evse_start_transaction(evse);
+	// CHARGING
+	evse_change_state(evse, ocpp, S_CHARGING);
 
 	ocpp_start_transaction_req(ocpp, evse, id_tag);
 	ocpp_send_req(ocpp, START_TRANSACTION);

@@ -75,6 +75,7 @@ bool
 evse_change_state
 (
 	EVSE *evse,
+	OCPP *ocpp,
 	EVSEState new_state
 );
 

@@ -13,7 +13,8 @@ ocpp_stop_transaction_req
 void
 ocpp_stop_transaction_conf
 (
-    OCPP *ocpp
+    OCPP *ocpp,
+    EVSE *evse
 );
 
 #endif /* STOP_TRANSACTION_H_ */
