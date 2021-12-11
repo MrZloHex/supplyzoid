@@ -57,9 +57,48 @@ evse_change_state
 	{
 		if (new_state == S_AVAILABLE || new_state == S_FINISHING)
 			return false;
-		
-		evse->state = new_state;
 	}
+	else if (evse->state == S_PREPARING)
+	{
+		if (new_state == S_PREPARING || new_state == S_RESERVED || new_state == S_UNAVAILABLE)
+			return false;
+	}
+	else if (evse->state == S_CHARGING)
+	{
+		if (new_state == S_PREPARING || new_state == S_CHARGING || new_state == S_RESERVED)
+			return false;
+	}
+	else if (evse->state == S_SUSPENDED_EV)
+	{
+		if (new_state == S_PREPARING || new_state == S_SUSPENDED_EV || new_state == S_RESERVED)
+			return false;
+	}
+	else if (evse->state == S_SUSPENDED_EVSE)
+	{
+		if (new_state == S_PREPARING || new_state == S_SUSPENDED_EVSE || new_state == S_RESERVED)
+			return false;
+	}
+	else if (evse->state == S_FINISHING)
+	{
+		if (new_state > 2 && new_state < 8)
+			return false;
+	}
+	else if (evse->state == S_RESERVED)
+	{
+		if (new_state > 2 && new_state < 8)
+			return false;
+	}
+	else if (evse->state == S_UNAVAILABLE)
+	{
+		if (new_state > 5 && new_state < 9)
+			return false;
+	}
+	else if (evse->state == S_FAULTED)
+	{
+		if (new_state == S_FAULTED)
+			return false;
+	}
+	evse->state = new_state;
 	return true;
 }
 
