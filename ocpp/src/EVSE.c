@@ -103,6 +103,27 @@ evse_change_state
 	return true;
 }
 
+char *evse_states_str[9] = {
+	"Available",
+	"Preparing",
+	"Charging",
+	"SuspendedEV",
+	"SuspendedEVSE",
+	"Finishing",
+	"Reserved",
+	"Unavailable",
+	"Faulted"
+};
+
+char *
+evse_get_state
+(
+	EVSE *evse
+)
+{
+	return evse_states_str[evse->state -1];
+}
+
 void
 evse_start_transaction
 (

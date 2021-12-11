@@ -19,6 +19,7 @@
 #define S_FAULTED        9
 typedef unsigned char EVSEState;
 
+
 typedef struct
 {
 	// NEEDFUL STATES FOR `CORE` IMPLEMENTATION OF OCPPM 1.6
@@ -77,6 +78,12 @@ evse_change_state
 	EVSE *evse,
 	OCPP *ocpp,
 	EVSEState new_state
+);
+
+char *
+evse_get_state
+(
+	EVSE *evse
 );
 
 void

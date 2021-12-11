@@ -17,7 +17,7 @@ ocpp_status_notification_req
 		"errorCode",
 		ChargePointErrorCode[NO_ERROR],
 		"status",
-		STATUS,
+		evse_get_state
 	);
 
 	ocpp->now.type = CALL;

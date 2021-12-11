@@ -95,7 +95,7 @@ ocpp_handle_message
 	const size length
 )
 {
-	printf("HANDLE NEW MESSAGE: `%s`\n", str);
+	// printf("HANDLE NEW MESSAGE: `%s`\n", str);
 
 	OCPPResult res_parse = ocpp_parse_message(ocpp, str, length);
 	if (res_parse == ERROR)
@@ -108,7 +108,7 @@ ocpp_handle_message
 		else if (ocpp->last.call.action == START_TRANSACTION)
 			ocpp_start_transaction_conf(ocpp, evse);
 		else if (ocpp->last.call.action == STOP_TRANSACTION)
-			ocpp_stop_transaction_conf(ocpp);
+			ocpp_stop_transaction_conf(ocpp, evse);
 		else
 			printf("NOT IMPLEMETED\n");
 	}
@@ -159,10 +159,10 @@ ocpp_parse_message
 
 		strcpyy(ocpp->now.call.payload, payload);
 
-		printf("NEW CALL REQ:\n");
-		printf("\tID: `%ld`\n", ocpp->now.ID);
-		printf("\tACTION: `%d`\n", ocpp->now.call.action);
-		printf("\tPAYLOAD: `%s`\n", ocpp->now.call.payload);
+		// printf("NEW CALL REQ:\n");
+		// printf("\tID: `%ld`\n", ocpp->now.ID);
+		// printf("\tACTION: `%d`\n", ocpp->now.call.action);
+		// printf("\tPAYLOAD: `%s`\n", ocpp->now.call.payload);
 	}
 	else if (msg_type == CALLRESULT)
 	{
@@ -173,9 +173,9 @@ ocpp_parse_message
 
 		strcpyy(ocpp->now.call_result.payload, payload);
 
-		printf("NEW CALL RESULT REQ:\n");
-		printf("\tID: `%ld`\n", ocpp->now.ID);
-		printf("\tPAYLOAD: `%s`\n", ocpp->now.call_result.payload);
+		// printf("NEW CALL RESULT REQ:\n");
+		// printf("\tID: `%ld`\n", ocpp->now.ID);
+		// printf("\tPAYLOAD: `%s`\n", ocpp->now.call_result.payload);
 	}
 	else if (msg_type == CALLERROR)
 	{
@@ -195,11 +195,11 @@ ocpp_parse_message
 			return ERROR;
 		strcpyy(ocpp->now.call_error.error_details, details);
 
-		printf("NEW CALL ERROR REQ:\n");
-		printf("\tID: `%ld`\n", ocpp->now.ID);
-		printf("\tERROR CODE: `%d`\n", ocpp->now.call_error.error_code);
-		printf("\tERROR DESCRIPTION: `%s`\n", ocpp->now.call_error.error_dscr);
-		printf("\tERROR DETAILS: `%s`\n", ocpp->now.call_error.error_details);
+		// printf("NEW CALL ERROR REQ:\n");
+		// printf("\tID: `%ld`\n", ocpp->now.ID);
+		// printf("\tERROR CODE: `%d`\n", ocpp->now.call_error.error_code);
+		// printf("\tERROR DESCRIPTION: `%s`\n", ocpp->now.call_error.error_dscr);
+		// printf("\tERROR DETAILS: `%s`\n", ocpp->now.call_error.error_details);
 	}
 }
 
