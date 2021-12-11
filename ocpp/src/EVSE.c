@@ -46,6 +46,23 @@ evse_update
 	}
 }
 
+bool
+evse_change_state
+(
+	EVSE *evse,
+	EVSEState new_state
+)
+{
+	if (evse->state == S_AVAILABLE)
+	{
+		if (new_state == S_AVAILABLE || new_state == S_FINISHING)
+			return false;
+		
+		evse->state = new_state;
+	}
+	return true;
+}
+
 void
 evse_start_transaction
 (

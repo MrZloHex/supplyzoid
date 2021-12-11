@@ -71,6 +71,13 @@ evse_update
 	OCPP *ocpp
 );
 
+bool
+evse_change_state
+(
+	EVSE *evse,
+	EVSEState new_state
+);
+
 void
 evse_start_transaction
 (

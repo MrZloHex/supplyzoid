@@ -3,23 +3,26 @@
 void
 ocpp_status_notification_req
 (
-    OCPP *ocpp
+    OCPP *ocpp,
+    EVSE *evse
 )
 {
 	char payload[PAYLOAD_LEN];
 	mjson_snprintf
 	(
 		payload, PAYLOAD_LEN,
-		"{%Q:%Q,%Q:%Q}",
+		"{%Q:%d,%Q:%Q,%Q:%Q,}",
 		"connectorId",
-		VENDOR,
-		"chargePointModel",
-		MODEL
+		1,
+		"errorCode",
+		ChargePointErrorCode[NO_ERROR],
+		"status",
+		STATUS,
 	);
 
 	ocpp->now.type = CALL;
 	ocpp->now.ID   = ocpp->id;
-	ocpp->now.call.action = BOOT_NOTIFICATION;
+	ocpp->now.call.action = STATUS_NOTIFICATION;
 	strcpyy(ocpp->now.call.payload, payload);
 }
 
