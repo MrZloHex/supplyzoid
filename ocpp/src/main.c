@@ -26,9 +26,9 @@ main()
 {
 	printf("[3,\"1\",{\"currentTime\":\"2013-02-01T20:53:32.486Z\",\"interval\":30,\"status\":\"Accepted\"}]\n");
 	printf("[2,\"987\",\"RemoteStartTransaction\",{\"idTag\":\"hub\"}]\n");
-	printf("[3,\"2\",{\"idTagInfo\":{\"status\":\"Accepted\"},\"transactionId\":420}]\n");
+	printf("[3,\"4\",{\"idTagInfo\":{\"status\":\"Accepted\"},\"transactionId\":420}]\n");
 	printf("[2,\"988\",\"RemoteStopTransaction\",{\"transactionId\":420}]\n");
-	printf("[3,\"3\",{}]\n");
+	printf("[3,\"6\",{}]\n");
 
 	printf("\n");
 

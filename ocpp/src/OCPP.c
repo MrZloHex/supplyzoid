@@ -217,6 +217,8 @@ ocpp_send_req
 		strcpyy(action_str, "StartTransaction");
 	else if (action == STOP_TRANSACTION)
 		strcpyy(action_str, "StopTransaction");
+	else if (action == STATUS_NOTIFICATION)
+		strcpyy(action_str, "StatusNotification");
 	else
 	{
 		printf("NO SUCH REQUEST AVAILABLE\n");
@@ -243,7 +245,8 @@ ocpp_send_req
 	// SENDING
 
 	ocpp->id++;
-	ocpp->waiting_for_resp = true;
+	if (action != STATUS_NOTIFICATION)
+		ocpp->waiting_for_resp = true;
 
 	ocpp_next(ocpp);
 }

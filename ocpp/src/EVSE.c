@@ -2,6 +2,7 @@
 #include "OCPP.h"
 
 #include "messages/boot_notification.h"
+#include "messages/status_notification.h"
 
 void
 evse_init
@@ -100,6 +101,8 @@ evse_change_state
 			return false;
 	}
 	evse->state = new_state;
+	ocpp_status_notification_req(ocpp, evse);
+	ocpp_send_req(ocpp, STATUS_NOTIFICATION);
 	return true;
 }
 
