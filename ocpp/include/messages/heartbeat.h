@@ -3,6 +3,8 @@
 
 #include "OCPP.h"
 
+#define P_TIME "$.currentTime"
+
 void
 ocpp_heartbeat_req
 (

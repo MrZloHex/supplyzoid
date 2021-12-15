@@ -20,5 +20,16 @@ ocpp_heartbeat_conf
 	OCPP *ocpp
 )
 {
+	if (ocpp->last.ID != ocpp->now.ID)
+		return;
+
+	ocpp->waiting_for_resp = false;
 	
+	size pay_len = strlenn(ocpp->now.call_result.payload);
+
+	char time[32];
+
+	int res_int = mjson_get_string(ocpp->now.call_result.payload, pay_len, P_TIME, time, 32);
+	if (res_int == -1)
+		return;
 }

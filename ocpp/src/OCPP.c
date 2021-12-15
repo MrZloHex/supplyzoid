@@ -6,6 +6,7 @@
 #include "messages/remote_stop_transaction.h"
 #include "messages/stop_transaction.h"
 #include "messages/meter_values.h"
+#include "messages/heartbeat.h"
 
 
 void
@@ -112,6 +113,8 @@ ocpp_handle_message
 			ocpp_stop_transaction_conf(ocpp, evse);
 		else if (ocpp->last.call.action == METER_VALUES)
 			ocpp_meter_values_conf(ocpp);
+		else if (ocpp->last.call.action == HEARTBEAT)
+			ocpp_heartbeat_conf(ocpp);
 		else
 			printf("NOT IMPLEMETED\n");
 	}
@@ -224,6 +227,8 @@ ocpp_send_req
 		strcpyy(action_str, "StatusNotification");
 	else if (action == METER_VALUES)
 		strcpyy(action_str, "MeterValues");
+	else if (action == HEARTBEAT)
+		strcpyy(action_str, "HeartBeat");
 	else
 	{
 		printf("NO SUCH REQUEST AVAILABLE\n");
