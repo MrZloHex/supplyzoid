@@ -5,6 +5,7 @@
 #include "messages/start_transaction.h"
 #include "messages/remote_stop_transaction.h"
 #include "messages/stop_transaction.h"
+#include "messages/meter_values.h"
 
 
 void
@@ -109,6 +110,8 @@ ocpp_handle_message
 			ocpp_start_transaction_conf(ocpp, evse);
 		else if (ocpp->last.call.action == STOP_TRANSACTION)
 			ocpp_stop_transaction_conf(ocpp, evse);
+		else if (ocpp->last.call.action == METER_VALUES)
+			ocpp_meter_values_conf(ocpp);
 		else
 			printf("NOT IMPLEMETED\n");
 	}
@@ -219,6 +222,8 @@ ocpp_send_req
 		strcpyy(action_str, "StopTransaction");
 	else if (action == STATUS_NOTIFICATION)
 		strcpyy(action_str, "StatusNotification");
+	else if (action == METER_VALUES)
+		strcpyy(action_str, "MeterValues");
 	else
 	{
 		printf("NO SUCH REQUEST AVAILABLE\n");

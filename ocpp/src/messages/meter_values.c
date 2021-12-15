@@ -30,5 +30,8 @@ ocpp_meter_values_conf
 	OCPP *ocpp
 )
 {
-	
+	if (ocpp->last.ID != ocpp->now.ID)
+		return;
+
+	ocpp->waiting_for_resp = false;
 }
