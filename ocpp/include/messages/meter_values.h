@@ -17,4 +17,3 @@ ocpp_meter_values_conf
 );
 
 #endif /* METER_VALUE_H_ */
-
