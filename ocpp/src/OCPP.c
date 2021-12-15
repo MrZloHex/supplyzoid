@@ -383,8 +383,8 @@ ocpp_get_payload
 
 	const char *p;
     int n;
-    if (mjson_find(str, length, path, &p, &n) != MJSON_TOK_OBJECT)
-        return ERROR;
+	if (mjson_find(str, length, path, &p, &n) != MJSON_TOK_OBJECT)
+		return ERROR;
 
 	strncpyy(dst, p, n);
 	return 1;
