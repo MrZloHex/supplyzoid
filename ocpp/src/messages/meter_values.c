@@ -3,17 +3,32 @@
 void
 ocpp_meter_values_req
 (
-    OCPP *ocpp
+	OCPP *ocpp,
+	EVSE *evse
 )
 {
+	char payload[PAYLOAD_LEN];
+	mjson_snprintf
+	(
+		payload, PAYLOAD_LEN,
+		"{%Q:%d,%Q:%lu}",
+		"connectorId",
+		1,
+		"meterValue",
+		evse->meter_value
+	);
 
+	ocpp->now.type = CALL;
+	ocpp->now.ID   = ocpp->id;
+	ocpp->now.call.action = METER_VALUES;
+	strcpyy(ocpp->now.call.payload, payload);
 }
 
 void
 ocpp_meter_values_conf
 (
-    OCPP *ocpp
+	OCPP *ocpp
 )
 {
-    
+	
 }

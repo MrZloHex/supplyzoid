@@ -9,6 +9,8 @@
 #define START_TRANSACTION        4
 #define STOP_TRANSACTION         5
 #define STATUS_NOTIFICATION      6
+#define METER_VALUES             7
+#define HEARTBEAT                8
 
 
 // ERROR CODES
