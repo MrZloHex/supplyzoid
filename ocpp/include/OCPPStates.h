@@ -11,6 +11,7 @@
 #define STATUS_NOTIFICATION      6
 #define METER_VALUES             7
 #define HEARTBEAT                8
+#define DATA_TRANSFER        	 9
 
 
 // ERROR CODES
