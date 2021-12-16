@@ -1,3 +1,8 @@
-[3,"1",{"currentTime":"2013-02-01T20:53:32.486Z","interval":30,"status":"Accepted"}]
+# Embedded OCPP Client
 
-[2,"987","RemoteStartTransaction",{"idTag":"hub"}]
+Implementation of Core Profile of OCPP Protocol v1.6 for Charge Point. </br>
+**NB** Target architecture *x86* or *amd64*.
+
+## RoadMap
+
+ - [ ] 
