@@ -20,3 +20,7 @@ Implementation of Core Profile of OCPP Protocol v1.6 for Charge Point. </br>
    - [ ] Get Configuration
    - [ ] Reset
    - [ ] Unlock Connector
+
+## Desciption
+
+All code based on 2 main structures _EVSE_ and _OCPP_.
