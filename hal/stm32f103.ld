@@ -9,4 +9,4 @@ MEMORY
 SECTIONS
 {
     .text : { obj/main.asm.o }
-}   
+}       

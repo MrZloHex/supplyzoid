@@ -5,7 +5,7 @@ OC = arm-none-eabi-objcopy
 OD = arm-none-eabi-objdump
 OS = arm-none-eabi-size
 
-MCU_SPEC  = cortex-m3
+MCU_SPEC  = cortex-m0
 
 INC_DIR = include
 
