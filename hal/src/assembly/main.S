@@ -31,10 +31,12 @@ _start:
 	STR R5, [R6]
 
 
-	@ setting mode to PA_4
-	LDR R6, =GPIOA_CRL
-	LDR R5, =0x00020000
+	@ setting mode to PA_0
+	LDR R6, =GPIOA_MODER
+	LDR R5, [R6]
+	ORR R5, 0x00000001
 	STR R5, [R6]
+
 
 
 
