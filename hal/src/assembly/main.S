@@ -1,14 +1,11 @@
 
 .syntax unified
-.cpu cortex-m3
-.fpu softvfp
+.cpu cortex-m0
 .thumb
 
 #include "RCC.h"
 #include "GPIO.h"
 
-.global delay_asm
-.global delay_c
 
 .section .text
 
@@ -37,7 +34,11 @@ _start:
 	ORR R5, 0x00000001
 	STR R5, [R6]
 
-
+	@ set HIGH to PA_0
+	LDR R6, =GPIOA_ODR
+	LDR R5, [R6]
+	ORR R5, 0x00000001
+	STR R5, [R6]
 
 
 exit:
@@ -45,18 +46,16 @@ exit:
 	B 	exit
 
 
-delay_asm:
-    PUSH {FP, LR}
-	
-    MOV R0, 0
-	LDR R1, =0xFFFFF
-_delay:
-	ADD R0, R0, 1
-	CMP R0, R1
-	BNE _delay
-
-    POP {FP, LR}
-    BX  LR
+@ delay_asm:
+@     PUSH {FP, LR}
+@     MOV R0, 0
+@ 	LDR R1, =0xFFFFF
+@ _delay:
+@ 	ADD R0, R0, 1
+@ 	CMP R0, R1
+@ 	BNE _delay
+@     POP {FP, LR}
+@     BX  LR
 
 
 
