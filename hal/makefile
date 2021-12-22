@@ -9,7 +9,7 @@ MCU_SPEC  = cortex-m0
 
 INC_DIR = include
 
-AS_FLAGS := -c -mcpu=$(MCU_SPEC) -mthumb -Wall -x assembler-with-cpp -I$(INC_DIR)
+AS_FLAGS := -c -mcpu=$(MCU_SPEC) -mthumb -Wall -ggdb -x assembler-with-cpp -I$(INC_DIR)
 
 C_FLAGS := -c -Wall -pedantic -I$(INC_DIR)
 

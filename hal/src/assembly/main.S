@@ -24,10 +24,10 @@
 
 _start:
 	@ enabling clock for PORTA
-	LDR R6, =RCC_APB2ENR
+	LDR R6, =RCC_IOPENR
 	LDR R5, [R6]
-	ORR R5, 0x000000004 @ R E D C  B |A| R O    p.146 RM0008
-				 		@ 0 0 0 0  0 |0| 0 0
+	ORR R5, 0x00000001 @ R . R F E  D C B |A|    5.4.12 RM0454
+				 	   @ 0 . 0 0 0  0 0 0 |1|
 	STR R5, [R6]
 
 
@@ -36,23 +36,7 @@ _start:
 	LDR R5, =0x00020000
 	STR R5, [R6]
 
-loop:
-	@ set PA_4 to high
-	LDR R6, =GPIOA_ODR
-	LDR R5, =0x00000010
-	STR R5, [R6]
 
-	BL delay_asm
-
-	@ set PA_4 to high
-	LDR R6, =GPIOA_ODR
-	LDR R5, =0x00000000
-	STR R5, [R6]
-
-
-	BL delay_asm
-
-	B 	loop
 
 exit:
 	NOP
