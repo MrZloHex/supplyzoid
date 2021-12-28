@@ -6,8 +6,6 @@
 #include "EVSE.h"
 #include "OCPP.h"
 
-#include <stdio.h>
-
 #define P_ID_TAG "$.idTag"
 
 void

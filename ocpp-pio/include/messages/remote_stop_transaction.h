@@ -3,8 +3,6 @@
 
 #include "OCPP.h"
 
-#include <stdio.h>
-
 #define P_TRANSACTION_ID "$.transactionId"
 
 void

@@ -60,5 +60,5 @@ ocpp_start_transaction_conf
 
 	evse->transactionID = (int)transaction_id;
 		
-	printf("TRANSACTION CONFIRMED\n");
+	// printf("TRANSACTION CONFIRMED\n");
 }

@@ -65,7 +65,7 @@ ocpp_update
 	static char buffer[BUF_LEN];
 	static size index = 0;
 
-	char ch = (char) getc(stdin);
+	char ch /*= (char) getc(stdin)*/;
 	if (ch != '\n')
 		buffer[index++] = ch;
 

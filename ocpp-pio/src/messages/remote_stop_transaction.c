@@ -9,7 +9,7 @@ ocpp_remote_stop_transaction_req
 	EVSE *evse
 )
 {
-	printf("REMOTE STOP TRANSACTION\n");
+	// printf("REMOTE STOP TRANSACTION\n");
 	
 	size pay_len = strlenn(ocpp->last.call.payload);
 

@@ -2,11 +2,12 @@
 
 #define EVSE_H_
 
+#include "Arduino.h"
+
 #include "stdtypes.h"
 #include "OCPPTypes.h"
+#include "time_format.h"
 
-#include <time.h>
-#include <stdio.h>
 
 #define S_AVAILABLE      1
 #define S_PREPARING      2
@@ -53,7 +54,7 @@ typedef struct
 
 	unsigned long meter_value;
 
-	time_t last_ping;
+	time last_ping;
 	bool booted;
 	
 } EVSE;

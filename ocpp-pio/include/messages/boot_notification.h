@@ -6,8 +6,6 @@
 #include "EVSE.h"
 #include "OCPP.h"
 
-#include <stdio.h>
-
 #define P_INTERVAL "$.interval"
 #define P_STATUS   "$.status"
 

@@ -5,8 +5,6 @@
 #define MODEL  "PROTOTYPE"
 
 
-#include <stdio.h>
-
 #include "stringg.h"
 #include "convert.h"
 #include "JSON.h"
