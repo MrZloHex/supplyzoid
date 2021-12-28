@@ -52,6 +52,6 @@ ocpp_stop_transaction_conf
 	// AVAILABLE
 	evse_change_state(evse, ocpp, S_AVAILABLE);
 
-	// printf("TRANSACTION FINISHED\n");
+	serial_println_str("TRANSACTION FINISHED\n");
 }
 
