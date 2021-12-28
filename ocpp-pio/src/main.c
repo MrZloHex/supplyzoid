@@ -1,12 +1,21 @@
 #include <Arduino.h>
 
-void setup() {
-	pinMode(PA0, OUTPUT);
+#include "EVSE.h"
+#include "OCPP.h"
+
+
+OCPP ocpp;
+EVSE evse;
+
+void
+setup()
+{
+	ocpp_init(&ocpp);
+	evse_init(&evse);
 }
 
-void loop() {
-	digitalWrite(PA0, HIGH); 
-	delay(1000);
-	digitalWrite(PA0, LOW);
-	delay(1000);
+void
+loop()
+{
+	evse_update(&evse, &ocpp);
 }
