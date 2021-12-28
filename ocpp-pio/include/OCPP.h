@@ -4,7 +4,6 @@
 #define VENDOR "EV Solutions"
 #define MODEL  "PROTOTYPE"
 
-
 #include "stringg.h"
 #include "convert.h"
 #include "JSON.h"

@@ -62,5 +62,5 @@ ocpp_boot_notification_conf
 	else
 		return;
 
-	printf("BOOTED\n");
+	serial_println_str("BOOTED");
 }

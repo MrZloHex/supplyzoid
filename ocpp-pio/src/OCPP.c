@@ -1,5 +1,7 @@
 #include "OCPP.h"
 
+// #include "Serial.h"
+
 #include "messages/boot_notification.h"
 #include "messages/remote_start_transaction.h"
 #include "messages/start_transaction.h"
@@ -65,27 +67,29 @@ ocpp_update
 	static char buffer[BUF_LEN];
 	static size index = 0;
 
-	char ch /*= (char) getc(stdin)*/;
-	if (ch != '\n')
-		buffer[index++] = ch;
-
-	if (index >= BUF_LEN)
+	if (serial_available())
 	{
-		memsett(buffer, 0, index);
-		index = 0;
-		return;
-	}
-	
+		char ch = serial_read();
+		if (ch != '\n')
+			buffer[index++] = ch;
 
-	if (mjson(buffer, index, NULL, NULL) > 0)
-	{
-		buffer[index] = '\0';
-		
-		// printf("NEW MESSAGE: `%s`\n", buffer);
-		ocpp_handle_message(ocpp, evse, buffer, index);
+		if (index >= BUF_LEN)
+		{
+			memsett(buffer, 0, index);
+			index = 0;
+			return;
+		}
 
-		memsett(buffer, 0, index);
-		index = 0;
+		if (mjson(buffer, index, NULL, NULL) > 0)
+		{
+			buffer[index] = '\0';
+
+			// serial_println_str("NEW MESSAGE");
+			ocpp_handle_message(ocpp, evse, buffer, index);
+
+			memsett(buffer, 0, index);
+			index = 0;
+		}
 	}
 }
 
@@ -118,8 +122,8 @@ ocpp_handle_message
 			ocpp_heartbeat_conf(ocpp);
 		else if (ocpp->last.call.action == DATA_TRANSFER)
 			ocpp_data_transfer_conf(ocpp);
-		else
-			printf("NOT IMPLEMETED\n");
+		// else
+			// printf("NOT IMPLEMETED\n");
 	}
 	else
 	{
@@ -129,8 +133,8 @@ ocpp_handle_message
 			ocpp_remote_start_transaction_req(ocpp, evse);
 		else if (ocpp->last.call.action == REMOTE_STOP_TRANSACTION)
 			ocpp_remote_stop_transaction_req(ocpp, evse);
-		else
-			printf("NOT IMPLEMETED\n");
+		// else
+			// printf("NOT IMPLEMETED\n");
 	}
 }
 
@@ -236,7 +240,7 @@ ocpp_send_req
 		strcpyy(action_str, "DataTransfer");
 	else
 	{
-		printf("NO SUCH REQUEST AVAILABLE\n");
+		// printf("NO SUCH REQUEST AVAILABLE\n");
 		return;
 	}
 
@@ -256,7 +260,7 @@ ocpp_send_req
 	);
 
 	// SENDING
-	printf("SENDING REQUEST: `%s`\n", req);
+	serial_println_str(req);
 	// SENDING
 
 	ocpp->id++;
@@ -289,7 +293,7 @@ ocpp_send_resp
 
 
 		// SENDING
-		printf("SENDING RESPONSE: `%s`\n", req);
+		// printf("SENDING RESPONSE: `%s`\n", req);
 		// SENDING
 	}
 	else if (type == CALLERROR)
