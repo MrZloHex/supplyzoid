@@ -16,7 +16,7 @@ C_FLAGS := -c -Wall -pedantic -I$(INC_DIR)
 LSCRIPT = $(LD_SCRIPT)
 L_FLAGS = -mcpu=$(MCU_SPEC) -mthumb -Wall -nostdlib -lgcc -T$(LSCRIPT)
 
-LD_SCRIPT = stm32f103.ld
+LD_SCRIPT = stm32g070.ld
 
 
 TARGET = supplyzoid

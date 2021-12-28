@@ -1,7 +1,3 @@
-#include "gports.h"
-#include "gpins.h"
-
-
 #define GPIOA_MODER   0x50000000
 #define GPIOA_OTYPER  0x50000004
 #define GPIOA_OSPEEDR 0x50000008

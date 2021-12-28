@@ -2,5 +2,9 @@ hal/obj/
 gt.sh
 */supplyzoid*
 .vscode/
-refs/
+refs/OCPP_1.6_documentation_2019_12/
 Arduino_Core_STM32/
+
+
+ocpp-pio/.pio/
+ocpp-pio/.vscode/
