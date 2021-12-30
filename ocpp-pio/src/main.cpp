@@ -1,4 +1,5 @@
 #include <Arduino.h>
+#include "STM32RTC.h"
 
 #ifdef __cplusplus
 extern "C"
@@ -14,6 +15,7 @@ extern "C"
 #include <HardwareSerial.h>
 
 HardwareSerial serial(PA3, PA2);
+STM32RTC& rtc = STM32RTC::getInstance();
 
 OCPP ocpp;
 EVSE evse;
@@ -21,6 +23,8 @@ EVSE evse;
 void
 setup()
 {
+	rtc.begin();
+
 	serial.begin(9600);
 
 	serial.printf("BOOTING UP\n");

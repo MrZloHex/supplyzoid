@@ -1,6 +1,6 @@
 #include "OCPP.h"
 
-// #include "Serial.h"
+#include "Serial.h"
 
 #include "messages/boot_notification.h"
 #include "messages/remote_start_transaction.h"
