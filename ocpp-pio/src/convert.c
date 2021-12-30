@@ -26,9 +26,45 @@ int_to_charset
 }
 
 void
-charset_to_ulong
+charset_to_u64
 (
-	unsigned long *dst,
+	u64 *dst,
+	char set[]
+)
+{
+	size i = 0;
+	size len = strlenn(set);
+	unsigned long res = 0;
+	while (set[i] != 0)
+	{
+		res += (set[i] - '0') * upower(10, (len-i-1));
+		++i;
+	}
+	*dst = res;
+}
+
+void
+charset_to_u32
+(
+	u32 *dst,
+	char set[]
+)
+{
+	size i = 0;
+	size len = strlenn(set);
+	unsigned long res = 0;
+	while (set[i] != 0)
+	{
+		res += (set[i] - '0') * upower(10, (len-i-1));
+		++i;
+	}
+	*dst = res;
+}
+
+void
+charset_to_u8
+(
+	u8 *dst,
 	char set[]
 )
 {

@@ -14,13 +14,34 @@ int_to_charset
 	int  digits
 );
 
+#define STR_TO_NUM(T, S) _Generic((T), \
+	u8:  charset_to_u8,  \
+	u32: charset_to_u32, \
+	u64: charset_to_u64, \
+	default: charset_to_u32 \
+	)(&T, S)
+
+
 void
-charset_to_ulong
+charset_to_u64
 (
-	unsigned long *dst,
+	u64 *dst,
 	char set[]
 );
 
+void
+charset_to_u32
+(
+	u32 *dst,
+	char set[]
+);
+
+void
+charset_to_u8
+(
+	u8 *dst,
+	char set[]
+);
 
 void
 reverse

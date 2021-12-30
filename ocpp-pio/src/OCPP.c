@@ -356,7 +356,7 @@ ocpp_get_message_id
 	if (res <= 0)
 		return ERROR;
 	OCPPMessageID id;
-	charset_to_ulong(&id , buf);
+	STR_TO_NUM(id, buf);
 	return id;
 }
 
