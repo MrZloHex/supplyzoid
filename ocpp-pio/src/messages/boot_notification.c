@@ -62,5 +62,13 @@ ocpp_boot_notification_conf
 	else
 		return;
 
+	char time[25];
+	int res_time = mjson_get_string(ocpp->now.call_result.payload, pay_len, P_CURRENT_TIME, time, 25);
+	if (res_time == -1)
+		return;
+
+	adjust_rtc_time(time);
+
+
 	serial_println_str("BOOTED");
 }

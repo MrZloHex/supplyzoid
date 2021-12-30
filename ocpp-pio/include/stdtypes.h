@@ -9,6 +9,7 @@
 
 typedef long unsigned int size;
 
-
+typedef unsigned char u8;
+typedef unsigned int u32;
 
 #endif /* STDTYPES_H_ */
