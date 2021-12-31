@@ -60,7 +60,8 @@ void
 ocpp_update
 (
 	OCPP *ocpp,
-	EVSE *evse
+	EVSE *evse,
+	STM32RTC *rtc
 )
 {
 	#define BUF_LEN 512
@@ -85,7 +86,7 @@ ocpp_update
 			buffer[index] = '\0';
 
 			// serial_println_str("NEW MESSAGE");
-			ocpp_handle_message(ocpp, evse, buffer, index);
+			ocpp_handle_message(ocpp, evse, rtc, buffer, index);
 
 			memsett(buffer, 0, index);
 			index = 0;
@@ -98,6 +99,7 @@ ocpp_handle_message
 (
  	OCPP *ocpp,
 	EVSE *evse,
+	STM32RTC *rtc,
 	const char *str,
 	const size length
 )
@@ -111,7 +113,7 @@ ocpp_handle_message
 	if (ocpp->waiting_for_resp)
 	{
 		if (ocpp->last.call.action == BOOT_NOTIFICATION)
-			ocpp_boot_notification_conf(ocpp, evse);
+			ocpp_boot_notification_conf(ocpp, evse, rtc);
 		else if (ocpp->last.call.action == START_TRANSACTION)
 			ocpp_start_transaction_conf(ocpp, evse);
 		else if (ocpp->last.call.action == STOP_TRANSACTION)

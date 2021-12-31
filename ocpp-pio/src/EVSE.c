@@ -24,7 +24,8 @@ void
 evse_update
 (
 	EVSE *evse,
-	OCPP *ocpp
+	OCPP *ocpp,
+	STM32RTC *rtc
 )
 {
 	if (evse->is_transaction)
@@ -43,7 +44,7 @@ evse_update
 
 	if (evse->booted || ocpp->waiting_for_resp)
 	{
-		ocpp_update(ocpp, evse);
+		ocpp_update(ocpp, evse, rtc);
 	}
 }
 

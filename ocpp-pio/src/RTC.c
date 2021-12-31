@@ -2,7 +2,11 @@
 
 
 void
-adjust_rtc_time(char time[25])
+adjust_rtc_time
+(
+    STM32RTC *rtc,
+    char time[25]
+)
 {
     char year_str[5];
     strncpyy(year_str, time, 4);
@@ -36,20 +40,22 @@ adjust_rtc_time(char time[25])
 
     char milliseconds_str[4];
     strncpyy(milliseconds_str, &time[20], 3);
-    u32 milliseconds;
+    ul32 milliseconds;
     STR_TO_NUM(milliseconds, milliseconds_str);
 
     
-    rtc_set_time
+    stm32rtc_set_time
     (
+        rtc,
         hours,
         minutes,
         seconds,
         milliseconds
     );
 
-    rtc_set_date
+    stm32rtc_set_date
     (
+        rtc,
         day,
         month,
         year

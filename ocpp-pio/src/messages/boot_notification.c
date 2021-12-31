@@ -28,7 +28,8 @@ void
 ocpp_boot_notification_conf
 (
 	OCPP *ocpp,
-	EVSE *evse
+	EVSE *evse,
+	STM32RTC *rtc
 )
 {
 	if (ocpp->last.ID != ocpp->now.ID)
@@ -67,7 +68,7 @@ ocpp_boot_notification_conf
 	if (res_time == -1)
 		return;
 
-	adjust_rtc_time(time);
+	adjust_rtc_time(rtc, time);
 
 
 	serial_println_str("BOOTED");

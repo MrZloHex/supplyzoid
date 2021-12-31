@@ -1,5 +1,4 @@
 #include <Arduino.h>
-#include "STM32RTC.h"
 
 #ifdef __cplusplus
 extern "C"
@@ -7,15 +6,18 @@ extern "C"
 #endif
 	#include "OCPP.h"
 	#include "EVSE.h"
+	#include "STM32RTC.h"
 #ifdef __cplusplus
 }
 #endif
 
-
 #include <HardwareSerial.h>
 
+
+
 HardwareSerial serial(PA3, PA2);
-STM32RTC& rtc = STM32RTC::getInstance();
+
+STM32RTC rtc;
 
 OCPP ocpp;
 EVSE evse;
@@ -23,7 +25,8 @@ EVSE evse;
 void
 setup()
 {
-	rtc.begin();
+	stm32rtc_init(&rtc);
+	stm32rtc_begin(&rtc, HOUR_FORMAT_24);
 
 	serial.begin(9600);
 
@@ -36,5 +39,5 @@ setup()
 void
 loop()
 {
-	evse_update(&evse, &ocpp);
+	evse_update(&evse, &ocpp, &rtc);
 }

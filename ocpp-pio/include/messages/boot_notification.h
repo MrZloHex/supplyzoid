@@ -23,7 +23,8 @@ void
 ocpp_boot_notification_conf
 (
 	OCPP *ocpp,
-	EVSE *evse
+	EVSE *evse,
+	STM32RTC *rtc
 );
 
 #endif /* BOOT_NOTIFICATION_H_ */

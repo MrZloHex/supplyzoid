@@ -28,7 +28,8 @@ void
 ocpp_update
 (
 	OCPP *ocpp,
-	EVSE *evse
+	EVSE *evse,
+	STM32RTC *rtc
 );
 
 void
@@ -36,6 +37,7 @@ ocpp_handle_message
 (
  	OCPP *ocpp,
 	EVSE *evse,
+	STM32RTC *rtc,
 	const char *str,
 	const size length
 );

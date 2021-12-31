@@ -3,6 +3,7 @@
 #define EVSE_H_
 
 #include "Arduino.h"
+#include "STM32RTC.h"
 
 #include "stdtypes.h"
 #include "OCPPTypes.h"
@@ -70,7 +71,8 @@ void
 evse_update
 (
 	EVSE *evse,
-	OCPP *ocpp
+	OCPP *ocpp,
+	STM32RTC *rtc
 );
 
 bool
