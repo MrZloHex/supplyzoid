@@ -1,15 +1,18 @@
 /**
-  ******************************************************************************
-  * @file    STM32RTC.cpp
-  * @author  Zlobin Alexey
-  * @brief   Provides a RTC interface for Arduino
-  *
-  */
+ ******************************************************************************
+ * @file    STM32RTC.c
+ * @author  Zlobin Alexey
+ * @brief   Provides a RTC interface for Arduino
+ * *
+ ******************************************************************************
+ */
 
 
 #include "STM32RTC.h"
 
 // CONTROL FUNCTION
+
+
 
 void
 stm32rtc_init
@@ -80,7 +83,101 @@ stm32rtc_end(STM32RTC *rtc)
 	}
 }
 
+void
+stm32rtc_enable_alarm
+(
+	STM32RTC *rtc,
+	alarmMask_t mask
+)
+{
+	if (rtc->_configured)
+	{
+		rtc->alarm_mask = mask;
+		switch (mask)
+		{
+			case OFF_MSK:
+				RTC_StopAlarm();
+				break;
+			case SS_MSK:
+			case MM_MSK:
+			case HH_MSK:
+			case D_MSK:
+			case M_MSK:
+			case Y_MSK:
+				RTC_StartAlarm
+				(
+					rtc->alarm_day,
+					rtc->alarm_hours,
+					rtc->alarm_minutes,
+					rtc->alarm_seconds,
+					rtc->alarm_sub_seconds,
+					rtc->alarm_period,
+					rtc->alarm_mask
+				);
+				rtc->alarm_enabled = true;
+				break;
+			default:
+				break;
+		}
+	}
+}
+
+void
+stm32rtc_disable_alarm(STM32RTC *rtc)
+{
+	if (rtc->_configured)
+	{
+		RTC_StopAlarm();
+		rtc->alarm_enabled = false;
+	}
+}
+
+void
+stm32rtc_attach_intrerrupt
+(
+	STM32RTC *rtc,
+	voidCallbackPtr callback,
+	void *data
+)
+{
+	attachAlarmCallback(callback, data);
+}
+
+void
+stm32rtc_detach_intrerrupt(STM32RTC *rtc)
+{
+	detachAlarmCallback();
+}
+
+#ifdef ONESECOND_IRQn
+
+	void
+	stm32rtc_attach_secconds_intrerrupt
+	(
+		STM32RTC *rtc,
+		voidCallbackPtr callback
+	)
+	{
+		attachSecondsIrqCallback(callback);
+	}
+
+	void
+	stm32rtc_detach_seconds_intrerrupt(STM32RTC *rtc)
+	{
+		detachSecondsIrqCallback();
+	}
+
+#endif /* ONESCOND_IRQn */
+
+
+
 // GET FUNCTIONS
+
+sourceClock_t
+stm32rtc_get_source_clock(STM32RTC *rtc)
+{
+	return rtc->source_clock;
+}
 
 ul32
 stm32rtc_get_sub_seconds(STM32RTC *rtc)
@@ -104,7 +201,7 @@ stm32rtc_get_minutes(STM32RTC *rtc)
 }
 
 u8
-stm32rtc_get_hsours
+stm32rtc_get_hours
 (
 	STM32RTC *rtc,
 	hourAM_PM_t *period
@@ -189,10 +286,90 @@ stm32rtc_get_date
 		*year = rtc->year;
 }
 
+ul32
+stm32rtc_get_alarm_sub_seconds(STM32RTC *rtc)
+{
+	stm32rtc_sync_alarm_time(rtc);
+	return rtc->alarm_sub_seconds;
+}
 
+u8
+stm32rtc_get_alarm_seconds(STM32RTC *rtc)
+{
+	stm32rtc_sync_alarm_time(rtc);
+	return rtc->alarm_seconds;
+}
+
+u8
+stm32rtc_get_alarm_minutes(STM32RTC *rtc)
+{
+	stm32rtc_sync_alarm_time(rtc);
+	return rtc->alarm_minutes;
+}
+
+u8
+stm32rtc_get_alarm_hours
+(
+	STM32RTC *rtc,
+	hourAM_PM_t *period
+)
+{
+	stm32rtc_sync_alarm_time(rtc);
+	if (period != NULL)
+		*period = rtc->alarm_period;
+	return rtc->alarm_hours;
+}
+
+u8
+stm32rtc_get_alarm_day(STM32RTC *rtc)
+{
+	stm32rtc_sync_alarm_time(rtc);
+	return rtc->alarm_day;
+}
+
+void
+stm32rtc_get_alarm
+(
+	STM32RTC *rtc,
+	u8 *day,
+	u8 *hours,
+	u8 *minutes,
+	u8 *seconds,
+	ul32 *sub_seconds,
+	hourAM_PM_t *period
+)
+{
+	stm32rtc_sync_alarm_time(rtc);
+	if (hours != NULL)
+		*hours = rtc->alarm_hours;
+	if (minutes != NULL)
+		*minutes = rtc->alarm_minutes;
+	if (seconds != NULL)
+		*seconds = rtc->alarm_seconds;
+	if (sub_seconds != NULL)
+		*sub_seconds = rtc->alarm_sub_seconds;
+	if (period != NULL)
+		*period = rtc->alarm_period;
+	if (day != NULL)
+		*day = rtc->alarm_day;
+}
 
 
 // SET FUNCTIONS
+
+void
+stm32rtc_set_source_clock
+(
+	STM32RTC *rtc,
+	sourceClock_t source
+)
+{
+	if (IS_CLOCK_SOURCE(source))
+	{
+		rtc->source_clock = source;
+		RTC_SetClockSource(source);
+	}
+}
 
 void
 stm32rtc_set_sub_seconds
@@ -527,10 +704,119 @@ stm32rtc_set_wdate
 	}
 }
 
+void
+stm32rtc_set_alarm_sub_seconds
+(
+	STM32RTC *rtc,
+	ul32 sub_seconds
+)
+{
+	if (rtc->_configured)
+		if (sub_seconds < 1000)
+			rtc->alarm_sub_seconds = sub_seconds;
+}
 
+void
+stm32rtc_set_alarm_seconds
+(
+	STM32RTC *rtc,
+	u8 seconds
+)
+{
+	if (rtc->_configured)
+		if (seconds < 60)
+			rtc->alarm_seconds = seconds;
+}
 
+void
+stm32rtc_set_alarm_minutes
+(
+	STM32RTC *rtc,
+	u8 minutes
+)
+{
+	if (rtc->_configured)
+		if (minutes < 60)
+		 rtc->alarm_minutes = minutes;
+}
 
+void
+stm32rtc_set_alarm_hours
+(
+	STM32RTC *rtc,
+	u8 hours
+)
+{
+	if (rtc->_configured)
+		if (hours < 24)
+			rtc->alarm_hours = hours;
+}
 
+void
+stm32rtc_set_alarm_hours_12
+(
+	STM32RTC *rtc,
+	u8 hours,
+	hourAM_PM_t period
+)
+{
+	if (rtc->_configured)
+	{
+		if (hours < 12)
+			rtc->alarm_hours = hours;
+		if (rtc->format == HOUR_FORMAT_12)
+			rtc->alarm_period = period;
+	}
+}
+
+void
+stm32rtc_set_alarm_day
+(
+	STM32RTC *rtc,
+	u8 day
+)
+{
+	if (rtc->_configured)
+		if (day >= 1 && day <= 31)
+			rtc->alarm_day = day;
+}
+
+void
+stm32rtc_set_alarm
+(
+	STM32RTC *rtc,
+	u8 day,
+	u8 hours,
+	u8 minutes,
+	u8 seconds,
+	ul32 sub_seconds
+)
+{
+	stm32rtc_set_alarm_day(rtc, day);	
+	stm32rtc_set_alarm_hours(rtc, hours);
+	stm32rtc_set_alarm_minutes(rtc, minutes);
+	stm32rtc_set_alarm_seconds(rtc, seconds);
+	stm32rtc_set_alarm_sub_seconds(rtc, sub_seconds);
+}
+
+void
+stm32rtc_set_alarm_12
+(
+	STM32RTC *rtc,
+	u8 day,
+	u8 hours,
+	u8 minutes,
+	u8 seconds,
+	ul32 sub_seconds,
+	hourAM_PM_t period
+)
+{
+	stm32rtc_set_alarm_day(rtc, day);	
+	stm32rtc_set_alarm_hours_12(rtc, hours, period);
+	stm32rtc_set_alarm_minutes(rtc, minutes);
+	stm32rtc_set_alarm_seconds(rtc, seconds);
+	stm32rtc_set_alarm_sub_seconds(rtc, sub_seconds);
+}
 
 
 
