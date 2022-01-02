@@ -13,6 +13,7 @@
 #include "Arduino.h"
 #if defined(STM32_CORE_VERSION) && (STM32_CORE_VERSION  > 0x01090000)
 	#include "rtc.h"
+	#include "time.h"
 #endif
 // Check if RTC HAL enable in variants/board_name/stm32yzxx_hal_conf.h
 #ifndef HAL_RTC_MODULE_ENABLED
@@ -764,7 +765,156 @@ stm32rtc_set_alarm_12
 );
 
 
+// EPOCH FGUNCTIONS
 
+/**
+ * @brief Get epoch time
+ * 
+ * @param rtc: RTC
+ * @param subseconds: Optional pointer to epoch time in subseconds
+ * @retval Epoch time in seconds
+ */
+ul32
+stm32rtc_get_epoch
+(
+	STM32RTC *rtc,
+	ul32 *subseconds
+);
+
+/**
+ * @brief Get epoch time since 1srt January 2000, 00:00:00
+ * 
+ * @param rtc: RTC
+ * @retval Epoch time in seconds
+ */
+ul32
+stm32rtc_get_y2k_epoch(STM32RTC *rtc);
+
+/**
+ * @brief Set RTC time from epoch time
+ * 
+ * @param rtc: RTC
+ * @param ts: time in seconds
+ * @param sub_seconds: subseconds
+ * @retval None
+ */
+void
+stm32rtc_set_epoch
+(
+	STM32RTC *rtc,
+	ul32 ts,
+	ul32 sub_seconds
+);
+
+/**
+ * @brief Set epoch time since 1srt January 2000, 00:00:00
+ * 
+ * @param rtc: RTC
+ * @param ts: Epoch Time in seconds
+ */
+void
+stm32rtc_set_y2k_epoch
+(
+	STM32RTC *rtc,
+	ul32 ts
+);
+
+/**
+ * @brief Set  RTC alarm from epoch time
+ * 
+ * @param rtc: RTC
+ * @param ts: time in seconds
+ * @param mask: alarm mask
+ * @param sub_seconds: 0-999
+ * @retval None
+ */
+void
+stm32rtc_set_alarm_epoch
+(
+	STM32RTC *rtc,
+	ul32 ts,
+	alarmMask_t mask,
+	ul32 sub_seconds
+);
+
+
+#ifdef STM32F1xx
+	/**
+	 * @brief  get user asynchronous prescaler value for the current clock source.
+	 * 
+	 * @param rtc: RTC
+	 * @param  predivA: pointer to the current Asynchronous prescaler value
+	 * @param  dummy : not used (kept for compatibility reason)
+	 * @retval None
+	 */
+	void
+	stm32rtc_get_prediv
+	(
+		STM32RTC *rtc,
+		ul32 *prediv_a,
+		i16 *dummy
+	);
+
+	/**
+	 * @brief  set user asynchronous prescalers value.
+	 * @note   This method must be called before begin().
+	 * 
+	 * @param rtc: RTC
+	 * @param  predivA: Asynchronous prescaler value. Reset value: RTC_AUTO_1_SECOND
+	 * @param  dummy : not used (kept for compatibility reason)
+	 * @retval None
+	 */
+	void
+	stm32rtc_set_prediv
+	(
+		STM32RTC *rtc,
+		ul32 prediv_a,
+		i16 dummy
+	);
+#else
+	/**
+	 * @brief Get user (a)synchronous prescaler values if set else computed
+	 *        ones for the current clock source.
+	 * 
+	 * @param rt: RTC
+	 * @param prediv_a: Pointer to the current Asynchronous prescaler value
+	 * @param prediv_s: Pointer to the current Synchronous prescaler value
+	 * @retval None
+	 */
+	void
+	stm32rtc_get_prediv
+	(
+		STM32RTC *rtc,
+		i8 *prediv_a,
+		i16* prediv_s
+	);
+
+	/**
+	 * @brief Set user (a)synchronous prescalers value.
+	 * @note  This method must be called before begin().
+	 * 
+	 * @param rtc: RTC
+	 * @param prediv_a: Asynchronous prescaler value. Reset value: -1
+	 * @param prediv_s: Synchronous prescaler value. Reset value: -1
+	 * @retval None
+	 */
+	void
+	stm32rtc_set_prediv
+	(
+		STM32RTC *rtc,
+		i8 prediv_a,
+		i16 prediv_s
+	);
+#endif /* STM32F1xx */
+
+bool
+stm32rtc_is_configured(STM32RTC *rtc);
+
+bool
+stm32rtc_is_alarm_enabled(STM32RTC *rtc);
+
+bool
+stm32rtc_is_time_set(STM32RTC *rtc);
 
 
 
