@@ -33,7 +33,7 @@ evse_update
 
 	if (!evse->booted && !ocpp->waiting_for_resp)
 	{
-		time now = millis();
+		my_time now = millis();
 		if (now >= (evse->last_ping + evse->HeartbeatInterval))
 		{
 			ocpp_boot_notification_req(ocpp);

@@ -55,7 +55,7 @@ typedef struct
 
 	unsigned long meter_value;
 
-	time last_ping;
+	my_time last_ping;
 	bool booted;
 	
 } EVSE;
