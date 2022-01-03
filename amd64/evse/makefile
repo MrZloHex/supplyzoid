@@ -7,10 +7,9 @@ C_FLAGS := -Wall -pedantic $(INC_DIR) -O3
 
 
 SRC_DIR = src
-SRC_R_DIR = src/messages
 
-TARGET  = ocpp
-SRCS    = $(wildcard $(SRC_DIR)/*.c) $(wildcard $(SRC_R_DIR)/*.c)
+TARGET  = evse
+SRCS    = $(wildcard $(SRC_DIR)/*.c)
 
 .PHONY: all
 all: clean $(TARGET) run 
