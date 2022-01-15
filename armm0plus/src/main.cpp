@@ -16,6 +16,7 @@ extern "C"
 
 
 HardwareSerial serial(PA3, PA2);
+HardwareSerial usart_rapi(PC5, PC4);
 
 STM32RTC rtc;
 RAPI rapi;
@@ -33,10 +34,12 @@ setup()
 	serial.printf("BOOTING UP\n");
 
 	ocpp_init(&ocpp);
+	rapi_reset(&rapi);
 }
 
 void
 loop()
 {
 	ocpp_update(&ocpp, &rapi, &rtc);
+	rapi_update(&rapi);
 }

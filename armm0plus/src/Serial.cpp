@@ -18,7 +18,7 @@ serial_println_str(const char *str)
 }
 
 extern "C"
-bool
+int
 serial_available()
 {
 	return serial.available();
