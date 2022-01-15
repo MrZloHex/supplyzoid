@@ -6,7 +6,6 @@
 #include "Serial.h"
 
 #include "stdtypes.h"
-#include "EVSE.h"
 #include "OCPP.h"
 
 #define P_INTERVAL     "$.interval"
@@ -23,7 +22,7 @@ void
 ocpp_boot_notification_conf
 (
 	OCPP *ocpp,
-	EVSE *evse,
+	RAPI *rapi,
 	STM32RTC *rtc
 );
 

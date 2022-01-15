@@ -6,7 +6,7 @@ void
 ocpp_remote_stop_transaction_req
 (
 	OCPP *ocpp,
-	EVSE *evse
+	RAPI *rapi
 )
 {
 	// printf("REMOTE STOP TRANSACTION\n");
@@ -20,27 +20,27 @@ ocpp_remote_stop_transaction_req
 	int transaction_id = (int)transaction_id_d;
 
 	bool reject;
-	if (evse->is_transaction && (evse->transactionID == transaction_id))
-	{
-		ocpp_remote_stop_transaction_conf(ocpp, RSS_ACCEPTED);
-		reject = false;
-	}
-	else
-	{
-		ocpp_remote_stop_transaction_conf(ocpp, RSS_REJECTED);
-		reject = true;
-	}
+	// if (evse->is_transaction && (evse->transactionID == transaction_id))
+	// {
+	// 	ocpp_remote_stop_transaction_conf(ocpp, RSS_ACCEPTED);
+	// 	reject = false;
+	// }
+	// else
+	// {
+	// 	ocpp_remote_stop_transaction_conf(ocpp, RSS_REJECTED);
+	// 	reject = true;
+	// }
 	ocpp_send_resp(ocpp, CALLRESULT);
 
 	if (reject)
 		return;
 
 	// TRANSACTION
-	evse_stop_transaction(evse);
+	// evse_stop_transaction(evse);
 	// FINISHED
-	evse_change_state(evse, ocpp, S_FINISHING);
+	// evse_change_state(evse, ocpp, S_FINISHING);
 
-	ocpp_stop_transaction_req(ocpp, evse);
+	// ocpp_stop_transaction_req(ocpp, evse);
 	ocpp_send_req(ocpp, STOP_TRANSACTION);
 }
 

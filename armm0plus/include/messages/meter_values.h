@@ -7,7 +7,7 @@ void
 ocpp_meter_values_req
 (
 	OCPP *ocpp,
-	EVSE *evse
+	RAPI *rapi
 );
 
 void

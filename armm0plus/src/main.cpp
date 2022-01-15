@@ -5,8 +5,8 @@ extern "C"
 {
 #endif
 	#include "OCPP.h"
-	#include "EVSE.h"
 	#include "STM32RTC.h"
+	#include "RAPI.h"
 #ifdef __cplusplus
 }
 #endif
@@ -18,9 +18,9 @@ extern "C"
 HardwareSerial serial(PA3, PA2);
 
 STM32RTC rtc;
+RAPI rapi;
 
 OCPP ocpp;
-EVSE evse;
 
 void
 setup()
@@ -33,11 +33,10 @@ setup()
 	serial.printf("BOOTING UP\n");
 
 	ocpp_init(&ocpp);
-	evse_init(&evse);
 }
 
 void
 loop()
 {
-	evse_update(&evse, &ocpp, &rtc);
+	ocpp_update(&ocpp, &rapi, &rtc);
 }

@@ -11,7 +11,7 @@ void
 ocpp_status_notification_req
 (
     OCPP *ocpp,
-    EVSE *evse
+    RAPI *rapi
 );
 
 void

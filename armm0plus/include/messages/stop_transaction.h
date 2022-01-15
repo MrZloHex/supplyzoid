@@ -7,14 +7,14 @@ void
 ocpp_stop_transaction_req
 (
     OCPP *ocpp,
-    EVSE *evse
+    RAPI *rapi
 );
 
 void
 ocpp_stop_transaction_conf
 (
     OCPP *ocpp,
-    EVSE *evse
+    RAPI *rapi
 );
 
 #endif /* STOP_TRANSACTION_H_ */

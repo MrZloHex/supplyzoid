@@ -7,8 +7,9 @@
 #include "stringg.h"
 #include "convert.h"
 #include "JSON.h"
-#include "EVSE.h"
+#include "RAPI.h"
 
+#include "STM32RTC.h"
 #include "OCPPTypes.h"
 #include "OCPPStates.h"
 
@@ -28,7 +29,7 @@ void
 ocpp_update
 (
 	OCPP *ocpp,
-	EVSE *evse,
+	RAPI *rapi,
 	STM32RTC *rtc
 );
 
@@ -36,7 +37,7 @@ void
 ocpp_handle_message
 (
  	OCPP *ocpp,
-	EVSE *evse,
+	RAPI *rapi,
 	STM32RTC *rtc,
 	const char *str,
 	const size length

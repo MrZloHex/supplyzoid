@@ -9,7 +9,7 @@ void
 ocpp_remote_stop_transaction_req
 (
 	OCPP *ocpp,
-	EVSE *evse
+	RAPI *rapi
 );
 
 void

@@ -28,7 +28,7 @@ void
 ocpp_boot_notification_conf
 (
 	OCPP *ocpp,
-	EVSE *evse,
+	RAPI *rapi,
 	STM32RTC *rtc
 )
 {
@@ -49,19 +49,19 @@ ocpp_boot_notification_conf
 	if (res_int == 0)
 		return;
 	
-	evse->HeartbeatInterval = (my_time)interval;
+	// evse->HeartbeatInterval = (my_time)interval;
 
 	char status[9];
 	int res_st = mjson_get_string(ocpp->now.call_result.payload, pay_len, P_STATUS, status, 9);
 	if (res_st == -1)
 		return;
 
-	if (strcmpp(status, "Accepted"))
-		evse->booted = true;
-	else if (strcmpp(status, "Pending") || strcmpp(status, "Rejected"))
-		evse->booted = false;
-	else
-		return;
+	// if (strcmpp(status, "Accepted"))
+	// 	evse->booted = true;
+	// else if (strcmpp(status, "Pending") || strcmpp(status, "Rejected"))
+	// 	evse->booted = false;
+	// else
+	// 	return;
 
 	char time[25];
 	int res_time = mjson_get_string(ocpp->now.call_result.payload, pay_len, P_CURRENT_TIME, time, 25);

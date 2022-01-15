@@ -5,7 +5,8 @@ void
 ocpp_stop_transaction_req
 (
 	OCPP *ocpp,
-	EVSE *evse
+	RAPI *rapi
+
 )
 {
 	char id[37];
@@ -17,12 +18,12 @@ ocpp_stop_transaction_req
 		payload, PAYLOAD_LEN,
 		"{%Q:%ld,%Q:%Q,%Q:%d}",
 		"meterStop",
-		evse->meter_value,
+		// evse->meter_value,
 		"timestamp",
 		// TIMESTAMP
 		"18.06.2021.687",
-		"transactionId",
-		evse->transactionID
+		"transactionId"
+		// evse->transactionID
 	);
 
 	
@@ -36,7 +37,7 @@ void
 ocpp_stop_transaction_conf
 (
 	OCPP *ocpp,
-	EVSE *evse
+	RAPI *rapi
 )
 {
 	if (ocpp->last.ID != ocpp->now.ID)
@@ -50,7 +51,7 @@ ocpp_stop_transaction_conf
 	}
 
 	// AVAILABLE
-	evse_change_state(evse, ocpp, S_AVAILABLE);
+	// evse_change_state(evse, ocpp, S_AVAILABLE);
 
 	serial_println_str("TRANSACTION FINISHED\n");
 }

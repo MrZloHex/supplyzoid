@@ -3,7 +3,6 @@
 
 #include "stdtypes.h"
 #include "stringg.h"
-#include "EVSE.h"
 #include "OCPP.h"
 
 #define P_ID_TAG "$.idTag"
@@ -12,7 +11,7 @@ void
 ocpp_remote_start_transaction_req
 (
 	OCPP *ocpp,
-	EVSE *evse
+	RAPI *rapi
 );
 
 void

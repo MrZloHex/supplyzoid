@@ -4,7 +4,7 @@ void
 ocpp_meter_values_req
 (
 	OCPP *ocpp,
-	EVSE *evse
+	RAPI *rapi
 )
 {
 	char payload[PAYLOAD_LEN];
@@ -14,8 +14,8 @@ ocpp_meter_values_req
 		"{%Q:%d,%Q:%lu}",
 		"connectorId",
 		1,
-		"meterValue",
-		evse->meter_value
+		"meterValue"
+		// evse->meter_value
 	);
 
 	ocpp->now.type = CALL;

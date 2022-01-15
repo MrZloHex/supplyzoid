@@ -5,7 +5,7 @@ void
 ocpp_start_transaction_req
 (
 	OCPP *ocpp,
-	EVSE *evse,
+	RAPI *rapi,
 	char id_tag[21]
 )
 {
@@ -22,7 +22,7 @@ ocpp_start_transaction_req
 		"idTag",
 		id_tag,
 		"meterStart",
-		evse->meter_value,
+		// evse->meter_value,
 		"timestamp",
 		// TIMESTAMP
 		"18.06.2021.687"
@@ -38,7 +38,7 @@ void
 ocpp_start_transaction_conf
 (
 	OCPP *ocpp,
-	EVSE *evse
+	RAPI *rapi
 )
 {
 	if (ocpp->last.ID != ocpp->now.ID)
@@ -58,7 +58,7 @@ ocpp_start_transaction_conf
 	if (res_int == 0)
 		return;
 
-	evse->transactionID = (int)transaction_id;
+	// evse->transactionID = (int)transaction_id;
 		
 	serial_println_str("TRANSACTION CONFIRMED");
 }

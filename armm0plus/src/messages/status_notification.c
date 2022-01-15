@@ -23,7 +23,7 @@ void
 ocpp_status_notification_req
 (
     OCPP *ocpp,
-    EVSE *evse
+    RAPI *rapi
 )
 {
 	char payload[PAYLOAD_LEN];
@@ -35,8 +35,8 @@ ocpp_status_notification_req
 		1,
 		"errorCode",
 		ChargePointErrorCode[NO_ERROR],
-		"status",
-		evse_get_state(evse)
+		"status"
+		// evse_get_state(evse)
 	);
 
 	ocpp->now.type = CALL;

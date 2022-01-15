@@ -9,7 +9,7 @@ void
 ocpp_start_transaction_req
 (
 	OCPP *ocpp,
-	EVSE *evse,
+	RAPI *rapi,
 	char id_tag[21]
 );
 
@@ -17,7 +17,7 @@ void
 ocpp_start_transaction_conf
 (
 	OCPP *ocpp,
-	EVSE *evse
+	RAPI *rapi
 );
 
 #endif /* START_TRANSACTION_H_ */

@@ -60,7 +60,7 @@ void
 ocpp_update
 (
 	OCPP *ocpp,
-	EVSE *evse,
+	RAPI *rapi,
 	STM32RTC *rtc
 )
 {
@@ -86,7 +86,7 @@ ocpp_update
 			buffer[index] = '\0';
 
 			// serial_println_str("NEW MESSAGE");
-			ocpp_handle_message(ocpp, evse, rtc, buffer, index);
+			ocpp_handle_message(ocpp, rapi, rtc, buffer, index);
 
 			memsett(buffer, 0, index);
 			index = 0;
@@ -98,7 +98,7 @@ void
 ocpp_handle_message
 (
  	OCPP *ocpp,
-	EVSE *evse,
+	RAPI *rapi,
 	STM32RTC *rtc,
 	const char *str,
 	const size length
@@ -113,11 +113,11 @@ ocpp_handle_message
 	if (ocpp->waiting_for_resp)
 	{
 		if (ocpp->last.call.action == BOOT_NOTIFICATION)
-			ocpp_boot_notification_conf(ocpp, evse, rtc);
+			ocpp_boot_notification_conf(ocpp, rapi, rtc);
 		else if (ocpp->last.call.action == START_TRANSACTION)
-			ocpp_start_transaction_conf(ocpp, evse);
+			ocpp_start_transaction_conf(ocpp, rapi);
 		else if (ocpp->last.call.action == STOP_TRANSACTION)
-			ocpp_stop_transaction_conf(ocpp, evse);
+			ocpp_stop_transaction_conf(ocpp, rapi);
 		else if (ocpp->last.call.action == METER_VALUES)
 			ocpp_meter_values_conf(ocpp);
 		else if (ocpp->last.call.action == HEARTBEAT)
@@ -132,9 +132,9 @@ ocpp_handle_message
 		ocpp_next(ocpp);
 
 		if (ocpp->last.call.action == REMOTE_START_TRANSACTION)
-			ocpp_remote_start_transaction_req(ocpp, evse);
+			ocpp_remote_start_transaction_req(ocpp, rapi);
 		else if (ocpp->last.call.action == REMOTE_STOP_TRANSACTION)
-			ocpp_remote_stop_transaction_req(ocpp, evse);
+			ocpp_remote_stop_transaction_req(ocpp, rapi);
 		// else
 			// printf("NOT IMPLEMETED\n");
 	}
