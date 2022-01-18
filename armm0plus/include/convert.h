@@ -44,6 +44,13 @@ charset_to_u8
 );
 
 void
+hex_str_to_u8
+(
+	const char *str,
+	u8 *dst
+);
+
+void
 reverse
 (
 	char *set,

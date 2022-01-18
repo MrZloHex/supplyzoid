@@ -79,6 +79,37 @@ charset_to_u8
 	*dst = res;
 }
 
+void
+hex_str_to_u8
+(
+	const char *str,
+	u8 *dst
+)
+{
+	u8 num = 0;
+	for (size i = 0; i < 2; ++i)
+	{
+		char ch = str[i];
+		if (ch != '\0')
+		{
+			if (i == 1)
+				num <<= 4;
+			if ((ch >= '0') && (ch <= '9'))
+			{
+				num += ch - '0';
+			}
+			else if ((ch >= 'A') && (ch <= 'F'))
+			{
+				num += ch - 'A' + 10;
+			}
+			else if ((ch >= 'a') && (ch <= 'f'))
+			{
+				num += ch - 'a' + 10;
+			}
+		}
+	}
+	*dst = num;
+}
 
 void
 reverse
