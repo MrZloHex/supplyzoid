@@ -31,5 +31,8 @@ rapi_update(RAPI *rapi);
 bool
 rapi_analyze(RAPI *rapi);
 
+void
+rapi_process_cmd(RAPI *rapi);
+
 
 #endif /* RAPI_H_ */
