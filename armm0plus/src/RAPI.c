@@ -55,14 +55,10 @@ rapi_update(RAPI *rapi)
 bool
 rapi_analyze(RAPI *rapi)
 {
-	usart_rapi_println_str(rapi->buf_cmd);
 	rapi->tokens[0] = &rapi->buf_cmd[1];
 	char *s = &rapi->buf_cmd[2];
 	rapi->token_index = 1;
 	u8 add_chksum = RAPI_SOC + rapi->buf_cmd[1];
-	char raw[3];
-	int_to_charset(add_chksum, raw, 0);
-	usart_rapi_println_str(raw);
 	u8 xor_chksum = RAPI_SOC ^ rapi->buf_cmd[1];
 	u8 hex_chksum;
 	u8 chk_type = 0; // 0=none,1=additive,2=xor
@@ -103,14 +99,14 @@ rapi_analyze(RAPI *rapi)
 		}
 	}
 
-	usart_rapi_print_str("Hex: ");
-	char hex[3];
-	int_to_charset(hex_chksum, hex, 0);
-	usart_rapi_println_str(hex);
-	usart_rapi_print_str("Add: ");
-	char add[3];
-	int_to_charset(add_chksum, add, 0);
-	usart_rapi_println_str(add);
+	// usart_rapi_print_str("Hex: ");
+	// char hex[3];
+	// int_to_charset(hex_chksum, hex, 0);
+	// usart_rapi_println_str(hex);
+	// usart_rapi_print_str("Add: ");
+	// char add[3];
+	// int_to_charset(add_chksum, add, 0);
+	// usart_rapi_println_str(add);
 
 	bool ok = ((chk_type == 0) ||
 				(chk_type == 1) && (hex_chksum == add_chksum) ||
@@ -119,10 +115,10 @@ rapi_analyze(RAPI *rapi)
 	if (!ok)
 		rapi->token_index = 0;
 
-	if (ok)
-		usart_rapi_println_str("OK CHK SUM RAPi");
-	else
-		usart_rapi_println_str("ERR CHK SUM RAPi");
+	// if (ok)
+	// 	usart_rapi_println_str("OK CHK SUM RAPi");
+	// else
+	// 	usart_rapi_println_str("ERR CHK SUM RAPi");
 
 	return ok;
 }

@@ -15,10 +15,10 @@ extern "C"
 
 
 
-// HardwareSerial serial(PA3, PA2);
-// HardwareSerial usart_rapi(PC5, PC4);
-HardwareSerial usart_rapi(PA3, PA2);
-HardwareSerial serial(PC5, PC4);
+HardwareSerial serial(PA3, PA2);
+HardwareSerial usart_rapi(PC5, PC4);
+// HardwareSerial usart_rapi(PA3, PA2);
+// HardwareSerial serial(PC5, PC4);
 
 
 STM32RTC rtc;
