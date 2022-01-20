@@ -11,6 +11,12 @@ int
 usart_rapi_print_str();
 
 int
+usart_rapi_print_ch(const char ch);
+
+int
+usart_rapi_print_u8(const u8 num);
+
+int
 usart_rapi_println_str();
 
 #endif /* USART_RAPI_H_ */

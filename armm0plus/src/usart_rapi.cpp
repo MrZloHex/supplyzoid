@@ -23,6 +23,19 @@ usart_rapi_print_str(const char *str)
     return usart_rapi.printf("%s", str);
 }
 
+extern "C"
+int
+usart_rapi_print_ch(const char ch)
+{
+    return usart_rapi.printf("%c", ch);
+}
+
+extern "C"
+int
+usart_rapi_print_u8(const unsigned char num)
+{
+    return usart_rapi.printf("%u", num);
+}
 
 extern "C"
 int
