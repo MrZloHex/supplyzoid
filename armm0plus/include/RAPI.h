@@ -4,6 +4,7 @@
 #include "stdtypes.h"
 #include "stringg.h"
 #include "convert.h"
+#include "OCPPTypes.h"
 
 #define RAPI_BUF_LEN 32
 #define RAPI_SOC '$'
@@ -26,13 +27,21 @@ void
 rapi_reset(RAPI *rapi);
 
 void
-rapi_update(RAPI *rapi);
+rapi_update
+(
+	RAPI *rapi,
+	OCPP *ocpp
+);
 
 bool
 rapi_analyze(RAPI *rapi);
 
 void
-rapi_process_cmd(RAPI *rapi);
+rapi_process_cmd
+(
+	RAPI *rapi,
+	OCPP *ocpp
+);
 
 
 #endif /* RAPI_H_ */

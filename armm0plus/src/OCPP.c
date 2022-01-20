@@ -107,7 +107,7 @@ ocpp_handle_message
 	// printf("HANDLE NEW MESSAGE: `%s`\n", str);
 
 	OCPPResult res_parse = ocpp_parse_message(ocpp, str, length);
-	if (res_parse == ERROR)
+	if (res_parse == ERROR_P)
 		return;
 
 	if (ocpp->waiting_for_resp)
@@ -149,28 +149,28 @@ ocpp_parse_message
 )
 {
 	OCPPMessageType msg_type = ocpp_determine_message_type(str, length);
-	if (msg_type == ERROR)
-		return ERROR;
+	if (msg_type == ERROR_P)
+		return ERROR_P;
 
 	ocpp->now.type = msg_type;
 
 	OCPPMessageID msg_id = ocpp_get_message_id(str, length);
 	if (msg_id == 0)
-		return ERROR;
+		return ERROR_P;
 	ocpp->now.ID = msg_id;
 
 	if (msg_type == CALL)
 	{
 		OCPPCallAction action = ocpp_get_action(str, length);
 		if (action == 0)
-			return ERROR;
+			return ERROR_P;
 
 		ocpp->now.call.action = action;
 
 		char payload[PAYLOAD_LEN];
 		OCPPResult res = ocpp_get_payload(CALL, str, length, payload);
-		if (res == ERROR)
-			return ERROR;
+		if (res == ERROR_P)
+			return ERROR_P;
 
 		strcpyy(ocpp->now.call.payload, payload);
 
@@ -183,8 +183,8 @@ ocpp_parse_message
 	{
 		char payload[PAYLOAD_LEN];
 		OCPPResult res = ocpp_get_payload(CALLRESULT, str, length, payload);
-		if (res == ERROR)
-			return ERROR;
+		if (res == ERROR_P)
+			return ERROR_P;
 
 		strcpyy(ocpp->now.call_result.payload, payload);
 
@@ -199,15 +199,15 @@ ocpp_parse_message
 
 		char description[DSCR_LEN];
 		OCPPResult res_d = ocpp_get_call_error_descr(str, length, description);
-		if (res_d == ERROR)
-			return ERROR;
+		if (res_d == ERROR_P)
+			return ERROR_P;
 
 		strcpyy(ocpp->now.call_error.error_dscr, description);
 
 		char details[PAYLOAD_LEN];
 		OCPPResult res = ocpp_get_payload(CALLERROR, str, length, details);
-		if (res == ERROR)
-			return ERROR;
+		if (res == ERROR_P)
+			return ERROR_P;
 		strcpyy(ocpp->now.call_error.error_details, details);
 
 		// printf("NEW CALL ERROR REQ:\n");
@@ -332,7 +332,7 @@ ocpp_determine_message_type
 	double type;
 	int res = mjson_get_number(str, length, POS_MSG_TYPE, &type);
 	if (res <= 0)
-		return ERROR;
+		return ERROR_P;
 	switch ((int)type) {
         case CALL:
             return CALL;
@@ -341,7 +341,7 @@ ocpp_determine_message_type
         case CALLERROR:
 			return CALLERROR;
         default:
-            return ERROR;
+            return ERROR_P;
     }
 }
 
@@ -356,7 +356,7 @@ ocpp_get_message_id
 	char buf[50];
 	int res = mjson_get_string(str, length, POS_MSG_ID, buf, 50);
 	if (res <= 0)
-		return ERROR;
+		return ERROR_P;
 	OCPPMessageID id;
 	STR_TO_NUM(id, buf);
 	return id;
@@ -372,14 +372,14 @@ ocpp_get_action
 	char buf[ACTION_LEN];
 	int res = mjson_get_string(str, length, POS_CL_ACT, buf, ACTION_LEN);
 	if (res <= 0)
-		return ERROR;
+		return ERROR_P;
 	
 	if (strcmpp(buf, "RemoteStartTransaction"))
 		return REMOTE_START_TRANSACTION;
 	else if (strcmpp(buf, "RemoteStopTransaction"))
 		return REMOTE_STOP_TRANSACTION;
 	else
-		return ERROR;
+		return ERROR_P;
 }
 
 OCPPResult
@@ -399,13 +399,13 @@ ocpp_get_payload
 	else if (type == CALLERROR)
 		strcpyy(path, POS_CE_ERR_DETL);
 	else
-		return ERROR;
+		return ERROR_P;
 
 
 	const char *p;
     int n;
 	if (mjson_find(str, length, path, &p, &n) != MJSON_TOK_OBJECT)
-		return ERROR;
+		return ERROR_P;
 
 	strncpyy(dst, p, n);
 	return 1;
@@ -421,12 +421,12 @@ ocpp_get_call_error_code
 	char buf[ERR_CODE_LEN];
 	int res = mjson_get_string(str, length, POS_CE_ERR_CODE, buf, ERR_CODE_LEN);
 	if (res <= 0)
-		return ERROR;
+		return ERROR_P;
 	
 	if (strcmpp(buf, "GenericError"))
 		return GENERIC_ERROR;
 	else
-		return ERROR;
+		return ERROR_P;
 }
 
 OCPPResult
@@ -440,7 +440,7 @@ ocpp_get_call_error_descr
 	char buf[DSCR_LEN];
 	int res = mjson_get_string(str, length, POS_CE_ERR_DSCR, buf, DSCR_LEN);
 	if (res <= 0)
-		return ERROR;
+		return ERROR_P;
 
 	strcpyy(dscr, buf);
 }

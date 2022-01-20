@@ -1,6 +1,9 @@
 #include "RAPI.h"
 #include "usart_rapi.h"
 
+#include "messages/boot_notification.h"
+#include "OCPP.h"
+
 void
 rapi_reset(RAPI *rapi)
 {
@@ -9,7 +12,11 @@ rapi_reset(RAPI *rapi)
 }
 
 void
-rapi_update(RAPI *rapi)
+rapi_update
+(
+	RAPI *rapi,
+	OCPP *ocpp
+)
 {
 	int buf_cnt = usart_rapi_available();
 	if (buf_cnt)
@@ -30,7 +37,7 @@ rapi_update(RAPI *rapi)
 					{
 						if (rapi_analyze(rapi))
 						{
-							rapi_process_cmd(rapi);
+							rapi_process_cmd(rapi, ocpp);
 						}
 						else
 						{
@@ -129,7 +136,11 @@ rapi_analyze(RAPI *rapi)
 }
 
 void
-rapi_process_cmd(RAPI *rapi)
+rapi_process_cmd
+(
+	RAPI *rapi,
+	OCPP *ocpp
+)
 {
 	for (size i = 0; i < rapi->token_index; ++i)
 	{
@@ -145,7 +156,8 @@ rapi_process_cmd(RAPI *rapi)
 			switch (*(cmd+1))
 			{
 				case 'B':
-
+					ocpp_boot_notification_req(ocpp);
+					ocpp_send_req(ocpp, BOOT_NOTIFICATION);
 					break;
 				default:
 					usart_rapi_println_str("ERROR: Unknown command");

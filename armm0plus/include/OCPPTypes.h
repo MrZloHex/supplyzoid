@@ -2,7 +2,7 @@
 
 #define OCPP_TYPES_H_
 
-#define ERROR 0
+#define ERROR_P 0
 typedef unsigned char OCPPResult;
 
 typedef char CiString20[21];

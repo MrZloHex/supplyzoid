@@ -44,6 +44,6 @@ setup()
 void
 loop()
 {
-	ocpp_update(&ocpp, &rapi, &rtc);
-	rapi_update(&rapi);
+	// ocpp_update(&ocpp, &rapi, &rtc);
+	rapi_update(&rapi, &ocpp);
 }
