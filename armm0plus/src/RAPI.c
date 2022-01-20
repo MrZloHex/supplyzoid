@@ -156,6 +156,7 @@ rapi_process_cmd
 			switch (*(cmd+1))
 			{
 				case 'B':
+					// handle BOOT TROUBLES
 					ocpp_boot_notification_req(ocpp);
 					ocpp_send_req(ocpp, BOOT_NOTIFICATION);
 					break;

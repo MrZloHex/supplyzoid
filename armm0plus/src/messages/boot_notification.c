@@ -37,6 +37,8 @@ ocpp_boot_notification_conf
 
 	ocpp->waiting_for_resp = false;
 
+	serial_println_str("Got a BOOT NOTIFICATION confirmation");
+
 	if (ocpp->now.type == CALLERROR)
 	{
 		return;  // TODO: add handling CALLERRROR
