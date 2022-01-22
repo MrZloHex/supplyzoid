@@ -4,5 +4,6 @@ amd64/ocpp/.vscode/
 armm0plus/.vscode/
 armm0plus/.pio/
 
-
+chksum/chksum.o
+chksum/chksum
 refs/OCPP_1.6_documentation_2019_12/
