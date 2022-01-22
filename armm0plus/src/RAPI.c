@@ -168,3 +168,12 @@ rapi_process_cmd
 			usart_rapi_println_str("ERROR: Unknown command");
 	}
 }
+
+u8
+rapi_app_chksum(RAPI *rapi)
+{
+	usart_rapi_print_str("MAKING CHKSUM FOR: ");
+	usart_rapi_println_str(rapi->buf_cmd);
+
+	return 8;
+}

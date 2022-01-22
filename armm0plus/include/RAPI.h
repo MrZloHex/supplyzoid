@@ -44,4 +44,10 @@ rapi_process_cmd
 );
 
 
+
+u8
+rapi_app_chksum(RAPI *rapi);
+
+
+
 #endif /* RAPI_H_ */
