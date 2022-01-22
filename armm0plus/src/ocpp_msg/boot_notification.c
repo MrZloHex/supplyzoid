@@ -1,4 +1,4 @@
-#include "messages/boot_notification.h"
+#include "ocpp_msg/boot_notification.h"
 
 
 void
@@ -52,6 +52,7 @@ ocpp_boot_notification_conf
 		return;
 	
 	// evse->HeartbeatInterval = (my_time)interval;
+	// rapi->	
 
 	char status[9];
 	int res_st = mjson_get_string(ocpp->now.call_result.payload, pay_len, P_STATUS, status, 9);

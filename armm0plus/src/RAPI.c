@@ -1,7 +1,7 @@
 #include "RAPI.h"
 #include "usart_rapi.h"
 
-#include "messages/boot_notification.h"
+#include "ocpp_msg/boot_notification.h"
 #include "OCPP.h"
 
 void

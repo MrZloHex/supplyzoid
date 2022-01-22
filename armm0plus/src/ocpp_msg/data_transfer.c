@@ -1,31 +1,30 @@
-#include "messages/meter_values.h"
+#include "ocpp_msg/data_transfer.h"
+
 
 void
-ocpp_meter_values_req
+ocpp_data_transfer_req
 (
-	OCPP *ocpp,
-	RAPI *rapi
+	OCPP *ocpp
 )
 {
 	char payload[PAYLOAD_LEN];
 	mjson_snprintf
 	(
 		payload, PAYLOAD_LEN,
-		"{%Q:%d,%Q:%lu}",
-		"connectorId",
-		1,
-		"meterValue"
-		// evse->meter_value
+		"{%Q:%Q}",
+		"vendorId",
+		"PROTOTYPE"
+		// ADD DATA
 	);
 
 	ocpp->now.type = CALL;
 	ocpp->now.ID   = ocpp->id;
-	ocpp->now.call.action = METER_VALUES;
+	ocpp->now.call.action = DATA_TRANSFER;
 	strcpyy(ocpp->now.call.payload, payload);
 }
 
 void
-ocpp_meter_values_conf
+ocpp_data_transfer_conf
 (
 	OCPP *ocpp
 )

@@ -1,4 +1,4 @@
-#include "messages/status_notification.h"
+#include "ocpp_msg/status_notification.h"
 
 char *ChargePointErrorCode[] = {
 	"NoError",

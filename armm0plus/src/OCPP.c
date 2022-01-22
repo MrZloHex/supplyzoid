@@ -2,14 +2,14 @@
 
 #include "Serial.h"
 
-#include "messages/boot_notification.h"
-#include "messages/remote_start_transaction.h"
-#include "messages/start_transaction.h"
-#include "messages/remote_stop_transaction.h"
-#include "messages/stop_transaction.h"
-#include "messages/meter_values.h"
-#include "messages/heartbeat.h"
-#include "messages/data_transfer.h"
+#include "ocpp_msg/boot_notification.h"
+#include "ocpp_msg/remote_start_transaction.h"
+#include "ocpp_msg/start_transaction.h"
+#include "ocpp_msg/remote_stop_transaction.h"
+#include "ocpp_msg/stop_transaction.h"
+#include "ocpp_msg/meter_values.h"
+#include "ocpp_msg/heartbeat.h"
+#include "ocpp_msg/data_transfer.h"
 
 
 void

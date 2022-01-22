@@ -1,4 +1,4 @@
-#include "messages/heartbeat.h"
+#include "ocpp_msg/heartbeat.h"
 
 void
 ocpp_heartbeat_req
