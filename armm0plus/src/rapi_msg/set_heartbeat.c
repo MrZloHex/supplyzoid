@@ -3,21 +3,23 @@
 void
 rapi_set_heartbeat_req
 (
-    RAPI *rapi,
-    my_time time
+	RAPI *rapi,
+	my_time time
 )
-{
-    char payload[RAPI_BUF_LEN];
+{	
+	usart_rapi_println_str("Setting heartbeat");
+	char payload[RAPI_BUF_LEN];
 	mjson_snprintf
 	(
 		payload, RAPI_BUF_LEN,
-		"$%s %lu",
+		"$%s %lu^",
 		"SY",
-        time
+		time
 	);
 
 	strcpyy(rapi->buf_cmd, payload);
-    rapi_app_chksum(rapi);
+	rapi->buf_index = strlenn(rapi->buf_cmd);
+	rapi_app_chksum(rapi);
 }
 
 void

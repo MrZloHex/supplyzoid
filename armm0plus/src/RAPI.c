@@ -172,8 +172,15 @@ rapi_process_cmd
 u8
 rapi_app_chksum(RAPI *rapi)
 {
-	usart_rapi_print_str("MAKING CHKSUM FOR: ");
-	usart_rapi_println_str(rapi->buf_cmd);
+	u8 chksum = 0;
+	for (size i = 0; i < rapi->buf_index-1; ++i)
+	{
+		chksum ^= rapi->buf_cmd[i];
+
+	}
+
+
+
 
 	return 8;
 }

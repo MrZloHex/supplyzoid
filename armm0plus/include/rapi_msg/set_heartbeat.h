@@ -7,8 +7,8 @@
 void
 rapi_set_heartbeat_req
 (
-    RAPI *rapi,
-    my_time time
+	RAPI *rapi,
+	my_time time
 );
 
 void
