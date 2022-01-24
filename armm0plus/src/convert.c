@@ -132,3 +132,31 @@ reverse
 		j--;
 	}
 }
+
+void
+u8_to_hex_str
+(
+	char *str,
+	u8 num
+)
+{
+	for (size i = 0; i < 2; ++i)
+	{
+		u8 number = num;
+		if (i == 0)
+		{
+			number >>= 4;
+		}
+		else if (i == 1)
+		{
+			number %= 16;
+		}
+
+		if (number < 10)
+			str[i] = number + 48;
+		else if (number < 16)
+			str[i] = number + 55;
+		
+	}
+}
+

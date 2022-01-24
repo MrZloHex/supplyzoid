@@ -51,6 +51,13 @@ hex_str_to_u8
 );
 
 void
+u8_to_hex_str
+(
+	char *str,
+	u8 num
+);
+
+void
 reverse
 (
 	char *set,

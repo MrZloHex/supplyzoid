@@ -174,13 +174,20 @@ rapi_app_chksum(RAPI *rapi)
 {
 	u8 chksum = 0;
 	for (size i = 0; i < rapi->buf_index-1; ++i)
-	{
 		chksum ^= rapi->buf_cmd[i];
 
-	}
+	usart_rapi_print_u8(chksum);
+	char hx[3];
+	u8_to_hex_str(hx, chksum);
+	hx[2] = 0;
+	usart_rapi_println_str("");
+	usart_rapi_println_str(hx);
+	// u8_to_hex_str(rapi->buf_cmd + rapi->buf_index, chksum);
+	// rapi->buf_index += 2;
+	// rapi->buf_cmd[rapi->buf_index] = 0;
 
-
-
+	// usart_rapi_println_str(rapi->buf_cmd);
+	// strcpyy(rapi->buf_cmd, "\r\0");
 
 	return 8;
 }
