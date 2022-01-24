@@ -45,7 +45,7 @@ rapi_process_cmd
 
 
 
-u8
+void
 rapi_app_chksum(RAPI *rapi);
 
 
