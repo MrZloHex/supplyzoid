@@ -26,7 +26,7 @@ typedef struct
 void
 rapi_reset(RAPI *rapi);
 
-void
+bool
 rapi_update
 (
 	RAPI *rapi,

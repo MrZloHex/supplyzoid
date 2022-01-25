@@ -11,7 +11,7 @@ rapi_reset(RAPI *rapi)
 	rapi->buf_index = 0;
 }
 
-void
+bool
 rapi_update
 (
 	RAPI *rapi,
@@ -38,10 +38,12 @@ rapi_update
 						if (rapi_analyze(rapi))
 						{
 							rapi_process_cmd(rapi, ocpp);
+							return true;
 						}
 						else
 						{
 							rapi_reset(rapi);
+							return false;
 						}
 					}
 					else
@@ -52,10 +54,12 @@ rapi_update
 				else
 				{
 					rapi_reset(rapi);
+					return false;
 				}
 			}
 		}
 	}
+	return false;
 }
 
 
@@ -187,23 +191,18 @@ rapi_get_resp
 )
 {
 	rapi_reset(rapi);
+	bool upd = false;
 	do
-		rapi_update(rapi, ocpp);
-	while (rapi->buf_cmd[0] != RAPI_SOC);
+		upd = rapi_update(rapi, ocpp);
+	while (!upd);
+	
 
-	usart_rapi_println_str("GOT A RESP");
 	if (rapi->buf_cmd[2] == 'K')
 	{
 		if (rapi->buf_cmd[1] == 'O')
-		{
-			usart_rapi_println_str("OK RESP");
 			return true;
-		}
 		else if (rapi->buf_cmd[1] == 'N')
-		{
-			usart_rapi_println_str("NOT OK RESP");
 			return false;
-		}
 		else
 			return false;
 	}
@@ -225,5 +224,4 @@ rapi_app_chksum(RAPI *rapi)
 	rapi->buf_index += 2;
 	rapi->buf_cmd[rapi->buf_index++] = RAPI_EOC;
 	rapi->buf_cmd[rapi->buf_index] = 0;
-	return 8;
 }
