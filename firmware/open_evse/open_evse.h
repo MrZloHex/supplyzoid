@@ -49,7 +49,7 @@
 #define clrBits(flags,bits) (flags &= ~(bits))
 
 #ifndef VERSION
-#define VERSION "D8.1.1"
+#define VERSION "D8.2.0"
 #endif // !VERSION
 
 #include "Language_default.h"   //Default language should always be included as bottom layer
@@ -61,20 +61,18 @@ typedef unsigned long time_t;
 
 //-- begin features
 
+#ifndef PLATFORMIO
 //#define OCPP
 // support V6 hardware
 #define OEV6
 #ifdef OEV6
-//#define INVERT_V6_DETECTION // DO NOT USE: ONLY FOR lincomatic's BETA V6 board
+#define INVERT_V6_DETECTION // DO NOT USE: ONLY FOR lincomatic's BETA V6 board
 #define RELAY_PWM
 //#define RELAY_HOLD_DELAY_TUNING // enable Z0
 #endif // OEV6
 
 // enable CGMI support
 //#define ENABLE_CGMI
-
-// enable $GI
-#define MCU_ID_LEN 10
 
 // auto detect L1/L2
 #ifndef NO_AUTOSVCLEVEL
@@ -121,12 +119,29 @@ typedef unsigned long time_t;
 // EVSE must call state transition function for permission to change states
 //#define STATE_TRANSITION_REQ_FUNC
 
+// auto detect ampacity by PP pin resistor
+// #define PP_AUTO_AMPACITY
+
+// charge for a specified amount of time and then stop
+#define TIME_LIMIT
+
+
+// stop charging after a certain kWh reached - requires KWH_RECORDING
+#define CHARGE_LIMIT
+
+// support Mennekes (IEC 62196) type 2 locking pin
+#define MENNEKES_LOCK
+
+// Support for Nick Sayer's OpenEVSE II board, which has alternate hardware for ground check/stuck relay check and a voltmeter for L1/L2.
+//#define OPENEVSE_2
+
+#endif // !PLATFORMIO
+
+// enable $GI
+#define MCU_ID_LEN 10
 
 // enable watchdog timer
 #define WATCHDOG
-
-// auto detect ampacity by PP pin resistor
-// #define PP_AUTO_AMPACITY
 
 #ifdef PP_AUTO_AMPACITY
 #define STATE_TRANSITION_REQ_FUNC
@@ -135,15 +150,6 @@ typedef unsigned long time_t;
 
 extern AutoCurrentCapacityController g_ACCController;
 #endif
-
-// charge for a specified amount of time and then stop
-#define TIME_LIMIT
-
-// support Mennekes (IEC 62196) type 2 locking pin
-#define MENNEKES_LOCK
-
-// Support for Nick Sayer's OpenEVSE II board, which has alternate hardware for ground check/stuck relay check and a voltmeter for L1/L2.
-//#define OPENEVSE_2
 
 #ifdef OPENEVSE_2
 // If the AC voltage is > 150,000 mV, then it's L2. Else, L1.
@@ -209,8 +215,6 @@ extern AutoCurrentCapacityController g_ACCController;
 // comment out KWH_RECORDING to have the elapsed time and time of day displayed on the second line of the LCD
 #define KWH_RECORDING
 #ifdef KWH_RECORDING
-// stop charging after a certain kWh reached
-#define CHARGE_LIMIT
 
 // update interval in ms - code assumes that current/voltage are constant
 // during this interval
