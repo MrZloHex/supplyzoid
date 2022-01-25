@@ -3,6 +3,8 @@ amd64/evse/.vscode/
 amd64/ocpp/.vscode/
 armm0plus/.vscode/
 armm0plus/.pio/
+armm0plus/todo
+.vscode/
 
 chksum/chksum.o
 chksum/chksum
