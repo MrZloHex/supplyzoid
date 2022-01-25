@@ -43,6 +43,15 @@ rapi_process_cmd
 	OCPP *ocpp
 );
 
+void
+rapi_send_req(RAPI *rapi);
+
+bool
+rapi_get_resp
+(
+	RAPI *rapi,
+	OCPP *ocpp
+);
 
 
 void

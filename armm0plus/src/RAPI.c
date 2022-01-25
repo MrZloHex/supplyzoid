@@ -63,7 +63,7 @@ bool
 rapi_analyze(RAPI *rapi)
 {
 
-	usart_rapi_print_str("Get a new message: `");
+	usart_rapi_print_str("\nGet a new message: `");
 	usart_rapi_print_str(rapi->buf_cmd);
 	usart_rapi_print_str("`\n");
 
@@ -142,12 +142,12 @@ rapi_process_cmd
 	OCPP *ocpp
 )
 {
-	for (size i = 0; i < rapi->token_index; ++i)
-	{
-		usart_rapi_print_str("NEW TOKEN: `");
-		usart_rapi_print_str(rapi->tokens[i]);
-		usart_rapi_print_str("`\n");
-	}
+	// for (size i = 0; i < rapi->token_index; ++i)
+	// {
+	// 	usart_rapi_print_str("NEW TOKEN: `");
+	// 	usart_rapi_print_str(rapi->tokens[i]);
+	// 	usart_rapi_print_str("`\n");
+	// }
 
 	char *cmd = rapi->tokens[0];
 	switch (*cmd)
@@ -164,10 +164,55 @@ rapi_process_cmd
 					usart_rapi_println_str("ERROR: Unknown command");
 			}
 			break;
+		case 'O':
+		case 'N':
+			break;
 		default:
 			usart_rapi_println_str("ERROR: Unknown command");
 	}
 }
+
+void
+rapi_send_req(RAPI *rapi)
+{
+	usart_rapi_print_str(rapi->buf_cmd);
+	rapi_reset(rapi);
+}
+
+bool
+rapi_get_resp
+(
+	RAPI *rapi,
+	OCPP *ocpp
+)
+{
+	rapi_reset(rapi);
+	do
+		rapi_update(rapi, ocpp);
+	while (rapi->buf_cmd[0] != RAPI_SOC);
+
+	usart_rapi_println_str("GOT A RESP");
+	if (rapi->buf_cmd[2] == 'K')
+	{
+		if (rapi->buf_cmd[1] == 'O')
+		{
+			usart_rapi_println_str("OK RESP");
+			return true;
+		}
+		else if (rapi->buf_cmd[1] == 'N')
+		{
+			usart_rapi_println_str("NOT OK RESP");
+			return false;
+		}
+		else
+			return false;
+	}
+	else
+	{
+		return false;
+	}
+}
+
 
 void
 rapi_app_chksum(RAPI *rapi)

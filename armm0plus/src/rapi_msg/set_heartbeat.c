@@ -12,7 +12,7 @@ rapi_set_heartbeat_req
 	mjson_snprintf
 	(
 		payload, RAPI_BUF_LEN,
-		"$%s %lu^",
+		"$%s %lu 0^",
 		"SY",
 		time
 	);
