@@ -2,6 +2,7 @@
 #include "usart_rapi.h"
 
 #include "ocpp_msg/boot_notification.h"
+#include "rapi_msg/boot_notification.h"
 #include "OCPP.h"
 
 void
@@ -160,9 +161,7 @@ rapi_process_cmd
 			switch (*(cmd+1))
 			{
 				case 'B':
-					// handle BOOT TROUBLES
-					ocpp_boot_notification_req(ocpp);
-					ocpp_send_req(ocpp, BOOT_NOTIFICATION);
+					rapi_boot_notification_req(rapi, ocpp);
 					break;
 				default:
 					usart_rapi_println_str("ERROR: Unknown command");

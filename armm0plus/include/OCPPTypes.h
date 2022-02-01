@@ -89,6 +89,7 @@ typedef struct
 {
 	unsigned int id;
 	bool waiting_for_resp;
+	bool booted;
 	OCPPMessage now;
 	OCPPMessage last;
 } OCPP;

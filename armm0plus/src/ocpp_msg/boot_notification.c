@@ -38,8 +38,6 @@ ocpp_boot_notification_conf
 
 	ocpp->waiting_for_resp = false;
 
-	serial_println_str("Got a BOOT NOTIFICATION confirmation");
-
 	if (ocpp->now.type == CALLERROR)
 	{
 		return;  // TODO: add handling CALLERRROR
@@ -64,12 +62,12 @@ ocpp_boot_notification_conf
 	if (res_st == -1)
 		return;
 
-	// if (strcmpp(status, "Accepted"))
-	// 	evse->booted = true;
-	// else if (strcmpp(status, "Pending") || strcmpp(status, "Rejected"))
-	// 	evse->booted = false;
-	// else
-	// 	return;
+	if (strcmpp(status, "Accepted"))
+		ocpp->booted = true;
+	else if (strcmpp(status, "Pending") || strcmpp(status, "Rejected"))
+		ocpp->booted = false;
+	else
+		return;
 
 	char time[25];
 	int res_time = mjson_get_string(ocpp->now.call_result.payload, pay_len, P_CURRENT_TIME, time, 25);

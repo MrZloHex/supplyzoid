@@ -17,6 +17,7 @@ ocpp_init(OCPP *ocpp)
 {
 	ocpp->id = 1;
 	ocpp->waiting_for_resp = false;
+	ocpp->booted = false;
 
 	ocpp->now.call.payload = (char *) malloc(sizeof(char)*PAYLOAD_LEN);
 	ocpp->now.call_result.payload      = (char *) malloc(sizeof(char)*PAYLOAD_LEN);
@@ -110,33 +111,39 @@ ocpp_handle_message
 	if (res_parse == ERROR_P)
 		return;
 
-	if (ocpp->waiting_for_resp)
+
+	if (!ocpp->booted)
 	{
-		if (ocpp->last.call.action == BOOT_NOTIFICATION)
+		if (ocpp->waiting_for_resp)
 			ocpp_boot_notification_conf(ocpp, rapi, rtc);
-		else if (ocpp->last.call.action == START_TRANSACTION)
-			ocpp_start_transaction_conf(ocpp, rapi);
-		else if (ocpp->last.call.action == STOP_TRANSACTION)
-			ocpp_stop_transaction_conf(ocpp, rapi);
-		else if (ocpp->last.call.action == METER_VALUES)
-			ocpp_meter_values_conf(ocpp);
-		else if (ocpp->last.call.action == HEARTBEAT)
-			ocpp_heartbeat_conf(ocpp);
-		else if (ocpp->last.call.action == DATA_TRANSFER)
-			ocpp_data_transfer_conf(ocpp);
-		// else
-			// printf("NOT IMPLEMETED\n");
 	}
 	else
 	{
-		ocpp_next(ocpp);
-
-		if (ocpp->last.call.action == REMOTE_START_TRANSACTION)
-			ocpp_remote_start_transaction_req(ocpp, rapi);
-		else if (ocpp->last.call.action == REMOTE_STOP_TRANSACTION)
-			ocpp_remote_stop_transaction_req(ocpp, rapi);
-		// else
-			// printf("NOT IMPLEMETED\n");
+		if (ocpp->waiting_for_resp)
+		{
+			if (ocpp->last.call.action == START_TRANSACTION)
+				ocpp_start_transaction_conf(ocpp, rapi);
+			else if (ocpp->last.call.action == STOP_TRANSACTION)
+				ocpp_stop_transaction_conf(ocpp, rapi);
+			else if (ocpp->last.call.action == METER_VALUES)
+				ocpp_meter_values_conf(ocpp);
+			else if (ocpp->last.call.action == HEARTBEAT)
+				ocpp_heartbeat_conf(ocpp);
+			else if (ocpp->last.call.action == DATA_TRANSFER)
+				ocpp_data_transfer_conf(ocpp);
+			// else
+				// printf("NOT IMPLEMETED\n");
+		}
+		else
+		{
+			ocpp_next(ocpp);
+			if (ocpp->last.call.action == REMOTE_START_TRANSACTION)
+				ocpp_remote_start_transaction_req(ocpp, rapi);
+			else if (ocpp->last.call.action == REMOTE_STOP_TRANSACTION)
+				ocpp_remote_stop_transaction_req(ocpp, rapi);
+			// else
+				// printf("NOT IMPLEMETED\n");
+		}
 	}
 }
 

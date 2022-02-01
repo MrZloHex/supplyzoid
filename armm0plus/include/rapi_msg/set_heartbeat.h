@@ -1,5 +1,5 @@
-#ifndef SET_HEARTBEAT_H_
-#define SET_HEARTBEAT_H_
+#ifndef RAPI_SET_HEARTBEAT_H_
+#define RAPI_SET_HEARTBEAT_H_
 
 #include "RAPI.h"
 #include "time_format.h"
@@ -14,4 +14,4 @@ rapi_set_heartbeat_req
 void
 rapi_set_heartbeat_resp(RAPI *rapi);
 
-#endif /* SET_HEARTBEAT_H_ */
+#endif /* RAPI_SET_HEARTBEAT_H_ */

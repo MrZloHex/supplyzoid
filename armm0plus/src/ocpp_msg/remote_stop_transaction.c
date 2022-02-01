@@ -9,7 +9,7 @@ ocpp_remote_stop_transaction_req
 	RAPI *rapi
 )
 {
-	// printf("REMOTE STOP TRANSACTION\n");
+	serial_print_str("REMOTE STOP TRANSACTION\n");
 	
 	size pay_len = strlenn(ocpp->last.call.payload);
 

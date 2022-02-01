@@ -9,7 +9,8 @@ ocpp_remote_start_transaction_req
 	RAPI *rapi
 )
 {
-	// printf("REMOTE START TRANSACTION\n");
+	// printf("REMOTE START? TRANSACTION\n");
+	serial_println_str("START TRANSACRTION");
 	
 	size pay_len = strlenn(ocpp->last.call.payload);
 
@@ -18,30 +19,30 @@ ocpp_remote_start_transaction_req
 	if (res_id == -1)
 		return;
 
-	bool reject;
-	// if (evse->is_transaction)
-	// {
-	// 	ocpp_remote_start_transaction_conf(ocpp, RSS_REJECTED);
-	// 	reject = true;
-	// }
-	// else
-	// {
-	// 	ocpp_remote_start_transaction_conf(ocpp, RSS_ACCEPTED);
-	// 	reject = false;
-	// }
-	ocpp_send_resp(ocpp, CALLRESULT);
-	if (reject)
-		return;
+	// bool reject;
+	// // if (evse->is_transaction)
+	// // {
+	// // 	ocpp_remote_start_transaction_conf(ocpp, RSS_REJECTED);
+	// // 	reject = true;
+	// // }
+	// // else
+	// // {
+	// // 	ocpp_remote_start_transaction_conf(ocpp, RSS_ACCEPTED);
+	// // 	reject = false;
+	// // }
+	// ocpp_send_resp(ocpp, CALLRESULT);
+	// if (reject)
+	// 	return;
 	
-	// PREPARING
-	// evse_change_state(evse, ocpp, S_PREPARING);
-	// TRANSACTION
-	// evse_start_transaction(evse);
-	// CHARGING
-	// evse_change_state(evse, ocpp, S_CHARGING);
+	// // PREPARING
+	// // evse_change_state(evse, ocpp, S_PREPARING);
+	// // TRANSACTION
+	// // evse_start_transaction(evse);
+	// // CHARGING
+	// // evse_change_state(evse, ocpp, S_CHARGING);
 
-	ocpp_start_transaction_req(ocpp, rapi, id_tag);
-	ocpp_send_req(ocpp, START_TRANSACTION);
+	// ocpp_start_transaction_req(ocpp, rapi, id_tag);
+	// ocpp_send_req(ocpp, START_TRANSACTION);
 }
 
 void
