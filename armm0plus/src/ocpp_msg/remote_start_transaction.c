@@ -1,6 +1,8 @@
 #include "ocpp_msg/remote_start_transaction.h"
 #include "ocpp_msg/start_transaction.h"
 
+#include "rapi_msg/get_state.h"
+
 
 void
 ocpp_remote_start_transaction_req
@@ -17,6 +19,12 @@ ocpp_remote_start_transaction_req
 	char id_tag[21];
 	int res_id = mjson_get_string(ocpp->last.call.payload, pay_len, P_ID_TAG, id_tag, 20);
 	if (res_id == -1)
+		return;
+
+	rapi_get_state_req(rapi);
+	rapi_send_req(rapi);
+	bool resp = rapi_get_resp(rapi, ocpp);
+	if (!resp)
 		return;
 
 	// bool reject;

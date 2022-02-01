@@ -13,6 +13,22 @@
 
 #define RAPI_MAX_TOKENS 10
 
+// EVSE states for m_EvseState
+#define EVSE_STATE_UNKNOWN 0x00
+#define EVSE_STATE_A 0x01 // vehicle state A 12V - not connected
+#define EVSE_STATE_B 0x02 // vehicle state B 9V - connected, ready
+#define EVSE_STATE_C 0x03 // vehicle state C 6V - charging
+#define EVSE_STATE_D 0x04 // vehicle state D 3V - vent required
+#define EVSE_FAULT_STATE_BEGIN EVSE_STATE_D
+#define EVSE_STATE_DIODE_CHK_FAILED 0x05 // diode check failed
+#define EVSE_STATE_GFCI_FAULT 0x06 // GFCI fault
+#define EVSE_STATE_NO_GROUND 0x07 //bad ground
+#define EVSE_STATE_STUCK_RELAY 0x08 //stuck relay
+#define EVSE_STATE_GFI_TEST_FAILED 0x09 // GFI self-test failure
+#define EVSE_STATE_OVER_TEMPERATURE 0x0A // over temperature error shutdown
+#define EVSE_STATE_OVER_CURRENT 0x0B // over current error shutdown
+#define EVSE_FAULT_STATE_END EVSE_STATE_OVER_CURRENT
+
 
 typedef struct
 {
