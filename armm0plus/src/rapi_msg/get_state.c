@@ -2,8 +2,6 @@
 
 #include "convert.h"
 
-#define NULL ((void *)0)
-
 void
 rapi_get_state_req(RAPI *rapi)
 {

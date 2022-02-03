@@ -6,6 +6,8 @@
 #include "convert.h"
 #include "OCPPTypes.h"
 
+#define NULL ((void *)0)
+
 #define RAPI_BUF_LEN 32
 #define RAPI_SOC '$'
 #define RAPI_EOC 0xD

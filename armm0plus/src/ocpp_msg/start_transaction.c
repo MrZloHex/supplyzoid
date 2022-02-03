@@ -1,4 +1,5 @@
 #include "ocpp_msg/start_transaction.h"
+#include "rapi_msg/get_energy_usage.h"
 
 
 void
@@ -12,17 +13,27 @@ ocpp_start_transaction_req
 	char id[37];
 	int_to_charset(ocpp->id, id, 1);
 
+	rapi_get_energy_usage_req(rapi);
+	rapi_send_req(rapi);
+	bool resp = rapi_get_resp(rapi, ocpp);
+	if (!resp)
+		return;
+
+	u32 ws;
+	rapi_get_energy_usage_resp(rapi, &ws, NULL);
+	u32 wh = ws / 3600;
+
 	char payload[PAYLOAD_LEN];
 	mjson_snprintf
 	(
 		payload, PAYLOAD_LEN,
-		"{%Q:%u,%Q:%Q,%Q:%ld,%Q:%Q}",
+		"{%Q:%u,%Q:%Q,%Q:%lu,%Q:%Q}",
 		"connectorId",
 		1,
 		"idTag",
 		id_tag,
 		"meterStart",
-		// evse->meter_value,
+		wh,
 		"timestamp",
 		// TIMESTAMP
 		"18.06.2021.687"
