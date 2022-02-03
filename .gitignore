@@ -4,7 +4,9 @@ amd64/ocpp/.vscode/
 armm0plus/.vscode/
 armm0plus/.pio/
 armm0plus/todo
+armm0plus/req
 .vscode/
+
 
 chksum/chksum.o
 chksum/chksum
