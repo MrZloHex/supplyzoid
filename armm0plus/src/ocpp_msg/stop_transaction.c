@@ -1,16 +1,31 @@
 #include "ocpp_msg/stop_transaction.h"
+#include "rapi_msg/get_energy_usage.h"
 
+#include "RTC.h"
 
 void
 ocpp_stop_transaction_req
 (
 	OCPP *ocpp,
-	RAPI *rapi
-
+	RAPI *rapi,
+	STM32RTC *rtc
 )
 {
 	char id[37];
 	int_to_charset(ocpp->id, id, 1);
+
+	rapi_get_energy_usage_req(rapi);
+	rapi_send_req(rapi);
+	bool resp = rapi_get_resp(rapi, ocpp);
+	if (!resp)
+		return;
+
+	u32 ws;
+	rapi_get_energy_usage_resp(rapi, &ws, NULL);
+	u32 wh = ws / 3600;
+
+	char time[25] = {0};
+	get_rtc_time(rtc, time);
 
 	char payload[PAYLOAD_LEN];
 	mjson_snprintf
@@ -18,12 +33,11 @@ ocpp_stop_transaction_req
 		payload, PAYLOAD_LEN,
 		"{%Q:%ld,%Q:%Q,%Q:%d}",
 		"meterStop",
-		// evse->meter_value,
+		wh,
 		"timestamp",
-		// TIMESTAMP
-		"18.06.2021.687",
-		"transactionId"
-		// evse->transactionID
+		time,
+		"transactionId",
+		ocpp->transactionID
 	);
 
 	
@@ -36,8 +50,7 @@ ocpp_stop_transaction_req
 void
 ocpp_stop_transaction_conf
 (
-	OCPP *ocpp,
-	RAPI *rapi
+	OCPP *ocpp
 )
 {
 	if (ocpp->last.ID != ocpp->now.ID)

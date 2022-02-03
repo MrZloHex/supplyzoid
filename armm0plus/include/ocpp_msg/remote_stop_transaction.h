@@ -9,7 +9,8 @@ void
 ocpp_remote_stop_transaction_req
 (
 	OCPP *ocpp,
-	RAPI *rapi
+	RAPI *rapi,
+	STM32RTC *rtc
 );
 
 void

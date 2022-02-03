@@ -17,8 +17,7 @@ ocpp_start_transaction_req
 void
 ocpp_start_transaction_conf
 (
-	OCPP *ocpp,
-	RAPI *rapi
+	OCPP *ocpp
 );
 
 #endif /* START_TRANSACTION_H_ */

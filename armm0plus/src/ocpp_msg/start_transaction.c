@@ -52,8 +52,7 @@ ocpp_start_transaction_req
 void
 ocpp_start_transaction_conf
 (
-	OCPP *ocpp,
-	RAPI *rapi
+	OCPP *ocpp
 )
 {
 	if (ocpp->last.ID != ocpp->now.ID)
@@ -73,7 +72,7 @@ ocpp_start_transaction_conf
 	if (res_int == 0)
 		return;
 
-	// evse->transactionID = (int)transaction_id;
+	ocpp->transactionID = (int)transaction_id;
 		
 	serial_println_str("TRANSACTION CONFIRMED");
 }

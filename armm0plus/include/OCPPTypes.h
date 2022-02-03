@@ -92,6 +92,7 @@ typedef struct
 	bool booted;
 	OCPPMessage now;
 	OCPPMessage last;
+	int transactionID;
 } OCPP;
 
 

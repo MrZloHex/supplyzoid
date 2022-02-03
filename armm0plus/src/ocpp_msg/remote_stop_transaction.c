@@ -1,12 +1,14 @@
 #include "ocpp_msg/remote_stop_transaction.h"
 #include "ocpp_msg/stop_transaction.h"
 
+#include "rapi_msg/get_state.h"
 
 void
 ocpp_remote_stop_transaction_req
 (
 	OCPP *ocpp,
-	RAPI *rapi
+	RAPI *rapi,
+	STM32RTC *rtc
 )
 {
 	serial_print_str("REMOTE STOP TRANSACTION\n");
@@ -17,21 +19,30 @@ ocpp_remote_stop_transaction_req
 	int res_id = mjson_get_number(ocpp->last.call.payload, pay_len, P_TRANSACTION_ID, &transaction_id_d);
 	if (res_id == 0)
 		return;
+
 	int transaction_id = (int)transaction_id_d;
 
-	bool reject;
-	// if (evse->is_transaction && (evse->transactionID == transaction_id))
-	// {
-	// 	ocpp_remote_stop_transaction_conf(ocpp, RSS_ACCEPTED);
-	// 	reject = false;
-	// }
-	// else
-	// {
-	// 	ocpp_remote_stop_transaction_conf(ocpp, RSS_REJECTED);
-	// 	reject = true;
-	// }
-	ocpp_send_resp(ocpp, CALLRESULT);
+	rapi_get_state_req(rapi);
+	rapi_send_req(rapi);
+	bool resp = rapi_get_resp(rapi, ocpp);
+	if (!resp)
+		return;
 
+	u8 evse_state;
+	rapi_get_state_resp(rapi, &evse_state, NULL, NULL, NULL);
+	
+	bool reject;
+	if (evse_state == EVSE_STATE_C && (ocpp->transactionID == transaction_id))
+	{
+		ocpp_remote_start_transaction_conf(ocpp, RSS_ACCEPTED);
+		reject = false;
+	}
+	else
+	{
+		ocpp_remote_start_transaction_conf(ocpp, RSS_REJECTED);
+		reject = true;
+	}
+	ocpp_send_resp(ocpp, CALLRESULT);
 	if (reject)
 		return;
 
@@ -40,7 +51,7 @@ ocpp_remote_stop_transaction_req
 	// FINISHED
 	// evse_change_state(evse, ocpp, S_FINISHING);
 
-	// ocpp_stop_transaction_req(ocpp, evse);
+	ocpp_stop_transaction_req(ocpp, rapi, rtc);
 	ocpp_send_req(ocpp, STOP_TRANSACTION);
 }
 

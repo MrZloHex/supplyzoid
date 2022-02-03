@@ -16,6 +16,7 @@ void
 ocpp_init(OCPP *ocpp)
 {
 	ocpp->id = 1;
+	ocpp->transactionID = 0;
 	ocpp->waiting_for_resp = false;
 	ocpp->booted = false;
 
@@ -105,7 +106,8 @@ ocpp_handle_message
 	const size length
 )
 {
-	// printf("HANDLE NEW MESSAGE: `%s`\n", str);
+	// serial_print_str("HANDLE NEW MESSAGE: \n");
+	// serial_println_str(str);
 
 	OCPPResult res_parse = ocpp_parse_message(ocpp, str, length);
 	if (res_parse == ERROR_P)
@@ -122,9 +124,9 @@ ocpp_handle_message
 		if (ocpp->waiting_for_resp)
 		{
 			if (ocpp->last.call.action == START_TRANSACTION)
-				ocpp_start_transaction_conf(ocpp, rapi);
+				ocpp_start_transaction_conf(ocpp);
 			else if (ocpp->last.call.action == STOP_TRANSACTION)
-				ocpp_stop_transaction_conf(ocpp, rapi);
+				ocpp_stop_transaction_conf(ocpp);
 			else if (ocpp->last.call.action == METER_VALUES)
 				ocpp_meter_values_conf(ocpp);
 			else if (ocpp->last.call.action == HEARTBEAT)
@@ -140,7 +142,7 @@ ocpp_handle_message
 			if (ocpp->last.call.action == REMOTE_START_TRANSACTION)
 				ocpp_remote_start_transaction_req(ocpp, rapi, rtc);
 			else if (ocpp->last.call.action == REMOTE_STOP_TRANSACTION)
-				ocpp_remote_stop_transaction_req(ocpp, rapi);
+				ocpp_remote_stop_transaction_req(ocpp, rapi, rtc);
 			// else
 				// printf("NOT IMPLEMETED\n");
 		}
