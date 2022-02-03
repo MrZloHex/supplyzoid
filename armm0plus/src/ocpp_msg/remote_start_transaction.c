@@ -27,20 +27,23 @@ ocpp_remote_start_transaction_req
 	if (!resp)
 		return;
 
-	// bool reject;
-	// // if (evse->is_transaction)
-	// // {
-	// // 	ocpp_remote_start_transaction_conf(ocpp, RSS_REJECTED);
-	// // 	reject = true;
-	// // }
-	// // else
-	// // {
-	// // 	ocpp_remote_start_transaction_conf(ocpp, RSS_ACCEPTED);
-	// // 	reject = false;
-	// // }
-	// ocpp_send_resp(ocpp, CALLRESULT);
-	// if (reject)
-	// 	return;
+	u8 evse_state;
+	rapi_get_state_resp(rapi, &evse_state, NULL, NULL, NULL);
+	
+	bool reject;
+	if (evse_state != EVSE_STATE_B)
+	{
+		ocpp_remote_start_transaction_conf(ocpp, RSS_REJECTED);
+		reject = true;
+	}
+	else
+	{
+		ocpp_remote_start_transaction_conf(ocpp, RSS_ACCEPTED);
+		reject = false;
+	}
+	ocpp_send_resp(ocpp, CALLRESULT);
+	if (reject)
+		return;
 	
 	// // PREPARING
 	// // evse_change_state(evse, ocpp, S_PREPARING);
@@ -49,8 +52,8 @@ ocpp_remote_start_transaction_req
 	// // CHARGING
 	// // evse_change_state(evse, ocpp, S_CHARGING);
 
-	// ocpp_start_transaction_req(ocpp, rapi, id_tag);
-	// ocpp_send_req(ocpp, START_TRANSACTION);
+	ocpp_start_transaction_req(ocpp, rapi, id_tag);
+	ocpp_send_req(ocpp, START_TRANSACTION);
 }
 
 void

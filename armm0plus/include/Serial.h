@@ -8,6 +8,9 @@ serial_print_str(const char *str);
 int
 serial_println_str(const char *str);
 
+int
+serial_println_num(const int num);
+
 bool
 serial_available();
 

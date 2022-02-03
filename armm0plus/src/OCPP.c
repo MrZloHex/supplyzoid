@@ -302,7 +302,7 @@ ocpp_send_resp
 
 
 		// SENDING
-		// printf("SENDING RESPONSE: `%s`\n", req);
+		serial_println_str(req);
 		// SENDING
 	}
 	else if (type == CALLERROR)

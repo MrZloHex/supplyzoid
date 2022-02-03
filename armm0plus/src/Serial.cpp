@@ -19,6 +19,14 @@ serial_println_str(const char *str)
 
 extern "C"
 int
+serial_println_num(const int num)
+{
+	return serial.printf("%d\n", num);
+}
+
+
+extern "C"
+int
 serial_available()
 {
 	return serial.available();
