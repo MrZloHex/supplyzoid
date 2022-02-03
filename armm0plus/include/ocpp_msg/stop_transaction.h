@@ -1,6 +1,8 @@
 #ifndef STOP_TRANSACTION_H_
 #define STOP_TRANSACTION_H_
 
+#define P_ID_INFO_STATUS "$.idTagInfo.status"
+
 #include "OCPP.h"
 
 void

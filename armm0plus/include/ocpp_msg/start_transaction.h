@@ -4,6 +4,7 @@
 #include "OCPP.h"
 
 #define P_TRANSACTION_ID "$.transactionId"
+#define P_ID_INFO_STATUS "$.idTagInfo.status"
 
 void
 ocpp_start_transaction_req

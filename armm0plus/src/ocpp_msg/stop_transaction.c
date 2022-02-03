@@ -65,7 +65,19 @@ ocpp_stop_transaction_conf
 
 	// AVAILABLE
 	// evse_change_state(evse, ocpp, S_AVAILABLE);
+	size pay_len = strlenn(ocpp->now.call_result.payload);
 
-	serial_println_str("TRANSACTION FINISHED\n");
+	char status[10];
+	int res_st = mjson_get_string(ocpp->now.call_result.payload, pay_len, P_ID_INFO_STATUS, status, 10);
+	if (res_st < 1)
+		return;
+
+	if (strcmpp("Accepted", status))
+		serial_println_str("TRANSACTION FINISHED\n");
+	else if (strcmpp("Rejected", status))
+		serial_println_str("FAILED TO FINISH TRANSACTION");
+	else
+		return;
+
 }
 

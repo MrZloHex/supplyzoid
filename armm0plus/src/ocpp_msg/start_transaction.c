@@ -72,7 +72,24 @@ ocpp_start_transaction_conf
 	if (res_int == 0)
 		return;
 
-	ocpp->transactionID = (int)transaction_id;
+	char status[10];
+	int res_st = mjson_get_string(ocpp->now.call_result.payload, pay_len, P_ID_INFO_STATUS, status, 10);
+	if (res_st < 1)
+		return;
+
+	if (strcmpp("Accepted", status))
+	{
+		ocpp->transactionID = (int)transaction_id;
+		serial_println_str("TRANSACTION CONFIRMED");
+	}
+	else if (strcmpp("Rejected", status))
+	{
+		serial_println_str("TRANSACTION REJECTED");
+	}
+	else
+	{
+		return;
+	}
+
 		
-	serial_println_str("TRANSACTION CONFIRMED");
 }
