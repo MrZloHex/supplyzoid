@@ -50,7 +50,6 @@ ocpp_boot_notification_conf
 	if (res_int == 0)
 		return;
 	
-	// evse->HeartbeatInterval = (my_time)interval;
 	rapi_set_heartbeat_req(rapi, (my_time)interval);
 	rapi_send_req(rapi);
 	bool resp = rapi_get_resp(rapi, ocpp);

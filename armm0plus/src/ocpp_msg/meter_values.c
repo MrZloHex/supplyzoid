@@ -7,6 +7,16 @@ ocpp_meter_values_req
 	RAPI *rapi
 )
 {
+	rapi_get_energy_usage_req(rapi);
+	rapi_send_req(rapi);
+	bool resp = rapi_get_resp(rapi, ocpp);
+	if (!resp)
+		return;
+
+	u32 ws;
+	rapi_get_energy_usage_resp(rapi, &ws, NULL);
+	u32 wh = ws / 3600;
+
 	char payload[PAYLOAD_LEN];
 	mjson_snprintf
 	(
@@ -14,8 +24,8 @@ ocpp_meter_values_req
 		"{%Q:%d,%Q:%lu}",
 		"connectorId",
 		1,
-		"meterValue"
-		// evse->meter_value
+		"meterValue",
+		ws
 	);
 
 	ocpp->now.type = CALL;
