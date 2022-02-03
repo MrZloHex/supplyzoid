@@ -138,7 +138,7 @@ ocpp_handle_message
 		{
 			ocpp_next(ocpp);
 			if (ocpp->last.call.action == REMOTE_START_TRANSACTION)
-				ocpp_remote_start_transaction_req(ocpp, rapi);
+				ocpp_remote_start_transaction_req(ocpp, rapi, rtc);
 			else if (ocpp->last.call.action == REMOTE_STOP_TRANSACTION)
 				ocpp_remote_stop_transaction_req(ocpp, rapi);
 			// else

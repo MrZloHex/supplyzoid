@@ -10,6 +10,7 @@ ocpp_start_transaction_req
 (
 	OCPP *ocpp,
 	RAPI *rapi,
+	STM32RTC *rtc,
 	char id_tag[21]
 );
 

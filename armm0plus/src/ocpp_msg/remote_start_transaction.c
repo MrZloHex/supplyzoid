@@ -8,7 +8,8 @@ void
 ocpp_remote_start_transaction_req
 (
 	OCPP *ocpp,
-	RAPI *rapi
+	RAPI *rapi,
+	STM32RTC *rtc
 )
 {
 	// printf("REMOTE START? TRANSACTION\n");
@@ -52,7 +53,7 @@ ocpp_remote_start_transaction_req
 	// // CHARGING
 	// // evse_change_state(evse, ocpp, S_CHARGING);
 
-	ocpp_start_transaction_req(ocpp, rapi, id_tag);
+	ocpp_start_transaction_req(ocpp, rapi, rtc, id_tag);
 	ocpp_send_req(ocpp, START_TRANSACTION);
 }
 

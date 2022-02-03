@@ -14,4 +14,11 @@ adjust_rtc_time
     char time[25]
 );
 
+void
+get_rtc_time
+(
+    STM32RTC *rtc,
+    char time[25]
+);
+
 #endif /* RTC_H_ */

@@ -1,12 +1,14 @@
 #include "ocpp_msg/start_transaction.h"
 #include "rapi_msg/get_energy_usage.h"
 
+#include "RTC.h"
 
 void
 ocpp_start_transaction_req
 (
 	OCPP *ocpp,
 	RAPI *rapi,
+	STM32RTC *rtc,
 	char id_tag[21]
 )
 {
@@ -23,6 +25,9 @@ ocpp_start_transaction_req
 	rapi_get_energy_usage_resp(rapi, &ws, NULL);
 	u32 wh = ws / 3600;
 
+	char time[25] = {0};
+	get_rtc_time(rtc, time);
+
 	char payload[PAYLOAD_LEN];
 	mjson_snprintf
 	(
@@ -35,8 +40,7 @@ ocpp_start_transaction_req
 		"meterStart",
 		wh,
 		"timestamp",
-		// TIMESTAMP
-		"18.06.2021.687"
+		time
 	);
 
 	ocpp->now.type = CALL;
