@@ -10,6 +10,7 @@
 #include "ocpp_msg/meter_values.h"
 #include "ocpp_msg/heartbeat.h"
 #include "ocpp_msg/data_transfer.h"
+#include "ocpp_msg/reset.h"
 
 
 void
@@ -143,6 +144,8 @@ ocpp_handle_message
 				ocpp_remote_start_transaction_req(ocpp, rapi, rtc);
 			else if (ocpp->last.call.action == REMOTE_STOP_TRANSACTION)
 				ocpp_remote_stop_transaction_req(ocpp, rapi, rtc);
+			else if (ocpp->last.call.action == RESET)
+				ocpp_reset_req(ocpp, rapi, rtc);
 			// else
 				// printf("NOT IMPLEMETED\n");
 		}
@@ -249,6 +252,8 @@ ocpp_send_req
 		strcpyy(action_str, "HeartBeat");
 	else if (action == DATA_TRANSFER)
 		strcpyy(action_str, "DataTransfer");
+	else if (action == RESET)
+		strcpyy(action_str, "Reset");
 	else
 	{
 		// printf("NO SUCH REQUEST AVAILABLE\n");
@@ -387,6 +392,8 @@ ocpp_get_action
 		return REMOTE_START_TRANSACTION;
 	else if (strcmpp(buf, "RemoteStopTransaction"))
 		return REMOTE_STOP_TRANSACTION;
+	else if (strcmpp(buf, "Reset"))
+		return RESET;
 	else
 		return ERROR_P;
 }
