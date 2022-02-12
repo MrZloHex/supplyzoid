@@ -3,8 +3,6 @@
 
 #include "RAPI.h"
 
-#define AUTH_UNLOCKED 0
-#define AUTH_LOCKED 1
 
 void
 rapi_set_auth_lock_req

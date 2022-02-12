@@ -2,6 +2,7 @@
 #include "ocpp_msg/stop_transaction.h"
 
 #include "rapi_msg/get_state.h"
+#include "rapi_msg/set_auth_lock.h"
 #include "Serial.h"
 
 void
@@ -47,10 +48,11 @@ ocpp_remote_stop_transaction_req
 	if (reject)
 		return;
 
-	// TRANSACTION
-	// evse_stop_transaction(evse);
-	// FINISHED
-	// evse_change_state(evse, ocpp, S_FINISHING);
+	rapi_set_auth_lock_req(rapi, AUTH_LOCKED);
+	rapi_send_req(rapi);
+	resp = rapi_get_resp(rapi, ocpp);
+	if (!resp)
+		return;
 
 	ocpp_stop_transaction_req(ocpp, rapi, rtc);
 	ocpp_send_req(ocpp, STOP_TRANSACTION);

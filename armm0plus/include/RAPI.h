@@ -40,6 +40,9 @@
 #define EVSE_STATE_SLEEPING 0xfe // waiting for timer
 #define EVSE_STATE_DISABLED 0xff // disabled
 
+// Auth lock state
+#define AUTH_UNLOCKED 0
+#define AUTH_LOCKED 1
 
 typedef struct
 {
