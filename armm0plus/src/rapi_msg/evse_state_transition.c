@@ -7,7 +7,7 @@ rapi_evse_state_transition_req
     OCPP *ocpp
 )
 {
-
+    
 }
 
 void

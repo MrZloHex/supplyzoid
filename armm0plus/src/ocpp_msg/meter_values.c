@@ -1,4 +1,5 @@
 #include "ocpp_msg/meter_values.h"
+#include "rapi_msg/get_energy_usage.h"
 
 void
 ocpp_meter_values_req

@@ -1,16 +1,16 @@
-#include "rapi_msg/reset.h"
+#include "rapi_msg/enable.h"
 #include "usart_rapi.h"
 
 void
-rapi_reset_req(RAPI *rapi)
+rapi_enable_req(RAPI *rapi)
 {
-	usart_rapi_println_str("Reset");
+	usart_rapi_println_str("Enable");
 	char payload[RAPI_BUF_LEN];
 	mjson_snprintf
 	(
 		payload, RAPI_BUF_LEN,
 		"$%s^",
-		"FR"
+		"FE"
 	);
 
 	strcpyy(rapi->buf_cmd, payload);
@@ -19,7 +19,8 @@ rapi_reset_req(RAPI *rapi)
 }
 
 void
-rapi_reset_resp(RAPI *rapi)
+rapi_enable_resp(RAPI *rapi)
 {
 
 }
+

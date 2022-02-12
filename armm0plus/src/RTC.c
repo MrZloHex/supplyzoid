@@ -1,6 +1,8 @@
 #include "RTC.h"
 #include "mjson.h"
 
+#include "Serial.h"
+
 static int
 zero_2_int
 (
