@@ -2,6 +2,7 @@
 #include "ocpp_msg/start_transaction.h"
 
 #include "rapi_msg/get_state.h"
+#include "rapi_msg/set_auth_lock.h"
 #include "Serial.h"
 
 void
@@ -29,29 +30,30 @@ ocpp_remote_start_transaction_req
 		return;
 
 	u8 evse_state;
-	rapi_get_state_resp(rapi, &evse_state, NULL, NULL, NULL);
+	u8 pilot_state;
+	rapi_get_state_resp(rapi, &evse_state, NULL, &pilot_state, NULL);
 	
 	bool reject;
-	if (evse_state != EVSE_STATE_B)
-	{
-		ocpp_remote_start_transaction_conf(ocpp, RSS_REJECTED);
-		reject = true;
-	}
-	else
+	if (evse_state == EVSE_STATE_B && pilot_state == EVSE_STATE_C)
 	{
 		ocpp_remote_start_transaction_conf(ocpp, RSS_ACCEPTED);
 		reject = false;
+	}
+	else
+	{
+		ocpp_remote_start_transaction_conf(ocpp, RSS_REJECTED);
+		reject = true;
 	}
 	ocpp_send_resp(ocpp, CALLRESULT);
 	if (reject)
 		return;
 	
-	// // PREPARING
-	// // evse_change_state(evse, ocpp, S_PREPARING);
-	// // TRANSACTION
-	// // evse_start_transaction(evse);
-	// // CHARGING
-	// // evse_change_state(evse, ocpp, S_CHARGING);
+	rapi_set_auth_lock_req(rapi, AUTH_UNLOCKED);
+	rapi_send_req(rapi);
+	resp = rapi_get_resp(rapi, ocpp);
+	if (!resp)
+		return;
+
 
 	ocpp_start_transaction_req(ocpp, rapi, rtc, id_tag);
 	ocpp_send_req(ocpp, START_TRANSACTION);

@@ -1,5 +1,4 @@
 #include "ocpp_msg/boot_notification.h"
-#include "rapi_msg/set_heartbeat.h"
 
 
 void
@@ -50,11 +49,6 @@ ocpp_boot_notification_conf
 	if (res_int == 0)
 		return;
 	
-	rapi_set_heartbeat_req(rapi, (my_time)interval);
-	rapi_send_req(rapi);
-	bool resp = rapi_get_resp(rapi, ocpp);
-	if (!resp)
-		return;
 
 	char status[9];
 	int res_st = mjson_get_string(ocpp->now.call_result.payload, pay_len, P_STATUS, status, 9);
