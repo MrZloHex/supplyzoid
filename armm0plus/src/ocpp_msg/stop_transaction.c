@@ -2,6 +2,7 @@
 #include "rapi_msg/get_energy_usage.h"
 
 #include "RTC.h"
+#include "Serial.h"
 
 void
 ocpp_stop_transaction_req

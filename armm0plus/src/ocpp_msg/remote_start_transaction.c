@@ -2,7 +2,7 @@
 #include "ocpp_msg/start_transaction.h"
 
 #include "rapi_msg/get_state.h"
-
+#include "Serial.h"
 
 void
 ocpp_remote_start_transaction_req

@@ -2,6 +2,7 @@
 #include "ocpp_msg/stop_transaction.h"
 
 #include "rapi_msg/get_state.h"
+#include "Serial.h"
 
 void
 ocpp_remote_stop_transaction_req
@@ -34,12 +35,12 @@ ocpp_remote_stop_transaction_req
 	bool reject;
 	if (evse_state == EVSE_STATE_C && (ocpp->transactionID == transaction_id))
 	{
-		ocpp_remote_start_transaction_conf(ocpp, RSS_ACCEPTED);
+		ocpp_remote_stop_transaction_conf(ocpp, RSS_ACCEPTED);
 		reject = false;
 	}
 	else
 	{
-		ocpp_remote_start_transaction_conf(ocpp, RSS_REJECTED);
+		ocpp_remote_stop_transaction_conf(ocpp, RSS_REJECTED);
 		reject = true;
 	}
 	ocpp_send_resp(ocpp, CALLRESULT);
