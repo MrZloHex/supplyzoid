@@ -1,15 +1,15 @@
-#include "rapi_msg/reset.h"
+#include "rapi_msg/sleep.h"
 
 void
-rapi_reset_req(RAPI *rapi)
+rapi_sleep_req(RAPI *rapi)
 {
-	usart_rapi_println_str("Reset");
+	usart_rapi_println_str("Sleep");
 	char payload[RAPI_BUF_LEN];
 	mjson_snprintf
 	(
 		payload, RAPI_BUF_LEN,
 		"$%s^",
-		"FR"
+		"FS"
 	);
 
 	strcpyy(rapi->buf_cmd, payload);
@@ -18,7 +18,7 @@ rapi_reset_req(RAPI *rapi)
 }
 
 void
-rapi_reset_resp(RAPI *rapi)
+rapi_sleep_resp(RAPI *rapi)
 {
 
 }
