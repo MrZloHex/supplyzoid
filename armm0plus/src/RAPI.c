@@ -4,6 +4,7 @@
 #include "ocpp_msg/boot_notification.h"
 #include "rapi_msg/boot_notification.h"
 #include "rapi_msg/evse_state_transition.h"
+#include "rapi_msg/ext_button.h"
 #include "OCPP.h"
 
 void
@@ -166,6 +167,9 @@ rapi_process_cmd
 					break;
 				case 'T':
 					rapi_evse_state_transition_req(rapi, ocpp);
+					break;
+				case 'N':
+					rapi_ext_button_req(rapi);
 					break;
 				default:
 					usart_rapi_println_str("ERROR: Unknown command");

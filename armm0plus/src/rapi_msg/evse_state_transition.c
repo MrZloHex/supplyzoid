@@ -7,7 +7,7 @@ rapi_evse_state_transition_req
     OCPP *ocpp
 )
 {
-    
+    usart_rapi_println_str("Evse State Transition");
 }
 
 void
