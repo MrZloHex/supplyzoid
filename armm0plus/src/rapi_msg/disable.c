@@ -1,5 +1,4 @@
 #include "rapi_msg/disable.h"
-#include "usart_rapi.h"
 
 void
 rapi_disable_req(RAPI *rapi)

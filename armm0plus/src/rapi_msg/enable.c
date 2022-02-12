@@ -1,5 +1,4 @@
 #include "rapi_msg/enable.h"
-#include "usart_rapi.h"
 
 void
 rapi_enable_req(RAPI *rapi)

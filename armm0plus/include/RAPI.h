@@ -7,6 +7,7 @@
 #include "OCPPTypes.h"
 
 #include "mjson.h"
+#include "usart_rapi.h"
 
 // #define NULL ((void *)0)
 

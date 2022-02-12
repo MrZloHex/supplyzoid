@@ -1,5 +1,4 @@
 #include "rapi_msg/reset.h"
-#include "usart_rapi.h"
 
 void
 rapi_reset_req(RAPI *rapi)
