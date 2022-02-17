@@ -33,11 +33,11 @@ rapi_get_state_resp
 		return;
 
 	if (evse_state != NULL)
-		charset_to_u8(evse_state, rapi->tokens[1]);
+		hex_str_to_u8(evse_state, rapi->tokens[1]);
 	if (elapsed_time != NULL)
 		charset_to_u32(elapsed_time, rapi->tokens[2]);
 	if (pilot_state != NULL)
-		charset_to_u8(pilot_state, rapi->tokens[3]);
+		hex_str_to_u8(pilot_state, rapi->tokens[3]);
 	if (vflags != NULL)
-		charset_to_u8(vflags, rapi->tokens[4]);
+		hex_str_to_u8(vflags, rapi->tokens[4]);
 }

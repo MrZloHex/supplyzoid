@@ -2,6 +2,7 @@
 #include "ocpp_msg/stop_transaction.h"
 #include "rapi_msg/reset.h"
 #include "rapi_msg/get_state.h"
+#include "rapi_msg/set_auth_lock.h"
 
 #include "stringg.h"
 
@@ -16,7 +17,14 @@ ocpp_reset_req
 	size pay_len = strlenn(ocpp->last.call.payload);
 
 	char reset_type_str[21];
-	int res_id = mjson_get_string(ocpp->last.call.payload, pay_len, P_RESET_TYPE, reset_type_str, 20);
+	int res_id = mjson_get_string
+	(
+		ocpp->last.call.payload,
+		pay_len,
+		P_RESET_TYPE,
+		reset_type_str,
+		20
+	);
 	if (res_id == -1)
 		return;
 
