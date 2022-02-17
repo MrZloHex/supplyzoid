@@ -46,7 +46,9 @@ ocpp_reset_req
 			// STOP CHARGING
 			rapi_set_auth_lock_req(rapi, AUTH_LOCKED);
 			rapi_send_req(rapi);
-			rapi_get_resp(rapi, ocpp);
+			resp = rapi_get_resp(rapi, ocpp);
+			if (!resp)
+		return;
 			ocpp_stop_transaction_req(ocpp, rapi, rtc);
 		}
 	}
