@@ -7,8 +7,9 @@ Add-on for [open evse](https://github.com/lincomatic/open_evse) which provides f
 ## Description
 
 This project is an add-on for [epen evse](). _Open Evse_ doesn't support OCPP protocol so _supplyzoid_ makes it.</br>
-On hardware level it is a STM32 with 2 [_serial connectors_](https://en.wikipedia.org/wiki/Universal_asynchronous_receiver-transmitter): one for RAPI communications which goes into _Open Evse_ board,
-and  another for OCPP communication which goes into ESP bridge for recieving messages to OCPP Server.
+On hardware level, it is a STM32 with 2 [_serial connectors_](https://en.wikipedia.org/wiki/Universal_asynchronous_receiver-transmitter): one for RAPI communications which goes into _Open Evse_ board,
+and  another for OCPP communication which goes into ESP bridge for recieving messages to OCPP Server.</br>
+On firmware level, it supports full Core Profile of OCPP (for more details see [it](armm0plus/todo)
 
 ## Project directories
 
