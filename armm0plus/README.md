@@ -66,5 +66,12 @@ Connect _STM32G070RB_ to st-link and to PC and run:
 $ pio run -t upload
 ```
 
+### Setup
+
+       |  RX  | TX  | Serial
+-------|------|-----|--------
+USART1 | PC5  | PC4 | OCPP
+USART2 | PA3  | PA2 | RAPI
+
 ## Architecture
 
