@@ -69,7 +69,6 @@ $ pio run -t upload
 ### Setup
 
        |  RX  | TX  | Serial
--------|------|-----|--------
 USART1 | PC5  | PC4 | OCPP
 USART2 | PA3  | PA2 | RAPI
 
