@@ -45,13 +45,18 @@ See it [here](../README.md)
 
 ## Usage
 
+### Target Arch
+
+Now is available only STM32G070RB processor or __maybe__ any ARM M0+ 32 bit
+
 ### Compiling
 
 __Dependencies__: 
  - Platformio
  - arm-none-eabi-gcc
 
-To compile:
+To compile run:
+
 ```cmd
 $ pio run
 ```
@@ -72,6 +77,11 @@ $ pio run -t upload
 |--------|-----|-----|--------|
 | USART1 | PC5 | PC4 | OCPP   |
 | USART2 | PA3 | PA2 | RAPI   |
+
+
+### Testing
+
+Coming up soon...
 
 ## Architecture
 
