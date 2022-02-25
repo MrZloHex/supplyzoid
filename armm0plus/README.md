@@ -45,14 +45,26 @@ See it [here](../README.md)
 
 ## Usage
 
-### Dependencies
+### Compiling
 
-__Frameworks__:
- - [Platformio]()
+__Dependencies__: 
+ - Platformio
+ - arm-none-eabi-gcc
 
-__Libs__:
- * mjson
- * STM32RTC
+To compile:
+```cmd
+$ pio run
+```
+
+### Uploading
+
+__Upload protocol__: st-link
+
+Connect _STM32G070RB_ to st-link and to PC and run:
+
+```cmd
+$ pio run -t upload
+```
 
 ## Architecture
 
