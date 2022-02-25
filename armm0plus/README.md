@@ -48,11 +48,11 @@ See it [here](../README.md)
 ### Dependencies
 
 __Frameworks__:
-    * [Platformio]()
+    - [Platformio]()
 
 __Libs__:
-    * mjson
-    * STM32RTC
+    - mjson
+    - STM32RTC
 
 ## Architecture
 
