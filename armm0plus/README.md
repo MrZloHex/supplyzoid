@@ -43,4 +43,16 @@ See it [here](../README.md)
  - Set Voltmeter Settings
  - Sleep
 
+## Usage
+
+### Dependencies
+
+__Frameworks__:
+    * [Platformio]()
+
+__Libs__:
+    * mjson
+    * STM32RTC
+
 ## Architecture
+
