@@ -10,8 +10,8 @@
 #include "RAPI.h"
 
 #include "STM32RTC.h"
-#include "OCPPTypes.h"
-#include "OCPPStates.h"
+#include "OCPP_Types.h"
+#include "OCPP_States.h"
 
 
 
