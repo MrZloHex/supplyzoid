@@ -1,6 +1,8 @@
 // #include "stm32g0xx_hal.h"
 #include "unittest_transport.h"
-#include "uart.h"
+
+#include <Arduino.h>
+#include <HardwareSerial.h>
 
 // #define USARTx                              USART2
 // #define USARTx_CLK_ENABLE()                 __HAL_RCC_USART2_CLK_ENABLE()
@@ -19,10 +21,12 @@
 
 // static UART_HandleTypeDef UartHandle;
 
+static HardwareSerial unittest_serial(PA3, PA2);
+
+extern "C"
 void
 unittest_uart_begin()
 {
-    uart_init();
     // GPIO_InitTypeDef GPIO_InitStruct;
     
     // USARTx_TX_GPIO_CLK_ENABLE();
@@ -57,22 +61,31 @@ unittest_uart_begin()
 
     //     }
     // }
+
+    unittest_serial.begin(115200);  
 }
 
+extern "C"
 void
 unittest_uart_putchar(char c)
 {
     // HAL_UART_Transmit(&UartHandle, (uint8_t *)(&c), 1, 1000);
+    unittest_serial.printf("%c", c);
 }
 
+extern "C"
 void
 unittest_uart_flush()
-{}
+{
+    unittest_serial.flush();
+}
 
+extern "C"
 void
 unittest_uart_end()
 {
     // USARTx_CLK_DISABLE();
     // USARTx_RX_GPIO_CLK_DISABLE();
     // USARTx_TX_GPIO_CLK_DISABLE();
+    unittest_serial.end();
 }

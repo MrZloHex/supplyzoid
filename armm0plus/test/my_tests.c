@@ -1,14 +1,7 @@
-
 #include <Arduino.h>
 #include <unity.h>
 
-// void setUp(void) {
-// // set stuff up here
-// }
 
-// void tearDown(void) {
-// // clean stuff up here
-// }
 
 void test_equal(void) {
     TEST_ASSERT_EQUAL(32, 32);
