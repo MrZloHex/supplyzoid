@@ -1,6 +1,7 @@
 #include <Arduino.h>
 #include <unity.h>
 
+#include "string_tests.h"
 
 
 void test_equal(void) {
@@ -14,6 +15,8 @@ void setup() {
 
     UNITY_BEGIN();
     RUN_TEST(test_equal);
+
+    RUN_TEST(strcpy_test);
     UNITY_END();
 }
 

@@ -25,6 +25,7 @@ STM32RTC rtc;
 RAPI rapi;
 OCPP ocpp;
 
+#ifndef UNIT_TEST
 void
 setup()
 {
@@ -47,3 +48,4 @@ loop()
 	ocpp_update(&ocpp, &rapi, &rtc);
 	rapi_update(&rapi, &ocpp);
 }
+#endif
