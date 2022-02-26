@@ -17,6 +17,7 @@ void setup() {
     RUN_TEST(test_equal);
 
     RUN_TEST(strcpy_test);
+    RUN_TEST(strncpy_test);
     UNITY_END();
 }
 
