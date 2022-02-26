@@ -1,7 +1,7 @@
 #include "string_tests.h"
 
 #include <unity.h>
-#include "../include/stringg.h"
+#include <stringg.h>
 
 void
 strcpy_test(void)
