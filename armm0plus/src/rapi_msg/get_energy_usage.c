@@ -16,7 +16,7 @@ rapi_get_energy_usage_req(RAPI *rapi)
 
 	strcpyy(rapi->buf_cmd, payload);
 	rapi->buf_index = strlenn(rapi->buf_cmd);
-	rapi_app_chksum(rapi);
+	rapi_append_chksum(rapi);
 }
 
 void

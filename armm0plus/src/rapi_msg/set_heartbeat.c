@@ -19,7 +19,7 @@ rapi_set_heartbeat_req
 
 	strcpyy(rapi->buf_cmd, payload);
 	rapi->buf_index = strlenn(rapi->buf_cmd);
-	rapi_app_chksum(rapi);
+	rapi_append_chksum(rapi);
 }
 
 void

@@ -38,7 +38,7 @@ rapi_update
 				{
 					if (ch == RAPI_EOC)
 					{
-						if (rapi_analyze(rapi))
+						if (rapi_is_msg_correct(rapi))
 						{
 							rapi_process_cmd(rapi, ocpp);
 							return true;

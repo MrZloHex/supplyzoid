@@ -1,7 +1,9 @@
-#include "RAPI_add.h"
+#include "RAPI_msg_ingt.h"
+
+#include <convert.h>
 
 bool
-rapi_analyze(RAPI *rapi)
+rapi_is_msg_correct(RAPI *rapi)
 {
 	rapi->tokens[0] = &rapi->buf_cmd[1];
 	char *s = &rapi->buf_cmd[2];
@@ -59,7 +61,7 @@ rapi_analyze(RAPI *rapi)
 }
 
 void
-rapi_app_chksum(RAPI *rapi)
+rapi_append_chksum(RAPI *rapi)
 {
 	u8 chksum = 0;
 	for (size i = 0; i < rapi->buf_index-1; ++i)
