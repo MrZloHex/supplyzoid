@@ -19,6 +19,9 @@ void setup() {
 	
 	RUN_TEST(strcpy_test);
 	RUN_TEST(strncpy_test);
+	RUN_TEST(strlen_test);
+	RUN_TEST(strcmp_test);
+	RUN_TEST(memset_test);
 	
 	RUN_TEST(rapi_msg_correctness_test);
 	RUN_TEST(rapi_chksum_test);
