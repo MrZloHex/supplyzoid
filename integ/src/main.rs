@@ -15,7 +15,7 @@ fn main() {
     let (rapi, ocpp) = get_settings(scenario_fname);
 
 
-    let port = open_port(rapi.port(), rapi.baudrate(), 100);
+    let rapi_serial = open_port(rapi.port(), rapi.baudrate(), 100);
     
     if let Some(e) = is_opened_port(&port) {
         eprintln!("ERROR: failed to open port `{}` at {} baudrate cause {}", rapi.port(), rapi.baudrate(), e);
