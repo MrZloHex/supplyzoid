@@ -36,7 +36,7 @@ impl Scenario {
             }
         }
 
-        println!("SCEN: {:?}\nMETADATA: {:?}", scen.sceanario, scen.data);
+        // println!("SCEN: {:?}\nMETADATA: {:?}", scen.sceanario, scen.data);
 
         scen
     }
