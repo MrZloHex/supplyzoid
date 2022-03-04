@@ -7,15 +7,33 @@ use std::io::{self, Write};
 
 pub struct Serial {
     port: String,
-    baudrate: u32
+    baudrate: u32,
+    serial: Option<Box<dyn SerialPort>>,
+    timeout: u64
 }
 
 impl Serial {
+    pub fn init() -> Serial {
+        Serial {
+            port: String::new(),
+            baudrate: 0,
+            serial: None,
+            timeout: 100
+        }
+    }
     pub fn new(port: String, baudrate: u32) -> Serial {
         Serial {
             port,
-            baudrate
+            baudrate,
+            serial: None,
+            timeout: 100
         }
+    }
+
+    pub fn setup(&mut self, ex: Serial) {
+        self.port = ex.port;
+        self.baudrate = ex.baudrate;
+        self.timeout = ex.timeout;
     }
 
     pub fn set_port(&mut self, port: &str) {
@@ -33,20 +51,18 @@ impl Serial {
     pub fn get_baudrate(&self) -> u32 {
         self.baudrate.clone()
     }
-}
 
-pub fn open_port(port_name: &str, baud_rate: u32, timeout: u64) -> Result<Box<dyn SerialPort>, Error> {
-    serialport::new(port_name, baud_rate)
-        .timeout(Duration::from_millis(timeout))
-        .open()
-}
+    pub fn open(&mut self) {
+        let port_r = serialport::new(self.port.as_str(), self.baudrate)
+            .timeout(Duration::from_millis(self.timeout))
+            .open();
 
-pub fn is_opened_port(port: &Result<Box<dyn SerialPort>, Error>, serial: &Serial) {
-    match port {
-        Ok(_) => (),
-        Err(e) => {
-            eprintln!("ERROR: failed to open port `{}` at {} baudrate cause {}", serial.get_port(), serial.get_baudrate(), e);
-            std::process::exit(1);
+        match port_r {
+            Ok(port) => self.serial = Some(port),
+            Err(e) => {
+                eprintln!("ERROR: failed to open port `{}` at {} baudrate cause {}", self.port, self.baudrate, e);
+                std::process::exit(1);
+            }
         }
     }
 }
