@@ -1,29 +1,28 @@
 mod serial;
-use serial::{open_port, is_opened_port, read_port};
+use serial::{open_port, is_opened_port, read_port, write_port};
 
-use std::io::{self, Write};
+mod scen_parser;
+use scen_parser::get_settings;
 
-extern crate serialport;
+
+use clap::{load_yaml, App};
 
 fn main() {
-    let port_name_rapi = "/dev/ttyACM0";
-    let baud_rate_rapi: u32 = 9600;
-    
-    let port = open_port(port_name_rapi, baud_rate_rapi, 100);
+    let yaml = load_yaml!("cli.yaml");
+    let matches = App::from(yaml).get_matches();
+
+    let scenario_fname = matches.value_of("scenario").unwrap();
+    let (rapi, ocpp) = get_settings(scenario_fname);
+
+
+    let port = open_port(rapi.port(), rapi.baudrate(), 100);
     
     if let Some(e) = is_opened_port(&port) {
-        eprintln!("ERROR: failed to open port `{}` at {} baudrate cause {}", port_name_rapi, baud_rate_rapi, e);
+        eprintln!("ERROR: failed to open port `{}` at {} baudrate cause {}", rapi.port(), rapi.baudrate(), e);
         std::process::exit(1);
     };
 
-    let mut port = port.unwrap();
+    // let mut _port = port.unwrap();
 
-    loop {
-        let mut serial_buf: Vec<u8> = vec![0; 100];
-        match read_port(&mut port, serial_buf.as_mut_slice()) {
-            Ok(t) => io::stdout().write_all(&serial_buf[..t]).unwrap(),
-            Err(ref e) if e.kind() == std::io::ErrorKind::TimedOut => (),
-            Err(e) => eprintln!("{:?}", e),
-        }
-    }
+
 }

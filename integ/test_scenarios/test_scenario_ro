@@ -1,0 +1,4 @@
+@ RAPI_PORT /dev/ttyACM0
+@ RAPI_BAUD 9600
+@ OCPP_PORT /dev/ttyUSB0
+@ OCPP_BAUD 9600

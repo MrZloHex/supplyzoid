@@ -1,0 +1,40 @@
+name: integ
+version: "0.1.0"
+author: MrZloHex <zlo.alex.it@gmail.com>
+about: Integration test for supplyzoid
+args:
+    - rapi_port:
+        short: R
+        long: rapi-port
+        help: Serial port connected to RAPI
+        required: false
+        takes_value: true
+        value_name: RAPI_PORT
+    - rapi_baud:
+        short: r
+        long: rapi-baud
+        help: Baudrate of serial port of RAPI
+        required: false
+        takes_value: true
+        value_name: RAPI_BAUD
+    - ocpp_port:
+        short: O
+        long: ocpp-port
+        help: Serial port connected to OCPP
+        required: false
+        takes_value: true
+        value_name: OCPP_PORT
+    - ocpp_baud:
+        short: o
+        long: ocpp-baud
+        help: Baudrate of serial port of OCPP
+        required: false
+        takes_value: true
+        value_name: OCPP_BAUD
+    - scenario:
+        short: s
+        long: scenario
+        help: File path to test scenatio
+        required: true
+        takes_value: true
+        value_name: SCENARIO
