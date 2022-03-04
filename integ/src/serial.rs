@@ -5,24 +5,32 @@ use std::time::Duration;
 use std::io::{self, Write};
 
 
-pub struct Serial<'a> {
-    port: &'a str,
+pub struct Serial {
+    port: String,
     baudrate: u32
 }
 
-impl<'a> Serial<'a> {
-    pub fn new(port: &str, baudrate: u32) -> Serial {
+impl Serial {
+    pub fn new(port: String, baudrate: u32) -> Serial {
         Serial {
             port,
             baudrate
         }
     }
 
-    pub fn port(&self) -> &'a str {
-        self.port
+    pub fn set_port(&mut self, port: &str) {
+        self.port = port.to_string();
     }
 
-    pub fn baudrate(&self) -> u32 {
+    pub fn set_baudrate(&mut self, baud: u32) {
+        self.baudrate = baud;
+    }
+
+    pub fn get_port(&self) -> &str {
+        self.port.as_str()
+    }
+
+    pub fn get_baudrate(&self) -> u32 {
         self.baudrate.clone()
     }
 }
@@ -33,10 +41,13 @@ pub fn open_port(port_name: &str, baud_rate: u32, timeout: u64) -> Result<Box<dy
         .open()
 }
 
-pub fn is_opened_port(port: &Result<Box<dyn SerialPort>, Error>) -> Option<&Error> {
+pub fn is_opened_port(port: &Result<Box<dyn SerialPort>, Error>, serial: &Serial) {
     match port {
-        Ok(_) => None,
-        Err(e) => Some(e)
+        Ok(_) => (),
+        Err(e) => {
+            eprintln!("ERROR: failed to open port `{}` at {} baudrate cause {}", serial.get_port(), serial.get_baudrate(), e);
+            std::process::exit(1);
+        }
     }
 }
 

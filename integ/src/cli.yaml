@@ -31,6 +31,12 @@ args:
         required: false
         takes_value: true
         value_name: OCPP_BAUD
+    - data_in_scen:
+        short: d
+        long: data-in-scenario
+        help: If data about ports and baudrates in scenario file else you should provide in args
+        required: false
+        takes_value: false
     - scenario:
         short: s
         long: scenario
