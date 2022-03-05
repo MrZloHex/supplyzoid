@@ -1,7 +1,7 @@
 #include "RTC.h"
 #include "mjson.h"
 
-#include "Serial.h"
+#include "usart_ocpp.h"
 
 static int
 zero_2_int
@@ -52,7 +52,6 @@ adjust_rtc_time
 	strncpyy(month_str, &time[5], 2);
 	u8 month;
 	STR_TO_NUM(month, month_str);
-	serial_println_num(month);
 
 	char day_str[3];
 	strncpyy(day_str, &time[8], 2);

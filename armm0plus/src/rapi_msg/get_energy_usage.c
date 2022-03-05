@@ -5,7 +5,7 @@
 void
 rapi_get_energy_usage_req(RAPI *rapi)
 {
-    usart_rapi_println_str("Get energy state");
+    // usart_rapi_println_str("Get energy state");
 	char payload[RAPI_BUF_LEN];
 	mjson_snprintf
 	(

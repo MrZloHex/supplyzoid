@@ -3,7 +3,7 @@
 
 #include "rapi_msg/get_state.h"
 #include "rapi_msg/set_auth_lock.h"
-#include "Serial.h"
+#include "usart_ocpp.h"
 
 void
 ocpp_remote_stop_transaction_req
@@ -13,7 +13,7 @@ ocpp_remote_stop_transaction_req
 	STM32RTC *rtc
 )
 {
-	serial_print_str("REMOTE STOP TRANSACTION\n");
+	// usart_ocpp_print_str("REMOTE STOP TRANSACTION\n");
 	
 	size pay_len = strlenn(ocpp->last.call.payload);
 

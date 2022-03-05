@@ -3,7 +3,7 @@
 void
 rapi_disable_req(RAPI *rapi)
 {
-	usart_rapi_println_str("Disable");
+	// usart_rapi_println_str("Disable");
 	char payload[RAPI_BUF_LEN];
 	mjson_snprintf
 	(

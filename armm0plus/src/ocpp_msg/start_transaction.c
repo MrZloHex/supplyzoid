@@ -2,7 +2,7 @@
 #include "rapi_msg/get_energy_usage.h"
 
 #include "RTC.h"
-#include "Serial.h"
+#include "usart_ocpp.h"
 
 void
 ocpp_start_transaction_req
@@ -81,11 +81,11 @@ ocpp_start_transaction_conf
 	if (strcmpp("Accepted", status))
 	{
 		ocpp->transactionID = (int)transaction_id;
-		serial_println_str("TRANSACTION CONFIRMED");
+		// usart_ocpp_println_str("TRANSACTION CONFIRMED");
 	}
 	else if (strcmpp("Rejected", status))
 	{
-		serial_println_str("TRANSACTION REJECTED");
+		// usart_ocpp_println_str("TRANSACTION REJECTED");
 	}
 	else
 	{

@@ -5,21 +5,21 @@ extern HardwareSerial usart_ocpp;
 
 extern "C"
 int
-serial_print_str(const char *str)
+usart_ocpp_print_str(const char *str)
 {
 	return usart_ocpp.printf("%s", str);
 }
 
 extern "C"
 int
-serial_println_str(const char *str)
+usart_ocpp_println_str(const char *str)
 {
 	return usart_ocpp.printf("%s\n", str);
 }
 
 extern "C"
 int
-serial_println_num(const int num)
+usart_ocpp_println_num(const int num)
 {
 	return usart_ocpp.printf("%d\n", num);
 }
@@ -27,14 +27,14 @@ serial_println_num(const int num)
 
 extern "C"
 int
-serial_available()
+usart_ocpp_available()
 {
 	return usart_ocpp.available();
 }
 
 extern "C"
 char
-serial_read()
+usart_ocpp_read()
 {
 	return (char)usart_ocpp.read();
 }

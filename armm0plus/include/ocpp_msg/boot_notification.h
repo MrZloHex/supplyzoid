@@ -3,7 +3,7 @@
 #define BOOT_NOTIFICATION_H_
 
 #include "RTC.h"
-#include "Serial.h"
+#include "usart_ocpp.h"
 
 #include "stdtypes.h"
 #include "OCPP.h"

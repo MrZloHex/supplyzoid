@@ -3,7 +3,7 @@
 void
 rapi_sleep_req(RAPI *rapi)
 {
-	usart_rapi_println_str("Sleep");
+	// usart_rapi_println_str("Sleep");
 	char payload[RAPI_BUF_LEN];
 	mjson_snprintf
 	(

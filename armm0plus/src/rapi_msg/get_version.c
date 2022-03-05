@@ -3,7 +3,7 @@
 void
 rapi_get_version_req(RAPI *rapi)
 {
-	usart_rapi_println_str("Get version");
+	// usart_rapi_println_str("Get version");
 	char payload[RAPI_BUF_LEN];
 	mjson_snprintf
 	(

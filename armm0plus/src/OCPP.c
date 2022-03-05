@@ -1,6 +1,6 @@
 #include "OCPP.h"
 
-#include "Serial.h"
+#include "usart_ocpp.h"
 
 #include "ocpp_msg/boot_notification.h"
 #include "ocpp_msg/remote_start_transaction.h"
@@ -71,9 +71,9 @@ ocpp_update
 	static char buffer[BUF_LEN];
 	static size index = 0;
 
-	if (serial_available())
+	if (usart_ocpp_available())
 	{
-		char ch = serial_read();
+		char ch = usart_ocpp_read();
 		if (ch != '\n')
 			buffer[index++] = ch;
 
@@ -276,7 +276,7 @@ ocpp_send_req
 	);
 
 	// SENDING
-	serial_println_str(req);
+	usart_ocpp_println_str(req);
 	// SENDING
 
 	ocpp->id++;
@@ -309,7 +309,7 @@ ocpp_send_resp
 
 
 		// SENDING
-		serial_println_str(req);
+		usart_ocpp_println_str(req);
 		// SENDING
 	}
 	else if (type == CALLERROR)

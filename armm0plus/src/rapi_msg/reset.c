@@ -3,7 +3,7 @@
 void
 rapi_reset_req(RAPI *rapi)
 {
-	usart_rapi_println_str("Reset");
+	// usart_rapi_println_str("Reset");
 	char payload[RAPI_BUF_LEN];
 	mjson_snprintf
 	(

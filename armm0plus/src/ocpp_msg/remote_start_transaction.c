@@ -3,7 +3,7 @@
 
 #include "rapi_msg/get_state.h"
 #include "rapi_msg/set_auth_lock.h"
-#include "Serial.h"
+#include "usart_ocpp.h"
 
 void
 ocpp_remote_start_transaction_req
@@ -14,7 +14,7 @@ ocpp_remote_start_transaction_req
 )
 {
 	// printf("REMOTE START? TRANSACTION\n");
-	serial_println_str("START TRANSACRTION");
+	// usart_ocpp_println_str("START TRANSACRTION");
 	
 	size pay_len = strlenn(ocpp->last.call.payload);
 

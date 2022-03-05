@@ -7,7 +7,7 @@ rapi_set_heartbeat_req
 	my_time time
 )
 {	
-	usart_rapi_println_str("Setting heartbeat");
+	// usart_rapi_println_str("Setting heartbeat");
 	char payload[RAPI_BUF_LEN];
 	mjson_snprintf
 	(

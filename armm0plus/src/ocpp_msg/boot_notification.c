@@ -70,5 +70,5 @@ ocpp_boot_notification_conf
 	adjust_rtc_time(rtc, time);
 
 
-	serial_println_str("BOOTED");
+	// usart_ocpp_println_str("BOOTED");
 }

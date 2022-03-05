@@ -5,7 +5,7 @@
 void
 rapi_get_state_req(RAPI *rapi)
 {
-	usart_rapi_println_str("Get state");
+	// usart_rapi_println_str("Get state");
 	char payload[RAPI_BUF_LEN];
 	mjson_snprintf
 	(

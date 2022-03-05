@@ -2,7 +2,7 @@
 #include "rapi_msg/get_energy_usage.h"
 
 #include "RTC.h"
-#include "Serial.h"
+#include "usart_ocpp.h"
 
 void
 ocpp_stop_transaction_req
@@ -73,12 +73,12 @@ ocpp_stop_transaction_conf
 	if (res_st < 1)
 		return;
 
-	if (strcmpp("Accepted", status))
-		serial_println_str("TRANSACTION FINISHED\n");
-	else if (strcmpp("Rejected", status))
-		serial_println_str("FAILED TO FINISH TRANSACTION");
-	else
-		return;
+	// if (strcmpp("Accepted", status))
+	// 	usart_ocpp_println_str("TRANSACTION FINISHED\n");
+	// else if (strcmpp("Rejected", status))
+	// 	usart_ocpp_println_str("FAILED TO FINISH TRANSACTION");
+	// else
+	// 	return;
 
 }
 
