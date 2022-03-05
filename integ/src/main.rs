@@ -4,6 +4,7 @@ use serial::Serial;
 mod scen_parser;
 use scen_parser::{Scenario, Instruction, SerialRecip, Command};
 
+use std::time::Instant;
 
 use clap::{load_yaml, App};
 
@@ -49,6 +50,45 @@ fn main() {
     ocpp.open();
     rapi.open();
 
+    println!("Ports was succesfully opened");
+    println!("Please RESET board!");
+
+    let reset_timeout= 10_000;
+    
+    let mut rapi_booted = false;
+    let mut ocpp_booted = false;
+
+    let now = Instant::now();
+    let mut elapsed = now.elapsed();
+    
+    while elapsed.as_millis() < reset_timeout {
+        let mut data = String::new();
+        if !rapi_booted {
+            rapi.read(&mut data);
+            // println!("RAPI: {}", data);
+            if data == "STARTING RAPI\n" {
+                rapi_booted = true;
+            }
+            data = String::new();
+        }
+        if !ocpp_booted {
+            ocpp.read(&mut data);
+            // println!("OCPP: {}", data);
+            if data == "STARTING OCPP\n" {
+                ocpp_booted = true;
+                break;
+            }
+        }
+        elapsed = now.elapsed();
+    }
+
+    if rapi_booted { println!("RAPI succesfully started") }
+    else { println!("ERROR: RAPI failed to start"); std::process::exit(1) }
+    if ocpp_booted { println!("OCPP succesfully started") }
+    else { println!("ERROR: OCPP failed to start"); std::process::exit(1) }
+
+    println!("Starting testing");
+
     loop {
         let instr = scenario.next_instruction();
         if let None = instr { break; }
@@ -57,7 +97,7 @@ fn main() {
             SerialRecip::Rapi => {
                 match instr.cmd {
                     Command::Send => {
-                        rapi.write(instr.value.as_bytes())
+                        rapi.write(instr.value.as_bytes());
                     },
                     Command::Expect => {
 
@@ -67,7 +107,7 @@ fn main() {
             SerialRecip::Ocpp => {
                 match instr.cmd {
                     Command::Send => {
-                        ocpp.write(instr.value.as_bytes())
+                        ocpp.write(instr.value.as_bytes());
                     },
                     Command::Expect => {
                         

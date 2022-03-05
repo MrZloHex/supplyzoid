@@ -66,18 +66,12 @@ impl Serial {
         }
     }
 
-    pub fn write(&mut self, data: &[u8]) {
-        self.serial.as_mut().unwrap().write(data);
+    pub fn write(&mut self, data: &[u8]) -> Result<usize, std::io::Error> {
+        self.serial.as_mut().unwrap().write(data)
+    }
+
+    pub fn read(&mut self, buf: &mut String) -> Result<usize, std::io::Error> {
+        self.serial.as_mut().unwrap().read_to_string(buf)
     }
 }
-
-pub fn read_port(port: &mut Box<dyn SerialPort>, buf: &mut Vec<u8>) -> Result<usize, std::io::Error> {
-    port.read(buf.as_mut_slice())
-}
-
-pub fn write_port(port: &mut Box<dyn SerialPort>, data: &[u8]) -> Result<usize, std::io::Error> {
-    port.write(data)
-}
-
-
 
