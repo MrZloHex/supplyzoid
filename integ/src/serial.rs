@@ -65,6 +65,10 @@ impl Serial {
             }
         }
     }
+
+    pub fn write(&mut self, data: &[u8]) {
+        self.serial.as_mut().unwrap().write(data);
+    }
 }
 
 pub fn read_port(port: &mut Box<dyn SerialPort>, buf: &mut Vec<u8>) -> Result<usize, std::io::Error> {

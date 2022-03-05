@@ -2,7 +2,7 @@ mod serial;
 use serial::Serial;
 
 mod scen_parser;
-use scen_parser::Scenario;
+use scen_parser::{Scenario, Instruction, SerialRecip, Command};
 
 
 use clap::{load_yaml, App};
@@ -49,4 +49,33 @@ fn main() {
     ocpp.open();
     rapi.open();
 
+    loop {
+        let instr = scenario.next_instruction();
+        if let None = instr { break; }
+        let instr = instr.unwrap();
+        match instr.serial {
+            SerialRecip::Rapi => {
+                match instr.cmd {
+                    Command::Send => {
+                        rapi.write(instr.value.as_bytes())
+                    },
+                    Command::Expect => {
+
+                    }
+                }
+            },
+            SerialRecip::Ocpp => {
+                match instr.cmd {
+                    Command::Send => {
+                        ocpp.write(instr.value.as_bytes())
+                    },
+                    Command::Expect => {
+                        
+                    }
+                }
+            }
+        }
+    }
+    println!("TEST FINISHED");
+   
 }
