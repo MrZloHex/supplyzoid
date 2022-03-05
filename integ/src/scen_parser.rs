@@ -26,7 +26,7 @@ pub struct Instruction {
 }
 
 impl Instruction {
-    pub fn new(ser: String, command: String, value: String) -> Result<Instruction, Error> {
+    pub fn new(ser: String, command: String, val: String) -> Result<Instruction, Error> {
         let serial = if ser == "RAPI" {
             SerialRecip::Rapi
         } else if ser == "OCPP" {
@@ -42,6 +42,12 @@ impl Instruction {
         } else {
             return Err(Error{ error_msg: "unknown command".to_string(), error_val: command})
         };
+
+        let mut value = val.clone();
+        match serial {
+            SerialRecip::Rapi => value.push('\r'),
+            _ => ()
+        }
 
         Ok(
             Instruction{
@@ -94,11 +100,13 @@ impl Scenario {
         scen
     }
 
-    pub fn get_settings(&mut self) -> (Serial, Serial) {
+    pub fn get_settings(&mut self) -> (Serial, Serial, u128) {
         let mut rapi_port = String::new();
         let mut ocpp_port = String::new();
         let mut rapi_baud: u32 = 0;
         let mut ocpp_baud: u32 = 0;
+
+        let mut rst_timeout = 10_000;
 
         for line in self.data.clone() {
             let tokens: Vec<String> = line.split_whitespace().map(|s| s.to_string()).collect();
@@ -107,6 +115,7 @@ impl Scenario {
                 "RAPI_BAUD" => rapi_baud = tokens[1].parse::<u32>().unwrap(),
                 "OCPP_PORT" => ocpp_port = tokens[1].clone(),
                 "OCPP_BAUD" => ocpp_baud = tokens[1].parse::<u32>().unwrap(),
+                "RST_TIMEOUT" => rst_timeout = tokens[1].parse::<u128>().unwrap(),
                 _ => {
                     eprintln!("ERROR: unknown token in data segment: `{}`", line);
                     std::process::exit(1);
@@ -114,17 +123,17 @@ impl Scenario {
             }
         }
 
-        (Serial::new(rapi_port, rapi_baud), Serial::new(ocpp_port, ocpp_baud))
+        (Serial::new(rapi_port, rapi_baud), Serial::new(ocpp_port, ocpp_baud), rst_timeout)
     }
 
     pub fn next_instruction(&mut self) -> Option<Instruction> {
         if self.line == self.fcap { return None; }
 
         let line = self.sceanario[self.line].clone();
-        let tokens: Vec<String> = line.split_whitespace().map(|s| s.to_string()).collect();
+        let tokens: Vec<String> = line.splitn(3, ' ').map(|s| s.to_string()).collect();
         let instr = Instruction::new(tokens[0].clone(), tokens[1].clone(), tokens[2].clone());
         if let Err(e) = instr {
-            eprintln!("{}: {}", e.error_msg, e.error_val);
+            eprintln!("{}: {} at line {}", e.error_msg, e.error_val, self.line);
             std::process::exit(1);
         };
 
