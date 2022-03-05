@@ -2,6 +2,7 @@
 #include "convert_tests.h"
 
 #include <convert.h>
+#include "unittest_transport.h"
 
 
 void
@@ -37,6 +38,7 @@ u8_to_hex_str_test(void)
 	u8 num = 160;
 	char str[3];
 	u8_to_hex_str(str, num);
+	str[2] = 0; 
 	TEST_ASSERT_EQUAL_STRING("A0", str);
 }
 
