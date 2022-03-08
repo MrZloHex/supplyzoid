@@ -10,3 +10,9 @@ args:
         required: true
         takes_value: true
         value_name: SCENARIO
+    - verbose:
+        short: v
+        long: verbose
+        help: Verbose output
+        required: false
+        takes_value: false

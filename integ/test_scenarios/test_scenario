@@ -2,12 +2,16 @@ RST_TIMEOUT 5000
 
 RAPI_PORT /dev/ttyACM0
 RAPI_BAUD 9600
-OCPP_PORT /dev/ttyUSB1
+OCPP_PORT /dev/ttyUSB0
 OCPP_BAUD 9600
 
-# RAPI_MSG_TIMEOUT 100
-# RAPI_PORT_TIMEOUT 100
+RAPI_MSG_TIMEOUT 1000
 
 SCENARIO
 RAPI SEND $AT 00 00 0 0208^0B
+RAPI EXPT Evse State Transition
 RAPI SEND $AB 00 D8.2.0^59
+OCPP EXPT [2,"1","BootNotification",{"chargePointVendor":"EV Solutions","chargePointModel":"PROTOTYPE"}]
+OCPP SEND [3,"1",{"currentTime":"2013-02-01T04:5:40.486Z","interval":30,"status":"Accepted"}]
+OCPP SEND [2,"987","RemoteStartTransaction",{"idTag":"hub"}]
+RAPI EXPT $GS^30

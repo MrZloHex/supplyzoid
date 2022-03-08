@@ -2,7 +2,7 @@ mod serial;
 use serial::Serial;
 
 mod scen_parser;
-use scen_parser::{Scenario, Instruction, SerialRecip, Command};
+use scen_parser::{Command, Instruction, Scenario, SerialRecip};
 
 use std::time::Instant;
 
@@ -28,11 +28,11 @@ fn main() {
 
     let now = Instant::now();
     let mut elapsed = now.elapsed();
-    
+
     while elapsed.as_millis() <= rst_timeout {
         let mut data = String::new();
         if !rapi_booted {
-            rapi.read(&mut data);
+            rapi.read_str(&mut data);
             // println!("RAPI: {}", data);
             if data == "STARTING RAPI\n" {
                 rapi_booted = true;
@@ -40,13 +40,15 @@ fn main() {
             data = String::new();
         }
         if !ocpp_booted {
-            ocpp.read(&mut data);
+            ocpp.read_str(&mut data);
             // println!("OCPP: {}", data);
             if data == "STARTING OCPP\n" {
                 ocpp_booted = true;
             }
         }
-        if ocpp_booted && rapi_booted { break; }
+        if ocpp_booted && rapi_booted {
+            break;
+        }
         elapsed = now.elapsed();
     }
     if elapsed.as_millis() > rst_timeout {
@@ -54,40 +56,84 @@ fn main() {
         std::process::exit(1);
     }
 
-    if rapi_booted { println!("RAPI succesfully started") }
-    else { println!("ERROR: RAPI failed to start"); std::process::exit(1) }
-    if ocpp_booted { println!("OCPP succesfully started") }
-    else { println!("ERROR: OCPP failed to start"); std::process::exit(1) }
+    if rapi_booted {
+        println!("RAPI succesfully started");
+    } else {
+        println!("ERROR: RAPI failed to start");
+        std::process::exit(1)
+    }
+    if ocpp_booted {
+        println!("OCPP succesfully started")
+    } else {
+        println!("ERROR: OCPP failed to start");
+        std::process::exit(1)
+    }
 
     println!("Starting testing");
 
     loop {
         let instr = scenario.next_instruction();
-        if let None = instr { break; }
+        if let None = instr {
+            break;
+        }
         let instr = instr.unwrap();
         match instr.serial {
-            SerialRecip::Rapi => {
-                match instr.cmd {
-                    Command::Send => {
-                        rapi.write(instr.value.as_bytes());
-                    },
-                    Command::Expect => {
+            SerialRecip::Rapi => match instr.cmd {
+                Command::Send => {
+                    let res = rapi.write(instr.value.as_bytes());
+                    if let Err(e) = res {
+                        println!("ERROR RAPI WRITE: `{:?}`", e);
+                        std::process::exit(1);
+                    }
+                },
+                Command::Expect => {
+                    let now = Instant::now();
+                    let mut elapsed = now.elapsed();
 
+                    while elapsed.as_millis() <= rapi.get_timeout() {
+                        let mut data = String::new();
+                        rapi.read_str(&mut data);
+
+                        // println!("EXPECTED: `{}`\nGOTTED:   `{}`\n\n", instr.value, data);
+                        data.pop();
+                        print!("R:{}\nE:{}\n", instr.value, data);
+
+                        if compare_str(data.clone(), instr.value.clone()) {
+                            break;
+                            // std::process::exit(1);
+                        }
+                        elapsed = now.elapsed();
                     }
                 }
             },
-            SerialRecip::Ocpp => {
-                match instr.cmd {
-                    Command::Send => {
-                        ocpp.write(instr.value.as_bytes());
-                    },
-                    Command::Expect => {
-                        
+            SerialRecip::Ocpp => match instr.cmd {
+                Command::Send => {
+                    ocpp.write(instr.value.as_bytes());
+                },
+                Command::Expect => {
+                    let mut data = String::new();
+                    
+                    ocpp.read_str(&mut data);
+
+                    println!("EXPECTED: {}\nGOTTED:   {}", instr.value, data);
+                    data.pop();
+                    if data != instr.value {
+                        eprintln!("TEST FAILED: expected `{}`, but gotted `{}`", instr.value, data);
+                        std::process::exit(1);
                     }
                 }
-            }
-        }
+            },
+        };
     }
     println!("TEST FINISHED");
-   
+}
+
+
+fn compare_str(str1: String, str2: String) -> bool {
+    for i in 0..str1.len() {
+        if str1.chars().nth(i).unwrap() != str2.chars().nth(i).unwrap() {
+            return false;
+        }
+    }
+    true
 }

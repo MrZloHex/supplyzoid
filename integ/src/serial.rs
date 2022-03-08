@@ -1,15 +1,15 @@
 extern crate serialport;
-use serialport::{SerialPort, Error};
+use serialport::{Error, SerialPort};
 
-use std::time::Duration;
 use std::io::{self, Write};
-
+use std::time::Duration;
 
 pub struct Serial {
     port: String,
     baudrate: u32,
     serial: Option<Box<dyn SerialPort>>,
-    timeout: u64
+    timeout: u64,
+    expect_timeout: u128
 }
 
 impl Serial {
@@ -18,15 +18,17 @@ impl Serial {
             port: String::new(),
             baudrate: 0,
             serial: None,
-            timeout: 100
+            timeout: 100,
+            expect_timeout: 100
         }
     }
-    pub fn new(port: String, baudrate: u32) -> Serial {
+    pub fn new(port: String, baudrate: u32, timeout: u64, expect_timeout: u128) -> Serial {
         Serial {
             port,
             baudrate,
             serial: None,
-            timeout: 100
+            timeout,
+            expect_timeout
         }
     }
 
@@ -52,6 +54,10 @@ impl Serial {
         self.baudrate.clone()
     }
 
+    pub fn get_timeout(&self) -> u128 {
+        self.expect_timeout.clone()
+    }
+
     pub fn open(&mut self) {
         let port_r = serialport::new(self.port.as_str(), self.baudrate)
             .timeout(Duration::from_millis(self.timeout))
@@ -60,7 +66,10 @@ impl Serial {
         match port_r {
             Ok(port) => self.serial = Some(port),
             Err(e) => {
-                eprintln!("ERROR: failed to open port `{}` at {} baudrate cause {}", self.port, self.baudrate, e);
+                eprintln!(
+                    "ERROR: failed to open port `{}` at {} baudrate cause {}",
+                    self.port, self.baudrate, e
+                );
                 std::process::exit(1);
             }
         }
@@ -70,8 +79,11 @@ impl Serial {
         self.serial.as_mut().unwrap().write(data)
     }
 
-    pub fn read(&mut self, buf: &mut String) -> Result<usize, std::io::Error> {
+    pub fn read_str(&mut self, buf: &mut String) -> Result<usize, std::io::Error> {
         self.serial.as_mut().unwrap().read_to_string(buf)
     }
-}
 
+    pub fn read(&mut self, buf: &mut Vec<u8>) -> Result<usize, std::io::Error> {
+        self.serial.as_mut().unwrap().read(buf.as_mut_slice())
+    }
+}

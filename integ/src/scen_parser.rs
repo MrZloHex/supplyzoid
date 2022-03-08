@@ -6,23 +6,23 @@ use std::io::{BufRead, BufReader};
 #[derive(Debug)]
 pub struct Error {
     pub error_msg: String,
-    pub error_val: String
+    pub error_val: String,
 }
 
 pub enum SerialRecip {
     Rapi,
-    Ocpp
+    Ocpp,
 }
 
 pub enum Command {
     Send,
-    Expect
+    Expect,
 }
 
 pub struct Instruction {
     pub serial: SerialRecip,
     pub cmd: Command,
-    pub value: String
+    pub value: String,
 }
 
 impl Instruction {
@@ -32,32 +32,30 @@ impl Instruction {
         } else if ser == "OCPP" {
             SerialRecip::Ocpp
         } else {
-            return Err(Error{ error_msg: "unknown Serial Recipient".to_string(), error_val: ser})
+            return Err(Error {
+                error_msg: "unknown Serial Recipient".to_string(),
+                error_val: ser,
+            });
         };
 
         let cmd = if command == "SEND" {
             Command::Send
-        } else if command == "EXPECT" {
+        } else if command == "EXPT" {
             Command::Expect
         } else {
-            return Err(Error{ error_msg: "unknown command".to_string(), error_val: command})
+            return Err(Error {
+                error_msg: "unknown command".to_string(),
+                error_val: command,
+            });
         };
 
         let mut value = val.clone();
         match serial {
             SerialRecip::Rapi => value.push('\r'),
-            _ => ()
+            _ => (),
         }
 
-        Ok(
-            Instruction{
-                serial,
-                cmd,
-                value
-            }
-        )
-
-        
+        Ok(Instruction { serial, cmd, value })
     }
 }
 
@@ -65,7 +63,7 @@ pub struct Scenario {
     data: Vec<String>,
     sceanario: Vec<String>,
     line: usize,
-    fcap: usize
+    fcap: usize,
 }
 
 impl Scenario {
@@ -76,13 +74,15 @@ impl Scenario {
             data: Vec::new(),
             sceanario: Vec::new(),
             line: 0,
-            fcap: 0
+            fcap: 0,
         };
 
         let mut is_sc = false;
         for line in reader.lines() {
             let line = line.unwrap();
-            if line == "" || line.starts_with('#') { continue; }
+            if line == "" || line.starts_with('#') {
+                continue;
+            }
             if is_sc {
                 scen.sceanario.push(line);
                 scen.fcap += 1;
@@ -106,6 +106,11 @@ impl Scenario {
         let mut rapi_baud: u32 = 0;
         let mut ocpp_baud: u32 = 0;
 
+        // Default settings
+        let mut rapi_port_timeout = 100;
+        let mut ocpp_port_timeout = 100;
+        let mut rapi_expt_timeout = 100;
+        let mut ocpp_expt_timeout = 100;
         let mut rst_timeout = 10_000;
 
         for line in self.data.clone() {
@@ -113,8 +118,12 @@ impl Scenario {
             match tokens[0].as_str() {
                 "RAPI_PORT" => rapi_port = tokens[1].clone(),
                 "RAPI_BAUD" => rapi_baud = tokens[1].parse::<u32>().unwrap(),
+                "RAPI_PORT_TIMEOUT" => rapi_port_timeout = tokens[1].parse::<u64>().unwrap(),
+                "RAPI_MSG_TIMEOUT" => rapi_expt_timeout = tokens[1].parse::<u128>().unwrap(),
                 "OCPP_PORT" => ocpp_port = tokens[1].clone(),
                 "OCPP_BAUD" => ocpp_baud = tokens[1].parse::<u32>().unwrap(),
+                "OCPP_PORT_TIMEOUT" => ocpp_port_timeout = tokens[1].parse::<u64>().unwrap(),
+                "OCPP_MSG_TIMEOUT" => ocpp_expt_timeout = tokens[1].parse::<u128>().unwrap(),
                 "RST_TIMEOUT" => rst_timeout = tokens[1].parse::<u128>().unwrap(),
                 _ => {
                     eprintln!("ERROR: unknown token in data segment: `{}`", line);
@@ -123,17 +132,23 @@ impl Scenario {
             }
         }
 
-        (Serial::new(rapi_port, rapi_baud), Serial::new(ocpp_port, ocpp_baud), rst_timeout)
+        (
+            Serial::new(rapi_port, rapi_baud, rapi_port_timeout, rapi_expt_timeout),
+            Serial::new(ocpp_port, ocpp_baud, ocpp_port_timeout, ocpp_expt_timeout),
+            rst_timeout,
+        )
     }
 
     pub fn next_instruction(&mut self) -> Option<Instruction> {
-        if self.line == self.fcap { return None; }
+        if self.line == self.fcap {
+            return None;
+        }
 
         let line = self.sceanario[self.line].clone();
         let tokens: Vec<String> = line.splitn(3, ' ').map(|s| s.to_string()).collect();
         let instr = Instruction::new(tokens[0].clone(), tokens[1].clone(), tokens[2].clone());
         if let Err(e) = instr {
-            eprintln!("{}: {} at line {}", e.error_msg, e.error_val, self.line);
+            eprintln!("ERROR: {}: {} on {} instruction", e.error_msg, e.error_val, self.line);
             std::process::exit(1);
         };
 
