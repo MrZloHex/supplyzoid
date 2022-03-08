@@ -90,19 +90,19 @@ fn main() {
                     let now = Instant::now();
                     let mut elapsed = now.elapsed();
 
+                    let mut data = String::new();
                     while elapsed.as_millis() <= rapi.get_timeout() {
-                        let mut data = String::new();
                         rapi.read_str(&mut data);
-
-                        // println!("EXPECTED: `{}`\nGOTTED:   `{}`\n\n", instr.value, data);
                         data.pop();
-                        print!("R:{}\nE:{}\n", instr.value, data);
-
                         if compare_str(data.clone(), instr.value.clone()) {
                             break;
-                            // std::process::exit(1);
                         }
                         elapsed = now.elapsed();
+                        data = String::new();
+                    }
+                    if elapsed.as_millis() > rapi.get_timeout() {
+                        eprintln!("Failed rapi expect");
+                        std::process::exit(1);
                     }
                 }
             },
@@ -111,14 +111,21 @@ fn main() {
                     ocpp.write(instr.value.as_bytes());
                 },
                 Command::Expect => {
-                    let mut data = String::new();
-                    
-                    ocpp.read_str(&mut data);
+                    let now = Instant::now();
+                    let mut elapsed = now.elapsed();
 
-                    println!("EXPECTED: {}\nGOTTED:   {}", instr.value, data);
-                    data.pop();
-                    if data != instr.value {
-                        eprintln!("TEST FAILED: expected `{}`, but gotted `{}`", instr.value, data);
+                    let mut data = String::new();
+                    while elapsed.as_millis() <= ocpp.get_timeout() {
+                        ocpp.read_str(&mut data);
+                        data.pop();
+                        if compare_str(data.clone(), instr.value.clone()) {
+                            break;
+                        }
+                        elapsed = now.elapsed();
+                        data = String::new();
+                    }
+                    if elapsed.as_millis() > rapi.get_timeout() {
+                        eprintln!("Failed ocpp expect");
                         std::process::exit(1);
                     }
                 }
