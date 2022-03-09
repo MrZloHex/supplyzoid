@@ -62,6 +62,7 @@ impl Instruction {
 pub struct Scenario {
     data: Vec<String>,
     sceanario: Vec<String>,
+    name: String,
     line: usize,
     fcap: usize,
 }
@@ -73,6 +74,7 @@ impl Scenario {
         let mut scen = Scenario {
             data: Vec::new(),
             sceanario: Vec::new(),
+            name: String::new(),
             line: 0,
             fcap: 0,
         };
@@ -87,7 +89,9 @@ impl Scenario {
                 scen.sceanario.push(line);
                 scen.fcap += 1;
             } else {
-                if line == *"SCENARIO" {
+                if line.starts_with("SCENARIO")
+                {
+                    scen.name = line.strip_prefix("SCENARIO ").unwrap().to_string();
                     is_sc = true;
                     continue;
                 }
@@ -156,5 +160,9 @@ impl Scenario {
         self.line += 1;
 
         Some(instr)
+    }
+
+    pub fn name(&self) -> String {
+        self.name.clone()
     }
 }

@@ -127,14 +127,14 @@ fn main() {
                             continue;
                         } else {
                             let test_info = if compare_str(data.clone(), instr.value.clone()) {
-                                "OK".green().bold()
+                                "OKAY".green().bold()
                             } else {
                                 is_test_passed = false;
                                 "FAIL".red().bold()
                             };
 
                             if verbose {
-                                println!("  {}  Gotted              - {}", test_info, data.italic());
+                                println!(" {} Got                 - {}", test_info, data.italic());
                             }
                             break;
                         }
@@ -169,14 +169,14 @@ fn main() {
                             continue;
                         } else {
                             let test_info = if compare_str(data.clone(), instr.value.clone()) {
-                                "OK".green().bold()
+                                "OKAY".green().bold()
                             } else {
                                 is_test_passed = false;
                                 "FAIL".red().bold()
                             };
 
                             if verbose {
-                                println!("  {}  Got                 - {}", test_info, data.italic());
+                                println!(" {} Got                 - {}", test_info, data.italic());
                             }
                             break;
                         }
@@ -193,9 +193,9 @@ fn main() {
         }
     }
     if is_test_passed {
-        println!("\n\t{}\t{}", "Test".bold(), "PASSED".bold().green());
+        println!("\n {} {}\t{}", "Test".bold(), scenario.name().italic(), "PASSED".bold().green());
     } else {
-        println!("\n\t{}\t{}", "Test".bold(), "FAILED".bold().red());
+        println!("\n {} {}\t{}", "Test".bold(), scenario.name().italic(), "FAILED".bold().red());
     }
 
     println!("\n---- {} ----", "Finishing testing".bold().blue());
