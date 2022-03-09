@@ -1,6 +1,9 @@
 extern crate serialport;
 use serialport::{Error, SerialPort};
 
+extern crate colored;
+use colored::*;
+
 use std::io::{self, Write};
 use std::time::Duration;
 
@@ -54,7 +57,11 @@ impl Serial {
         self.baudrate.clone()
     }
 
-    pub fn get_timeout(&self) -> u128 {
+    pub fn get_timeout(&self) -> u64 {
+        self.timeout.clone()
+    }
+
+    pub fn get_msg_timeout(&self) -> u128 {
         self.expect_timeout.clone()
     }
 
@@ -67,8 +74,8 @@ impl Serial {
             Ok(port) => self.serial = Some(port),
             Err(e) => {
                 eprintln!(
-                    "ERROR: failed to open port `{}` at {} baudrate cause {}",
-                    self.port, self.baudrate, e
+                    "{}: failed to open port {} at {} baudrate cause {}",
+                    "ERROR".bright_red(), self.port.bold(), self.baudrate.to_string().bold(), e.description.to_lowercase().italic()
                 );
                 std::process::exit(1);
             }

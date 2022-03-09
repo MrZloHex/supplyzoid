@@ -52,7 +52,7 @@ impl Instruction {
         let mut value = val.clone();
         match serial {
             SerialRecip::Rapi => value.push('\r'),
-            _ => (),
+            SerialRecip::Ocpp => value.push('\n'),
         }
 
         Ok(Instruction { serial, cmd, value })

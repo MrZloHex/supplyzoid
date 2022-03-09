@@ -7,4 +7,5 @@ edition = "2018"
 
 [dependencies]
 serialport = "4.0.1"
+colored = "2"
 clap = { version = "2.33", features = ["yaml"] }
