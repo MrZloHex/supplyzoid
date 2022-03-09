@@ -49,7 +49,7 @@ impl Instruction {
             });
         };
 
-        let mut value = val.clone();
+        let mut value = val;
         match serial {
             SerialRecip::Rapi => value.push('\r'),
             SerialRecip::Ocpp => value.push('\n'),
@@ -80,14 +80,14 @@ impl Scenario {
         let mut is_sc = false;
         for line in reader.lines() {
             let line = line.unwrap();
-            if line == "" || line.starts_with('#') {
+            if line.is_empty() || line.starts_with('#') {
                 continue;
             }
             if is_sc {
                 scen.sceanario.push(line);
                 scen.fcap += 1;
             } else {
-                if line == "SCENARIO".to_string() {
+                if line == *"SCENARIO" {
                     is_sc = true;
                     continue;
                 }

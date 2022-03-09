@@ -1,8 +1,7 @@
 mod serial;
-use serial::Serial;
 
 mod scen_parser;
-use scen_parser::{Command, Instruction, Scenario, SerialRecip};
+use scen_parser::{Command, Scenario, SerialRecip};
 
 extern crate colored;
 use colored::*;
@@ -18,11 +17,7 @@ fn main() {
     let scenario_fname = matches.value_of("scenario").unwrap();
     let mut scenario = Scenario::new(scenario_fname);
 
-    let verbose = if matches.is_present("verbose") {
-        true
-    } else {
-        false
-    };
+    let verbose = matches.is_present("verbose");
 
     let (mut rapi, mut ocpp, rst_timeout) = scenario.get_settings();
     if verbose {
@@ -52,7 +47,7 @@ fn main() {
     ocpp.open();
 
     if verbose {
-        println!("{}: {}", "INFO".bright_cyan(), "ports was succesfully opened")
+        println!("{}: ports was succesfully opened", "INFO".bright_cyan())
     }
 
     println!("{} the board", "RESET".bright_yellow().blink());
@@ -103,7 +98,7 @@ fn main() {
 
     loop {
         let instr = scenario.next_instruction();
-        if let None = instr {
+        if instr.is_none() {
             break;
         }
         let instr = instr.unwrap();
@@ -181,7 +176,7 @@ fn main() {
                             };
 
                             if verbose {
-                                println!("  {}  Gotted              - {}", test_info, data.italic());
+                                println!("  {}  Got                 - {}", test_info, data.italic());
                             }
                             break;
                         }

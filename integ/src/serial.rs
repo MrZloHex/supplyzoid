@@ -1,10 +1,10 @@
 extern crate serialport;
-use serialport::{Error, SerialPort};
+use serialport::SerialPort;
 
 extern crate colored;
 use colored::*;
 
-use std::io::{self, Write};
+use std::io::Write;
 use std::time::Duration;
 
 pub struct Serial {
@@ -16,15 +16,6 @@ pub struct Serial {
 }
 
 impl Serial {
-    pub fn init() -> Serial {
-        Serial {
-            port: String::new(),
-            baudrate: 0,
-            serial: None,
-            timeout: 100,
-            expect_timeout: 100
-        }
-    }
     pub fn new(port: String, baudrate: u32, timeout: u64, expect_timeout: u128) -> Serial {
         Serial {
             port,
@@ -35,34 +26,20 @@ impl Serial {
         }
     }
 
-    pub fn setup(&mut self, ex: Serial) {
-        self.port = ex.port;
-        self.baudrate = ex.baudrate;
-        self.timeout = ex.timeout;
-    }
-
-    pub fn set_port(&mut self, port: &str) {
-        self.port = port.to_string();
-    }
-
-    pub fn set_baudrate(&mut self, baud: u32) {
-        self.baudrate = baud;
-    }
-
     pub fn get_port(&self) -> &str {
         self.port.as_str()
     }
 
     pub fn get_baudrate(&self) -> u32 {
-        self.baudrate.clone()
+        self.baudrate
     }
 
     pub fn get_timeout(&self) -> u64 {
-        self.timeout.clone()
+        self.timeout
     }
 
     pub fn get_msg_timeout(&self) -> u128 {
-        self.expect_timeout.clone()
+        self.expect_timeout
     }
 
     pub fn open(&mut self) {
@@ -88,9 +65,5 @@ impl Serial {
 
     pub fn read_str(&mut self, buf: &mut String) -> Result<usize, std::io::Error> {
         self.serial.as_mut().unwrap().read_to_string(buf)
-    }
-
-    pub fn read(&mut self, buf: &mut Vec<u8>) -> Result<usize, std::io::Error> {
-        self.serial.as_mut().unwrap().read(buf.as_mut_slice())
     }
 }
