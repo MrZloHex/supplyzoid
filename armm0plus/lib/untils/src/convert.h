@@ -46,15 +46,15 @@ charset_to_u8
 void
 hex_str_to_u8
 (
-	const char *str,
-	u8 *dst
+	u8 *dst,
+	const char *str
 );
 
 void
 u8_to_hex_str
 (
-	char *str,
-	u8 num
+	u8 num,
+	char *str
 );
 
 void

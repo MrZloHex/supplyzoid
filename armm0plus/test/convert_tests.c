@@ -28,7 +28,7 @@ hex_str_to_u8_test(void)
 {
 	char str[] = "A0";
 	u8 num;
-	hex_str_to_u8(str, &num);
+	hex_str_to_u8(&num, str);
 	TEST_ASSERT_EQUAL(160, num);
 }
 
@@ -37,7 +37,7 @@ u8_to_hex_str_test(void)
 {
 	u8 num = 160;
 	char str[3];
-	u8_to_hex_str(str, num);
+	u8_to_hex_str(num, str);
 	str[2] = 0; 
 	TEST_ASSERT_EQUAL_STRING("A0", str);
 }

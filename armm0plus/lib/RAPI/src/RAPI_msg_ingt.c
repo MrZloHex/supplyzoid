@@ -39,7 +39,7 @@ rapi_is_msg_correct(RAPI *rapi)
 				chk_type = 2;
 
 			*(s++) = '\0';
-			hex_str_to_u8(s, &hex_chksum);
+			hex_str_to_u8(&hex_chksum, s);
 			break;
 		}
 		else
@@ -67,7 +67,7 @@ rapi_append_chksum(RAPI *rapi)
 	for (size i = 0; i < rapi->buf_index-1; ++i)
 		chksum ^= rapi->buf_cmd[i];
 
-	u8_to_hex_str(rapi->buf_cmd + rapi->buf_index, chksum);
+	u8_to_hex_str(chksum, rapi->buf_cmd + rapi->buf_index);
 	rapi->buf_index += 2;
 	rapi->buf_cmd[rapi->buf_index++] = RAPI_EOC;
 	rapi->buf_cmd[rapi->buf_index] = 0;

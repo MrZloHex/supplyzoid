@@ -26,7 +26,7 @@ rapi_get_state_resp
 	u8 *evse_state,
 	u32 *elapsed_time,
 	u8 *pilot_state,
-	u8 * vflags
+	u8 *vflags
 )
 {
 	if (rapi->token_index < 5)

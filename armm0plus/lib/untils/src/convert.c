@@ -82,11 +82,12 @@ charset_to_u8
 void
 hex_str_to_u8
 (
-	const char *str,
-	u8 *dst
+	u8 *dst,
+	const char *str
 )
 {
 	u8 num = 0;
+	// usart_rapi_println_str(str);
 	for (size i = 0; i < 2; ++i)
 	{
 		char ch = str[i];
@@ -136,8 +137,8 @@ reverse
 void
 u8_to_hex_str
 (
-	char *str,
-	u8 num
+	u8 num,
+	char *str
 )
 {
 	for (size i = 0; i < 2; ++i)
