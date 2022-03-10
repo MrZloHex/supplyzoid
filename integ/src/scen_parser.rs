@@ -59,52 +59,65 @@ impl Instruction {
     }
 }
 
-pub struct Scenario {
+
+pub struct IntegrationTest {
     data: Vec<String>,
-    sceanario: Vec<String>,
-    name: String,
-    line: usize,
-    fcap: usize,
+    scenarios: Vec<Scenario>,
+    scen_quantity: usize
 }
 
-impl Scenario {
-    pub fn new(fname: &str) -> Scenario {
+impl IntegrationTest {
+    pub fn new(fname: &str) -> IntegrationTest {
         let file = File::open(fname).unwrap();
         let reader = BufReader::new(file);
-        let mut scen = Scenario {
+        let mut test = IntegrationTest {
             data: Vec::new(),
-            sceanario: Vec::new(),
-            name: String::new(),
-            line: 0,
-            fcap: 0,
+            scenarios: Vec::new(),
+            scen_quantity: 0
         };
 
-        let mut is_sc = false;
+        let mut scenario_name = String::new();
+        let mut scenario = Vec::<String>::new();
+        let mut is_scen = false;
+
         for line in reader.lines() {
             let line = line.unwrap();
             if line.is_empty() || line.starts_with('#') {
                 continue;
             }
-            if is_sc {
-                scen.sceanario.push(line);
-                scen.fcap += 1;
-            } else {
-                if line.starts_with("SCENARIO")
-                {
-                    scen.name = line.strip_prefix("SCENARIO ").unwrap().to_string();
-                    is_sc = true;
+            if test.scen_quantity == 0 {
+                if line.starts_with("SCENARIO") {
+                    test.scen_quantity += 1;
+                    is_scen = true;
+                    scenario_name = line.strip_prefix("SCENARIO ").unwrap().to_string();
                     continue;
                 }
-                scen.data.push(line);
+                test.data.push(line.clone());
+            }
+            if test.scen_quantity > 0 {
+                if is_scen {
+                    if line.starts_with("END") {
+                        is_scen = false;
+                        test.scenarios.push(Scenario::new(scenario_name, scenario));
+                        scenario_name = String::new();
+                        scenario = Vec::new();
+                        continue;
+                    }
+                    scenario.push(line);
+                } else {
+                    if line.starts_with("SCENARIO") {
+                        test.scen_quantity += 1;
+                        is_scen = true;
+                        scenario_name = line.strip_prefix("SCENARIO ").unwrap().to_string();
+                    }
+                }
             }
         }
 
-        // println!("SCEN: {:?}\nMETADATA: {:?}", scen.sceanario, scen.data);
-
-        scen
+        test
     }
 
-    pub fn get_settings(&mut self) -> (Serial, Serial, u128) {
+    pub fn get_settings(&self) -> (Serial, Serial, u128) {
         let mut rapi_port = String::new();
         let mut ocpp_port = String::new();
         let mut rapi_baud: u32 = 0;
@@ -143,12 +156,34 @@ impl Scenario {
         )
     }
 
+    pub fn get_scenarios(&self) -> Vec<Scenario> {
+        self.scenarios.clone()
+    }
+}
+
+
+#[derive(Clone)]
+pub struct Scenario {
+    scenario: Vec<String>,
+    name: String,
+    line: usize,
+}
+
+impl Scenario {
+    pub fn new(name: String, scenario: Vec<String>) -> Scenario {
+        Scenario {
+            scenario,
+            name,
+            line: 0
+        }
+    }
+
     pub fn next_instruction(&mut self) -> Option<Instruction> {
-        if self.line == self.fcap {
+        if self.line == self.scenario.len() {
             return None;
         }
 
-        let line = self.sceanario[self.line].clone();
+        let line = self.scenario[self.line].clone();
         let tokens: Vec<String> = line.splitn(3, ' ').map(|s| s.to_string()).collect();
         let instr = Instruction::new(tokens[0].clone(), tokens[1].clone(), tokens[2].clone());
         if let Err(e) = instr {

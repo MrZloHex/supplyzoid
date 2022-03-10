@@ -1,0 +1,50 @@
+RST_TIMEOUT 5000
+
+RAPI_PORT /dev/ttyACM0
+RAPI_BAUD 9600
+OCPP_PORT /dev/ttyUSB0
+OCPP_BAUD 9600
+
+SCENARIO BOOTING
+
+RAPI SEND $AB 00 D8.2.0^59
+OCPP EXPT [2,"1","BootNotification",{"chargePointVendor":"EV Solutions","chargePointModel":"PROTOTYPE"}]
+OCPP SEND [3,"1",{"currentTime":"2013-02-01T04:05:40.486Z","interval":30,"status":"Accepted"}]
+
+END
+
+SCENARIO START CHARGING
+
+OCPP SEND [2,"987","RemoteStartTransaction",{"idTag":"hub"}]
+RAPI EXPT $GS^30
+RAPI SEND $OK 02 0 03 0708^1E
+OCPP EXPT [3,"987",{"status":"Accepted"}]
+RAPI EXPT $S4 0^53
+RAPI SEND $OK^20
+RAPI EXPT $GU^36
+RAPI SEND $OK 0 0^20
+
+# TODO SOMEHOW DON'T LOOK AT TIMESTAMP
+OCPP EXPT [2,"2","StartTransaction",{"connectorId":1,"idTag":"hub","meterStart":0,"timestamp":"2013-02-01T04:05:40.552Z"}]
+
+OCPP SEND [3,"2",{"idTagInfo":{"status":"Accepted"},"transactionId":420}]
+
+END
+
+SCENARIO STOP CHARGING
+
+OCPP SEND [2,"988","RemoteStopTransaction",{"transactionId":420}]
+RAPI EXPT $GS^30
+RAPI SEND $OK 03 0 03 0209^1B
+OCPP EXPT [3,"988",{"status":"Accepted"}]
+RAPI EXPT $S4 1^52
+RAPI SEND $OK^20
+RAPI EXPT $GU^36
+RAPI SEND $OK 900000 250^1E
+
+# TODO SOMEHOW DON'T LOOK AT TIMESTAMP
+OCPP EXPT [2,"3","StopTransaction",{"meterStop":250,"timestamp":"2013-02-01T04:05:41.420Z","transactionId":420}]
+
+OCPP SEND [3,"3",{"idTagInfo":{"status":"Accepted"}}]
+
+END

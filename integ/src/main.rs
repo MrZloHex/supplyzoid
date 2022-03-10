@@ -1,7 +1,7 @@
 mod serial;
 
 mod scen_parser;
-use scen_parser::{Command, Scenario, SerialRecip};
+use scen_parser::{Command, Scenario, SerialRecip, IntegrationTest};
 
 extern crate colored;
 use colored::*;
@@ -15,11 +15,11 @@ fn main() {
     let matches = App::from(yaml).get_matches();
 
     let scenario_fname = matches.value_of("scenario").unwrap();
-    let mut scenario = Scenario::new(scenario_fname);
+    let mut test = IntegrationTest::new(scenario_fname);
 
     let verbose = matches.is_present("verbose");
 
-    let (mut rapi, mut ocpp, rst_timeout) = scenario.get_settings();
+    let (mut rapi, mut ocpp, rst_timeout) = test.get_settings();
     if verbose {
         println!("{}:", "Settings INFO".bright_cyan());
         println!
@@ -94,111 +94,114 @@ fn main() {
 
     println!("\n----- {} ----", "Starting testing".bold().blue());
 
-    let mut is_test_passed = true;
+    let mut ti = 0;
+    for mut scenario in test.get_scenarios() {
+        if verbose { if ti == 0 { print!("\n"); } else { println!("\n"); } ti += 1; }
+        let mut is_test_passed = true;
+        loop {
+            let instr = scenario.next_instruction();
+            if instr.is_none() {
+                break;
+            }
+            let instr = instr.unwrap();
+            match instr.serial {
+                SerialRecip::Rapi => match instr.cmd {
+                    Command::Send => {
+                        if verbose {
+                            println!("{}: Sending   to   {} - {}", "INFO".bright_cyan(), "RAPI".bold(), instr.value.italic());
+                        }
+                        rapi.write(instr.value.as_bytes());
 
-    loop {
-        let instr = scenario.next_instruction();
-        if instr.is_none() {
-            break;
-        }
-        let instr = instr.unwrap();
-        match instr.serial {
-            SerialRecip::Rapi => match instr.cmd {
-                Command::Send => {
-                    if verbose {
-                        println!("{}: Sending   to   {} - {}", "INFO".bright_cyan(), "RAPI".bold(), instr.value.italic());
-                    }
-                    rapi.write(instr.value.as_bytes());
+                    },
+                    Command::Expect => {
+                        let now = Instant::now();
+                        let mut elapsed = now.elapsed();
 
-                },
-                Command::Expect => {
-                    let now = Instant::now();
-                    let mut elapsed = now.elapsed();
+                        if verbose {
+                            println!("{}: Expecting from {} - {}", "INFO".bright_cyan(), "RAPI".bold(), instr.value.italic());
+                        }
 
-                    if verbose {
-                        println!("{}: Expecting from {} - {}", "INFO".bright_cyan(), "RAPI".bold(), instr.value.italic());
-                    }
-
-                    let mut data = String::new();
-                    while elapsed.as_millis() <= rapi.get_msg_timeout() {
-                        rapi.read_str(&mut data);
-                        if data.is_empty() {
-                            elapsed = now.elapsed();
-                            continue;
-                        } else {
-                            let test_info = if compare_str(data.clone(), instr.value.clone()) {
-                                "OKAY".green().bold()
+                        let mut data = String::new();
+                        while elapsed.as_millis() <= rapi.get_msg_timeout() {
+                            rapi.read_str(&mut data);
+                            if data.is_empty() {
+                                elapsed = now.elapsed();
+                                continue;
                             } else {
-                                is_test_passed = false;
-                                "FAIL".red().bold()
-                            };
+                                let test_info = if compare_str(data.clone(), instr.value.clone()) {
+                                    "OKAY".green().bold()
+                                } else {
+                                    is_test_passed = false;
+                                    "FAIL".red().bold()
+                                };
 
-                            if verbose {
-                                println!(" {} Got                 - {}", test_info, data.italic());
+                                if verbose {
+                                    println!(" {} Got                 - {}", test_info, data.italic());
+                                }
+                                break;
                             }
+                        }
+                        if elapsed.as_millis() > rapi.get_msg_timeout() {
+                            is_test_passed = false;
+                            break;
+                        }
+
+                    }
+                },
+                SerialRecip::Ocpp => match instr.cmd {
+                    Command::Send => {
+                        if verbose {
+                            print!("{}: Sending   to   {} - {}", "INFO".bright_cyan(), "OCPP".bold(), instr.value.italic());
+                        }
+                        ocpp.write(instr.value.as_bytes());
+                    },
+                    Command::Expect => {
+                        let now = Instant::now();
+                        let mut elapsed = now.elapsed();
+
+                        if verbose {
+                            print!("{}: Expecting from {} - {}", "INFO".bright_cyan(), "OCPP".bold(), instr.value.italic());
+                        }
+
+                        let mut data = String::new();
+                        while elapsed.as_millis() <= ocpp.get_msg_timeout() {
+                            ocpp.read_str(&mut data);
+                            if data.is_empty() {
+                                elapsed = now.elapsed();
+                                continue;
+                            } else {
+                                let test_info = if compare_str(data.clone(), instr.value.clone()) {
+                                    "OKAY".green().bold()
+                                } else {
+                                    is_test_passed = false;
+                                    "FAIL".red().bold()
+                                };
+
+                                if verbose {
+                                    print!(" {} Got                 - {}", test_info, data.italic());
+                                }
+                                break;
+                            }
+                        }
+                        if elapsed.as_millis() > ocpp.get_msg_timeout() {
+                            is_test_passed = false;
                             break;
                         }
                     }
-                    if elapsed.as_millis() > rapi.get_msg_timeout() {
-                        is_test_passed = false;
-                        break;
-                    }
-                    
                 }
-            },
-            SerialRecip::Ocpp => match instr.cmd {
-                Command::Send => {
-                    if verbose {
-                        print!("{}: Sending   to   {} - {}", "INFO".bright_cyan(), "OCPP".bold(), instr.value.italic());
-                    }
-                    ocpp.write(instr.value.as_bytes());
-                },
-                Command::Expect => {
-                    let now = Instant::now();
-                    let mut elapsed = now.elapsed();
-
-                    if verbose {
-                        print!("{}: Expecting from {} - {}", "INFO".bright_cyan(), "OCPP".bold(), instr.value.italic());
-                    }
-
-                    let mut data = String::new();
-                    while elapsed.as_millis() <= ocpp.get_msg_timeout() {
-                        ocpp.read_str(&mut data);
-                        if data.is_empty() {
-                            elapsed = now.elapsed();
-                            continue;
-                        } else {
-                            let test_info = if compare_str(data.clone(), instr.value.clone()) {
-                                "OKAY".green().bold()
-                            } else {
-                                is_test_passed = false;
-                                "FAIL".red().bold()
-                            };
-
-                            if verbose {
-                                println!(" {} Got                 - {}", test_info, data.italic());
-                            }
-                            break;
-                        }
-                    }
-                    if elapsed.as_millis() > ocpp.get_msg_timeout() {
-                        is_test_passed = false;
-                        break;
-                    }
-                }
-            },
-        };
-        if !is_test_passed {
-            break;
+            };
+            if !is_test_passed {
+                break;
+            }
         }
-    }
-    if is_test_passed {
-        println!("\n {} {}\t{}", "Test".bold(), scenario.name().italic(), "PASSED".bold().green());
-    } else {
-        println!("\n {} {}\t{}", "Test".bold(), scenario.name().italic(), "FAILED".bold().red());
-    }
-
-    println!("\n---- {} ----", "Finishing testing".bold().blue());
+        if is_test_passed {
+            print!("\n {} {}\t{}", "Test".bold(), scenario.name().italic(), "PASSED".bold().green());
+        } else {
+            print!("\n {} {}\t{}", "Test".bold(), scenario.name().italic(), "FAILED".bold().red());
+        }
+    }   
+    
+    println!("\n\n---- {} ----", "Finishing testing".bold().blue());
 }
 
 
