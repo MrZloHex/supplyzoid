@@ -49,7 +49,7 @@ File with tests can be divided into 2 segments: _Settings_ and _Scenarios_.
 
 Settings can be written in form of key-value pairs separated with _space_
 Available settings:
- - RST_TIMEOUT &lt u128 &gt
+ - RST_TIMEOUT \<u128\>
  - RAPI_PORT &lt String &gt
 
 ## Flags
