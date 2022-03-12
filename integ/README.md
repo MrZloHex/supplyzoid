@@ -36,9 +36,20 @@ RESET the board
 
 ---- Finishing testing ----
 ```
+
 All is __OK__!
 
 ## Test syntax
 
+### Segments
+
+File with tests can be divided into 2 segments: _Settings_ and _Scenarios_.
+
+#### Settings
+
+Settings can be written in form of key-value pairs separated with _space_
+Available settings:
+ - RST_TIMEOUT <u128>
+ - RAPI_PORT <String>
 
 ## Flags
