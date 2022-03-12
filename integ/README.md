@@ -95,4 +95,9 @@ This maight be useful in situation when the expecting value contains timestamp w
 
 The test is considered __passed__ only if all send commands were executed without any trouble and all expected values were received. 
 
-## Flags
+## Flags & Options
+
+| Long     | Short | Type | Description                  |
+|:--------:|:-----:|:----:|:----------------------------:|
+| scenario | s     | opt  | Path to file with tests      |
+| verbose  | v     | flag | Verbose output while testing |
