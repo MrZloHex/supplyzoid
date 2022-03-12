@@ -118,8 +118,8 @@ impl IntegrationTest {
     pub fn get_settings(&self) -> (Serial, Serial, u128) {
         let mut rapi_port = String::new();
         let mut ocpp_port = String::new();
-        let mut rapi_baud: u32 = 0;
-        let mut ocpp_baud: u32 = 0;
+        let mut rapi_baud: u32 = 9600;
+        let mut ocpp_baud: u32 = 9600;
 
         // Default settings
         let mut rapi_port_timeout = 100;

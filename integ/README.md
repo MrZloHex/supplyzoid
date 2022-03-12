@@ -44,19 +44,27 @@ All is __OK__!
 ### Segments
 
 File with tests can be divided into 2 segments: _Settings_ and _Scenarios_.
+Example [scenario](integ/test_scenarios/example_tests).
 
 #### Settings
 
 Settings can be written in form of key-value pairs separated with _space_. \
 Available settings:
- - RST_TIMEOUT \<u128\> - Timeout in _ms_ for push _reset_ button on supplyzoid
- - RAPI_PORT \<String\> - Port to which is connected rapi_port on board
- - OCPP_PORT \<String\> - Port to which is connected ocpp_port on board
- - RAPI_BAUD \<u32\> - Baudrate of rapi_port
- - OCPP_BAUD \<u32\> - Baudrate of ocpp_port
- - RAPI_PORT_TIMEOUT \<u64\> - Timeout in _ms_ for one try to read/write data from/into rapi_port
- - OCPP_PORT_TIMEOUT \<u64\> - Timeout in _ms_ for one try to read/write data from/into ocpp_port
- - RAPI_MSG_TIMEOUT \<u128\> - Timeout in _ms_ for expecting message from rapi_port
- - OCPP_MSG_TIMEOUT \<u128\> - Timeout in _ms_ for expecting message from ocpp_port
+
+| Name              | Value Type | Def value | Description                                                        |
+|:------------------|:----------:|:---------:|:------------------------------------------------------------------:|
+| RST_TIMEOUT       | \<u128\>   |   10000   | Timeout in _ms_ for push _reset_ button on supplyzoid              |
+| RAPI_PORT         | \<String\> |     -     | Port to which is connected rapi_port on board                      |
+| OCPP_PORT         | \<String\> |     -     | Port to which is connected ocpp_port on board                      |
+| RAPI_BAUD         | \<u32\>    |    9600   | Baudrate of rapi_port                                              |
+| OCPP_BAUD         | \<u32\>    |    9600   | Baudrate of ocpp_port                                              |
+| RAPI_PORT_TIMEOUT | \<u64\>    |    100    | Timeout in _ms_ for one try to read/write data from/into rapi_port |
+| OCPP_PORT_TIMEOUT | \<u64\>    |    100    | Timeout in _ms_ for one try to read/write data from/into ocpp_port |
+| RAPI_MSG_TIMEOUT  | \<u128\>   |    100    | Timeout in _ms_ for expecting message from rapi_port               |
+| OCPP_MSG_TIMEOUT  | \<u128\>   |    100    | Timeout in _ms_ for expecting message from ocpp_port               |
+
+#### Scenarios
+
+
 
 ## Flags
