@@ -67,9 +67,9 @@ Available settings:
 
 Scenarios should start with _keyword_ `SCENARIO` and finish with `END`. \
 One test file can include multiple scenarios. \
-Also scenarios could be named by writting _name_ after keyword `SCENARIO`. \
+Also scenarios could be named by writting _name_ after keyword `SCENARIO`.
 
-Inside scenario block you can write commands which will be execute at test time. \
+Inside scenario block you can write commands which will be execute at test time.
 
 #### Command
 
@@ -79,10 +79,20 @@ Firstly goes _PORT_ with will communicate command. It can either `RAPI` either `
 Secondly goes type of command:
  - SEND - Send value for defined port
  - EXPT - Expect value from defined port up to timeout.
-And thirdly goes value of command. \
+
+And thirdly goes value of command.
 
 Example of command: `RAPI SEND $GS^30`
 
+#### Notes
 
+To make a comment at start of line put `#` and after a space write your comment.
+
+In value of _EXPT_ command you can put `@` to indicate that this could be any character at real data. \
+This maight be useful in situation when the expecting value contains timestamp with milliseconds and you can't be 100% sure that value would everytime as you define up to 1 ms so you can just put `@@@` and forget about ms.
+
+### Passig the test
+
+The test is considered __passed__ only if all send commands were executed without any trouble and all expected values were received. 
 
 ## Flags
