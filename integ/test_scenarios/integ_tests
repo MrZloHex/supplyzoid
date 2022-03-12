@@ -2,7 +2,7 @@ RST_TIMEOUT 5000
 
 RAPI_PORT /dev/ttyACM0
 RAPI_BAUD 9600
-RAPI_MSG_TIMEOUT 500
+RAPI_MSG_TIMEOUT 1000
 OCPP_PORT /dev/ttyUSB0
 OCPP_BAUD 9600
 OCPP_MSG_TIMEOUT 300
@@ -27,7 +27,7 @@ RAPI EXPT $GU^36
 RAPI SEND $OK 0 0^20
 
 # TODO SOMEHOW DON'T LOOK AT TIMESTAMP
-OCPP EXPT [2,"2","StartTransaction",{"connectorId":1,"idTag":"hub","meterStart":0,"timestamp":"2013-02-01T04:05:40.552Z"}]
+OCPP EXPT [2,"2","StartTransaction",{"connectorId":1,"idTag":"hub","meterStart":0,"timestamp":"2013-02-01T04:05:40.@@@Z"}]
 
 OCPP SEND [3,"2",{"idTagInfo":{"status":"Accepted"},"transactionId":420}]
 
@@ -45,7 +45,7 @@ RAPI EXPT $GU^36
 RAPI SEND $OK 900000 250^1E
 
 # TODO SOMEHOW DON'T LOOK AT TIMESTAMP
-OCPP EXPT [2,"3","StopTransaction",{"meterStop":250,"timestamp":"2013-02-01T04:05:41.420Z","transactionId":420}]
+OCPP EXPT [2,"3","StopTransaction",{"meterStop":250,"timestamp":"2013-02-01T04:05:41.@@@Z","transactionId":420}]
 
 OCPP SEND [3,"3",{"idTagInfo":{"status":"Accepted"}}]
 

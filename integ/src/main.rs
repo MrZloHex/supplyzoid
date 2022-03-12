@@ -128,7 +128,7 @@ fn main() {
                                 elapsed = now.elapsed();
                                 continue;
                             } else {
-                                let test_info = if compare_str(data.clone(), instr.value.clone()) {
+                                let test_info = if compare_str(instr.value.clone(), data.clone()) {
                                     "OKAY".green().bold()
                                 } else {
                                     is_test_passed = false;
@@ -170,7 +170,7 @@ fn main() {
                                 elapsed = now.elapsed();
                                 continue;
                             } else {
-                                let test_info = if compare_str(data.clone(), instr.value.clone()) {
+                                let test_info = if compare_str(instr.value.clone(), data.clone()) {
                                     "OKAY".green().bold()
                                 } else {
                                     is_test_passed = false;
@@ -205,12 +205,16 @@ fn main() {
 }
 
 
-fn compare_str(str1: String, str2: String) -> bool {
-    if str1.len() != str2.len() {
+fn compare_str(expt: String, data: String) -> bool {
+    // println!("E: {}\nD: {}", expt, data);
+    if expt.len() != data.len() {
         return false;
     }
-    for i in 0..str1.len() {
-        if str1.chars().nth(i).unwrap() != str2.chars().nth(i).unwrap() {
+    for (ch_e, ch_d) in expt.chars().zip(data.chars()) {
+        if ch_e == '@' {
+            continue;
+        }
+        if ch_d != ch_e {
             return false;
         }
     }
