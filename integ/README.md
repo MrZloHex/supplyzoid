@@ -101,3 +101,5 @@ The test is considered __passed__ only if all send commands were executed withou
 |:--------:|:-----:|:----:|:----------------------------:|
 | scenario | s     | opt  | Path to file with tests      |
 | verbose  | v     | flag | Verbose output while testing |
+| help     | h     | flag | Help output                  |
+| version  | V     | flag | Displays version of app      |

@@ -1,5 +1,5 @@
 name: integ
-version: "0.1.0"
+version: "0.2.3"
 author: MrZloHex <zlo.alex.it@gmail.com>
 about: Integration test for supplyzoid
 args:

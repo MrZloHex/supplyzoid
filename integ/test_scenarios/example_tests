@@ -11,4 +11,10 @@ OCPP_PORT_TIMEOUT 100
 
 SCENARIO FIRST
 
+SEND RAPI $AB 00 D8.2.0^59
+OCPP EXPT [2,"1","BootNotification",{"chargePointVendor":"EV Solutions","chargePointModel":"PROTOTYPE"}]
+OCPP SEND [3,"1",{"currentTime":"2013-02-01T04:05:40.486Z","interval":30,"status":"Accepted"}]
+OCPP SEND [2,"987","RemoteStartTransaction",{"idTag":"hub"}]
+RAPI EXPT $GS^30
+
 END
