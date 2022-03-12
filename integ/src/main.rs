@@ -110,7 +110,7 @@ fn main() {
                 SerialRecip::Rapi => match instr.cmd {
                     Command::Send => {
                         if verbose {
-                            println!("{}: Sending   to   {} - {}", "INFO".bright_cyan(), "RAPI".bold(), instr.value.italic());
+                            println!("{}: Sending    {}   -> {} - {}", "INFO".bright_cyan(), "RAPI".bold(), "CLIENT".bold(), instr.value.italic());
                         }
                         rapi.write(instr.value.as_bytes());
 
@@ -120,7 +120,7 @@ fn main() {
                         let mut elapsed = now.elapsed();
 
                         if verbose {
-                            println!("{}: Expecting from {} - {}", "INFO".bright_cyan(), "RAPI".bold(), instr.value.italic());
+                            println!("{}: Expecting  {} -> {}   - {}", "INFO".bright_cyan(), "CLIENT".bold(), "RAPI".bold(), instr.value.italic());
                         }
 
                         let mut data = String::new();
@@ -138,7 +138,7 @@ fn main() {
                                 };
 
                                 if verbose {
-                                    println!(" {} Got                 - {}", test_info, data.italic());
+                                    println!(" {} Got                         - {}", test_info, data.italic());
                                 }
                                 break;
                             }
@@ -153,7 +153,7 @@ fn main() {
                 SerialRecip::Ocpp => match instr.cmd {
                     Command::Send => {
                         if verbose {
-                            print!("{}: Sending   to   {} - {}", "INFO".bright_cyan(), "OCPP".bold(), instr.value.italic());
+                            print!("{}: Sending    {} -> {} - {}", "INFO".bright_cyan(), "SERVER".bold(), "CLIENT".bold(), instr.value.italic());
                         }
                         ocpp.write(instr.value.as_bytes());
                     },
@@ -162,7 +162,7 @@ fn main() {
                         let mut elapsed = now.elapsed();
 
                         if verbose {
-                            print!("{}: Expecting from {} - {}", "INFO".bright_cyan(), "OCPP".bold(), instr.value.italic());
+                            print!("{}: Expecting  {} -> {} - {}", "INFO".bright_cyan(), "CLIENT".bold(), "SERVER".bold(), instr.value.italic());
                         }
 
                         let mut data = String::new();
@@ -180,7 +180,7 @@ fn main() {
                                 };
 
                                 if verbose {
-                                    print!(" {} Got                 - {}", test_info, data.italic());
+                                    print!(" {} Got                         - {}", test_info, data.italic());
                                 }
                                 break;
                             }
