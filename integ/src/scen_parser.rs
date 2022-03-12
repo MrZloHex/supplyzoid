@@ -104,12 +104,10 @@ impl IntegrationTest {
                         continue;
                     }
                     scenario.push(line);
-                } else {
-                    if line.starts_with("SCENARIO") {
-                        test.scen_quantity += 1;
-                        is_scen = true;
-                        scenario_name = line.strip_prefix("SCENARIO ").unwrap().to_string();
-                    }
+                } else if line.starts_with("SCENARIO") {
+                    test.scen_quantity += 1;
+                    is_scen = true;
+                    scenario_name = line.strip_prefix("SCENARIO ").unwrap().to_string();
                 }
             }
         }

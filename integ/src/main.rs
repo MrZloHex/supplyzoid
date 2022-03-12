@@ -1,7 +1,9 @@
+#![allow(unused_must_use)]
+
 mod serial;
 
 mod scen_parser;
-use scen_parser::{Command, Scenario, SerialRecip, IntegrationTest};
+use scen_parser::{Command, SerialRecip, IntegrationTest};
 
 extern crate colored;
 use colored::*;
@@ -15,7 +17,7 @@ fn main() {
     let matches = App::from(yaml).get_matches();
 
     let scenario_fname = matches.value_of("scenario").unwrap();
-    let mut test = IntegrationTest::new(scenario_fname);
+    let test = IntegrationTest::new(scenario_fname);
 
     let verbose = matches.is_present("verbose");
 
@@ -96,7 +98,7 @@ fn main() {
 
     let mut ti = 0;
     for mut scenario in test.get_scenarios() {
-        if verbose { if ti == 0 { print!("\n"); } else { println!("\n"); } ti += 1; }
+        if verbose { if ti == 0 { println!(); } else { println!("\n"); } ti += 1; }
         let mut is_test_passed = true;
         loop {
             let instr = scenario.next_instruction();
