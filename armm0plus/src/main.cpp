@@ -32,8 +32,8 @@ setup()
 	stm32rtc_init(&rtc);
 	stm32rtc_begin(&rtc, HOUR_FORMAT_24);
 
-	usart_ocpp.begin(9600);
-	usart_rapi.begin(9600);
+	usart_ocpp.begin(115200);
+	usart_rapi.begin(115200);
 
 	usart_rapi.printf("STARTING RAPI\n");
 	usart_ocpp.printf("STARTING OCPP\n");

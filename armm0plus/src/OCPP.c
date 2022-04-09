@@ -25,11 +25,13 @@ ocpp_init(OCPP *ocpp)
 	ocpp->now.call_result.payload      = (char *) malloc(sizeof(char)*PAYLOAD_LEN);
 	ocpp->now.call_error.error_dscr    = (char *) malloc(sizeof(char)*DSCR_LEN);
 	ocpp->now.call_error.error_details = (char *) malloc(sizeof(char)*PAYLOAD_LEN);
+	ocpp->now.ID = NULL;
 
 	ocpp->last.call.payload = (char *) malloc(sizeof(char)*PAYLOAD_LEN);
 	ocpp->last.call_result.payload      = (char *) malloc(sizeof(char)*PAYLOAD_LEN);
 	ocpp->last.call_error.error_dscr    = (char *) malloc(sizeof(char)*DSCR_LEN);
 	ocpp->last.call_error.error_details = (char *) malloc(sizeof(char)*PAYLOAD_LEN);
+	ocpp->last.ID = NULL;
 }
 
 void
@@ -167,9 +169,9 @@ ocpp_parse_message
 	ocpp->now.type = msg_type;
 
 	OCPPMessageID msg_id = ocpp_get_message_id(str, length);
-	if (msg_id == 0)
+	if (msg_id == ERROR_P)
 		return ERROR_P;
-	ocpp->now.ID = msg_id;
+	strcpyy(ocpp->now.ID, msg_id);
 
 	if (msg_type == CALL)
 	{
@@ -186,10 +188,6 @@ ocpp_parse_message
 
 		strcpyy(ocpp->now.call.payload, payload);
 
-		// printf("NEW CALL REQ:\n");
-		// printf("\tID: `%ld`\n", ocpp->now.ID);
-		// printf("\tACTION: `%d`\n", ocpp->now.call.action);
-		// printf("\tPAYLOAD: `%s`\n", ocpp->now.call.payload);
 	}
 	else if (msg_type == CALLRESULT)
 	{
@@ -260,8 +258,7 @@ ocpp_send_req
 		return;
 	}
 
-	char id[37];
-	int_to_charset(ocpp->id, id, 1);
+	set_msg_id(ocpp);
 
 	char req[REQ_LEN];
 
@@ -270,7 +267,7 @@ ocpp_send_req
 		req, REQ_LEN,
 		"[%u,%Q,%Q,%s]",
 		CALL,
-		id,
+		ocpp->now.ID,
 		action_str,
 		ocpp->now.call.payload
 	);
@@ -371,8 +368,10 @@ ocpp_get_message_id
 	int res = mjson_get_string(str, length, POS_MSG_ID, buf, 50);
 	if (res <= 0)
 		return ERROR_P;
-	OCPPMessageID id;
-	STR_TO_NUM(id, buf);
+	size_t id_len = strlenn(buf);
+	OCPPMessageID id = (char *)malloc(id_len+1);
+	strcpyy(id, buf);
+	id[id_len] = 0;
 	return id;
 }
 
@@ -459,4 +458,18 @@ ocpp_get_call_error_descr
 		return ERROR_P;
 
 	strcpyy(dscr, buf);
+}
+
+
+void
+set_msg_id(OCPP *ocpp)
+{
+	char id[50];
+	int_to_charset(ocpp->id, id, 1);
+	ocpp->id++;
+
+	size_t id_len = strlenn(id);
+	ocpp->now.ID = (char *)malloc(id_len+1);
+	strcpyy(ocpp->now.ID, id);
+	ocpp->now.ID[id_len] = 0;
 }

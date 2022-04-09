@@ -19,7 +19,7 @@ typedef char CiString25[26];
 #define POS_MSG_ID   "$[1]"
 
 typedef unsigned char OCPPMessageType;
-typedef unsigned long OCPPMessageID;
+typedef char * OCPPMessageID;
 
 
 

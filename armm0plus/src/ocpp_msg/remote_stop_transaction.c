@@ -45,6 +45,7 @@ ocpp_remote_stop_transaction_req
 		reject = true;
 	}
 	ocpp_send_resp(ocpp, CALLRESULT);
+	free(ocpp->now.ID);
 	if (reject)
 		return;
 
