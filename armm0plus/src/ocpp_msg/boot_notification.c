@@ -31,7 +31,7 @@ ocpp_boot_notification_conf
 	STM32RTC *rtc
 )
 {
-	if (strcmpp(ocpp->now.ID, ocpp->last.ID))
+	if (!strcmpp(ocpp->now.ID, ocpp->last.ID))
 		return;
 
 	ocpp->waiting_for_resp = false;
@@ -68,7 +68,4 @@ ocpp_boot_notification_conf
 
 	adjust_rtc_time(rtc, time);
 
-	free(ocpp->now.ID);
-	
-	// usart_ocpp_println_str("BOOTED");
 }

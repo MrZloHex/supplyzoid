@@ -13,9 +13,6 @@ ocpp_start_transaction_req
 	char id_tag[21]
 )
 {
-	char id[37];
-	int_to_charset(ocpp->id, id, 1);
-
 	rapi_get_energy_usage_req(rapi);
 	rapi_send_req(rapi);
 	bool resp = rapi_get_resp(rapi, ocpp);
@@ -45,7 +42,6 @@ ocpp_start_transaction_req
 	);
 
 	ocpp->now.type = CALL;
-	ocpp->now.ID   = ocpp->id;
 	ocpp->now.call.action = START_TRANSACTION;
 	strcpyy(ocpp->now.call.payload, payload);
 }
@@ -56,7 +52,7 @@ ocpp_start_transaction_conf
 	OCPP *ocpp
 )
 {
-	if (ocpp->last.ID != ocpp->now.ID)
+	if (!strcmpp(ocpp->now.ID, ocpp->last.ID))
 		return;
 
 	ocpp->waiting_for_resp = false;

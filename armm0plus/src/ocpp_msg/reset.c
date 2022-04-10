@@ -38,7 +38,6 @@ ocpp_reset_req
 
 	ocpp_reset_conf(ocpp, RSS_ACCEPTED);
 	ocpp_send_resp(ocpp, CALLRESULT);
-	free(ocpp->now.ID);
 
 	if (reset_type == 2)
 	{
@@ -93,7 +92,6 @@ ocpp_reset_conf
 		);
 	}
 
-	ocpp->now.ID = ocpp->last.ID;
 	ocpp->now.type = CALLRESULT;
 	strcpyy(ocpp->now.call_result.payload, payload);
 }

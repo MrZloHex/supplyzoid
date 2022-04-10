@@ -9,7 +9,6 @@ ocpp_heartbeat_req
 	char payload[PAYLOAD_LEN] = "{}";
 
 	ocpp->now.type = CALL;
-	ocpp->now.ID   = ocpp->id;
 	ocpp->now.call.action = HEARTBEAT;
 	strcpyy(ocpp->now.call.payload, payload);
 }
@@ -20,7 +19,7 @@ ocpp_heartbeat_conf
 	OCPP *ocpp
 )
 {
-	if (ocpp->last.ID != ocpp->now.ID)
+	if (!strcmpp(ocpp->last.ID, ocpp->now.ID))
 		return;
 
 	ocpp->waiting_for_resp = false;

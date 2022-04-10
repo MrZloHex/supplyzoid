@@ -10,6 +10,7 @@ typedef char CiString25[26];
 
 #define ACTION_LEN   30
 #define PAYLOAD_LEN  256
+#define ID_LEN		 50
 #define DSCR_LEN     255
 #define ERR_CODE_LEN 30
 #define REQ_LEN 	 512

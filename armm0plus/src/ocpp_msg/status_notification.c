@@ -40,7 +40,6 @@ ocpp_status_notification_req
 	);
 
 	ocpp->now.type = CALL;
-	ocpp->now.ID   = ocpp->id;
 	ocpp->now.call.action = STATUS_NOTIFICATION;
 	strcpyy(ocpp->now.call.payload, payload);
 }

@@ -119,4 +119,7 @@ ocpp_get_call_error_descr
 	char *dscr
 );
 
+void
+ocpp_set_msg_id(OCPP *ocpp);
+
 #endif /* OCPP_H_ */

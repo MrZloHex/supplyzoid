@@ -21,17 +21,17 @@ ocpp_init(OCPP *ocpp)
 	ocpp->waiting_for_resp = false;
 	ocpp->booted = false;
 
-	ocpp->now.call.payload = (char *) malloc(sizeof(char)*PAYLOAD_LEN);
+	ocpp->now.call.payload 			   = (char *) malloc(sizeof(char)*PAYLOAD_LEN);
 	ocpp->now.call_result.payload      = (char *) malloc(sizeof(char)*PAYLOAD_LEN);
 	ocpp->now.call_error.error_dscr    = (char *) malloc(sizeof(char)*DSCR_LEN);
 	ocpp->now.call_error.error_details = (char *) malloc(sizeof(char)*PAYLOAD_LEN);
-	ocpp->now.ID = NULL;
+	ocpp->now.ID					   = (char *) malloc(sizeof(char)*ID_LEN);
 
-	ocpp->last.call.payload = (char *) malloc(sizeof(char)*PAYLOAD_LEN);
+	ocpp->last.call.payload			    = (char *) malloc(sizeof(char)*PAYLOAD_LEN);
 	ocpp->last.call_result.payload      = (char *) malloc(sizeof(char)*PAYLOAD_LEN);
 	ocpp->last.call_error.error_dscr    = (char *) malloc(sizeof(char)*DSCR_LEN);
 	ocpp->last.call_error.error_details = (char *) malloc(sizeof(char)*PAYLOAD_LEN);
-	ocpp->last.ID = NULL;
+	ocpp->last.ID					    = (char *) malloc(sizeof(char)*ID_LEN);
 }
 
 void
@@ -41,18 +41,20 @@ ocpp_free(OCPP *ocpp)
 	free(ocpp->now.call_result.payload);
 	free(ocpp->now.call_error.error_dscr);
 	free(ocpp->now.call_error.error_details);
+	free(ocpp->now.ID);
 
 	free(ocpp->last.call.payload);
 	free(ocpp->last.call_result.payload);
 	free(ocpp->last.call_error.error_dscr);
 	free(ocpp->last.call_error.error_details);
+	free(ocpp->last.ID);
 }
 
 void
 ocpp_next(OCPP *ocpp)
 {
 	ocpp->last.type = ocpp->now.type;
-	ocpp->last.ID   = ocpp->now.ID;
+	strcpyy(ocpp->last.ID, ocpp->now.ID);
 	ocpp->last.call.action = ocpp->now.call.action;
 	strcpyy(ocpp->last.call.payload, ocpp->now.call.payload);
 	strcpyy(ocpp->last.call_result.payload, ocpp->now.call_result.payload);
@@ -109,8 +111,8 @@ ocpp_handle_message
 	const size length
 )
 {
-	// serial_print_str("HANDLE NEW MESSAGE: \n");
-	// serial_println_str(str);
+	// usart_ocpp_print_str("HANDLE NEW MESSAGE: \n");
+	// usart_ocpp_println_str(str);
 
 	OCPPResult res_parse = ocpp_parse_message(ocpp, str, length);
 	if (res_parse == ERROR_P)
@@ -172,6 +174,7 @@ ocpp_parse_message
 	if (msg_id == ERROR_P)
 		return ERROR_P;
 	strcpyy(ocpp->now.ID, msg_id);
+	free(msg_id);
 
 	if (msg_type == CALL)
 	{
@@ -258,7 +261,7 @@ ocpp_send_req
 		return;
 	}
 
-	set_msg_id(ocpp);
+	ocpp_set_msg_id(ocpp);
 
 	char req[REQ_LEN];
 
@@ -292,15 +295,13 @@ ocpp_send_resp
 {
 	if (type == CALLRESULT)
 	{
-		char id[37];
-		int_to_charset(ocpp->now.ID, id, 1);
 		char req[REQ_LEN];
 		mjson_snprintf
 		(
 			req, REQ_LEN,
 			"[%u,%Q,%s]",
 			ocpp->now.type,
-			id,
+			ocpp->now.ID,
 			ocpp->now.call_result.payload
 		);
 
@@ -462,14 +463,10 @@ ocpp_get_call_error_descr
 
 
 void
-set_msg_id(OCPP *ocpp)
+ocpp_set_msg_id(OCPP *ocpp)
 {
 	char id[50];
 	int_to_charset(ocpp->id, id, 1);
 	ocpp->id++;
-
-	size_t id_len = strlenn(id);
-	ocpp->now.ID = (char *)malloc(id_len+1);
 	strcpyy(ocpp->now.ID, id);
-	ocpp->now.ID[id_len] = 0;
 }

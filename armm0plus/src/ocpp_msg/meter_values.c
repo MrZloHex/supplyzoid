@@ -30,7 +30,6 @@ ocpp_meter_values_req
 	);
 
 	ocpp->now.type = CALL;
-	ocpp->now.ID   = ocpp->id;
 	ocpp->now.call.action = METER_VALUES;
 	strcpyy(ocpp->now.call.payload, payload);
 }
@@ -41,7 +40,7 @@ ocpp_meter_values_conf
 	OCPP *ocpp
 )
 {
-	if (ocpp->last.ID != ocpp->now.ID)
+	if (!strcmpp(ocpp->last.ID, ocpp->now.ID))
 		return;
 
 	ocpp->waiting_for_resp = false;

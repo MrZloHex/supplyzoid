@@ -12,9 +12,6 @@ ocpp_stop_transaction_req
 	STM32RTC *rtc
 )
 {
-	char id[37];
-	int_to_charset(ocpp->id, id, 1);
-
 	rapi_get_energy_usage_req(rapi);
 	rapi_send_req(rapi);
 	bool resp = rapi_get_resp(rapi, ocpp);
@@ -43,7 +40,6 @@ ocpp_stop_transaction_req
 
 	
 	ocpp->now.type = CALL;
-	ocpp->now.ID   = ocpp->id;
 	ocpp->now.call.action = STOP_TRANSACTION;
 	strcpyy(ocpp->now.call.payload, payload);
 }
@@ -54,7 +50,7 @@ ocpp_stop_transaction_conf
 	OCPP *ocpp
 )
 {
-	if (ocpp->last.ID != ocpp->now.ID)
+	if (!strcmpp(ocpp->last.ID, ocpp->now.ID))
 		return;
 
 	ocpp->waiting_for_resp = false;

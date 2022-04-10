@@ -18,7 +18,6 @@ ocpp_data_transfer_req
 	);
 
 	ocpp->now.type = CALL;
-	ocpp->now.ID   = ocpp->id;
 	ocpp->now.call.action = DATA_TRANSFER;
 	strcpyy(ocpp->now.call.payload, payload);
 }
@@ -29,7 +28,7 @@ ocpp_data_transfer_conf
 	OCPP *ocpp
 )
 {
-	if (ocpp->last.ID != ocpp->now.ID)
+	if (!strcmpp(ocpp->last.ID, ocpp->now.ID))
 		return;
 
 	ocpp->waiting_for_resp = false;
