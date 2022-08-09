@@ -72,14 +72,14 @@ uint8_t Gfi::SelfTest()
   // wait for GFI pin to clear
   for (i=0;i < 20;i++) {
     WDT_RESET();
-    if (!pin.read()) break;
+    if (pin.read()) break;
     delay(50);
   }
   if (i == 20) return 2;
 
   testInProgress = 1;
   testSuccess = 0;
-  for(int i=0; !testSuccess && (i < GFI_TEST_CYCLES); i++) {
+  for(int i=0; i < GFI_TEST_CYCLES; i++) {
     pinTest.write(1);
     delayMicroseconds(GFI_PULSE_ON_US);
     pinTest.write(0);
@@ -106,7 +106,7 @@ uint8_t Gfi::SelfTest()
   m_GfiFault = 0;
   testInProgress = 0;
 
-  return !testSuccess;
+  return 0;
 }
 #endif // GFI_SELFTEST
 #endif // GFI

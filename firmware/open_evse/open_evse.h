@@ -105,7 +105,7 @@ typedef unsigned long time_t;
 #define RAPI_SERIAL
 
 // RAPI $WF support
-#define RAPI_WF
+// #define RAPI_WF
 
 // RAPI $AN support
 #define RAPI_BTN
@@ -114,7 +114,7 @@ typedef unsigned long time_t;
 //#define RAPI_I2C
 
 // enable sending of RAPI commands
-//#define RAPI_SENDER
+#define RAPI_SENDER
 
 // EVSE must call state transition function for permission to change states
 //#define STATE_TRANSITION_REQ_FUNC
@@ -130,7 +130,7 @@ typedef unsigned long time_t;
 #define CHARGE_LIMIT
 
 // support Mennekes (IEC 62196) type 2 locking pin
-#define MENNEKES_LOCK
+// #define MENNEKES_LOCK
 
 // Support for Nick Sayer's OpenEVSE II board, which has alternate hardware for ground check/stuck relay check and a voltmeter for L1/L2.
 //#define OPENEVSE_2
@@ -241,7 +241,7 @@ extern AutoCurrentCapacityController g_ACCController;
 // Support PCF8574* based I2C backpack using F. Malpartida's library
 // https://bitbucket.org/fmalpartida/new-liquidcrystal/downloads
 // *requires* I2CLCD enabled and RGBLCD disabled
-//#define I2CLCD_PCF8574
+#define I2CLCD_PCF8574
 #ifdef I2CLCD_PCF8574
 #define I2CLCD
 #undef RGBLCD
@@ -256,7 +256,7 @@ extern AutoCurrentCapacityController g_ACCController;
 // How to use 1-button menu
 // Long press activates menu
 // When within menus, short press cycles menu items, long press selects and exits current submenu
-#define BTN_MENU
+// #define BTN_MENU
 
 // take out basic setup stuff that the user really shouldn't be changing,
 // which can be set via RAPI/WiFi module.. reclaims a lot of code space
@@ -457,9 +457,9 @@ extern AutoCurrentCapacityController g_ACCController;
 
 //J1772EVSEController
 
-#define CURRENT_PIN 0 // analog current reading pin ADCx
+#define CURRENT_PIN 2 // analog current reading pin ADCx
 #define PILOT_PIN 1 // analog pilot voltage reading pin ADCx
-#define PP_PIN 2 // PP_READ - ADC2
+#define PP_PIN 3 // PP_READ - ADC2
 #ifdef VOLTMETER
 // N.B. Note, ADC2 is already used as PP_PIN so beware of potential clashes
 // voltmeter pin is ADC2 on OPENEVSE_2
@@ -479,7 +479,7 @@ extern AutoCurrentCapacityController g_ACCController;
 
  // TEST PIN 1 for L1/L2, ground and stuck relay
 #define ACLINE1_REG &PIND
-#define ACLINE1_IDX 3
+#define ACLINE1_IDX 4
  // TEST PIN 2 for L1/L2, ground and stuck relay
 #define ACLINE2_REG &PIND
 #define ACLINE2_IDX 4
@@ -488,8 +488,8 @@ extern AutoCurrentCapacityController g_ACCController;
 #define V6_CHARGING_PIN2 6
 
 // digital Relay trigger pin
-#define CHARGING_REG &PINB
-#define CHARGING_IDX 0
+#define CHARGING_REG &PIND
+#define CHARGING_IDX 6
 // digital Relay trigger pin for second relay
 #define CHARGING2_REG &PIND
 #define CHARGING2_IDX 7
@@ -508,7 +508,7 @@ extern AutoCurrentCapacityController g_ACCController;
 // N.B. if PAFC_PWM is enabled, then pilot pin can be PB1 or PB2
 // if using fast PWM (PAFC_PWM disabled) pilot pin *MUST* be PB2
 #define PILOT_REG &PINB
-#define PILOT_IDX 2
+#define PILOT_IDX 1
 
 #ifdef MENNEKES_LOCK
 // requires external 12V H-bridge driver such as Polulu 1451
@@ -610,7 +610,7 @@ extern AutoCurrentCapacityController g_ACCController;
 #ifdef GFI_SELFTEST
 // pin is supposed to be wrapped around the GFI CT 5+ times
 #define GFITEST_REG &PIND
-#define GFITEST_IDX 6
+#define GFITEST_IDX 5
 // V6 GFI test pin PB0
 #define V6_GFITEST_REG &PINB
 #define V6_GFITEST_IDX 0
