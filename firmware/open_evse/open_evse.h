@@ -64,7 +64,7 @@ typedef unsigned long time_t;
 #ifndef PLATFORMIO
 //#define OCPP
 // support V6 hardware
-#define OEV6
+// #define OEV6
 #ifdef OEV6
 #define INVERT_V6_DETECTION // DO NOT USE: ONLY FOR lincomatic's BETA V6 board
 #define RELAY_PWM
@@ -99,22 +99,22 @@ typedef unsigned long time_t;
 //#define AUTH_LOCK 1
 
 // serial remote api
-#define RAPI
+// #define RAPI
 
 // RAPI over serial
-#define RAPI_SERIAL
+// #define RAPI_SERIAL
 
 // RAPI $WF support
 // #define RAPI_WF
 
 // RAPI $AN support
-#define RAPI_BTN
+// #define RAPI_BTN
 
 // RAPI over I2C
 //#define RAPI_I2C
 
 // enable sending of RAPI commands
-#define RAPI_SENDER
+// #define RAPI_SENDER
 
 // EVSE must call state transition function for permission to change states
 //#define STATE_TRANSITION_REQ_FUNC
@@ -188,7 +188,7 @@ extern AutoCurrentCapacityController g_ACCController;
 #define GFI_SELFTEST
 #endif //UL_COMPLIANT
 
-#define TEMPERATURE_MONITORING  // Temperature monitoring support
+// #define TEMPERATURE_MONITORING  // Temperature monitoring support
 
 //#define HEARTBEAT_SUPERVISION // Heartbeat Supervision support
 
@@ -372,7 +372,7 @@ extern AutoCurrentCapacityController g_ACCController;
 #endif
 
 // for testing print various diagnostic messages to the UART
-//#define SERDBG
+#define SERDBG
 
 //
 // begin functional tests

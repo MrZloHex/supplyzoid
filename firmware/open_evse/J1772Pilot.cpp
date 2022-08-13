@@ -57,14 +57,14 @@ void J1772Pilot::SetState(PILOT_STATE state)
 #ifdef PAFC_PWM
   if (state == PILOT_STATE_P12) {
 #if (PILOT_IDX == 1)
-    OCR1A = TOP;
+    OCR1A = 0;
 #else
     OCR1B = TOP;
 #endif
   }
   else {
 #if (PILOT_IDX == 1) // PB1
-    OCR1A = 0;
+    OCR1A = TOP;
 #else // PB2
     OCR1B = 0;
 #endif

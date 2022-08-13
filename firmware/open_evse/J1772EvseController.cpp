@@ -725,12 +725,12 @@ uint8_t J1772EVSEController::doPost()
       // save state with Relay 1 on 
 #ifdef OEV6
       if (isV6()) {
-	digitalWrite(V6_CHARGING_PIN,HIGH);
+	      digitalWrite(V6_CHARGING_PIN,HIGH);
       }
       else { // !V6
 #endif // OEV6
 #ifdef CHARGING_REG
-	pinCharging.write(1);
+	      pinCharging.write(1);
 #endif
 #ifdef OEV6
       }
@@ -744,12 +744,12 @@ uint8_t J1772EVSEController::doPost()
 
 #ifdef OEV6
       if (isV6()) {
-	digitalWrite(V6_CHARGING_PIN,LOW);
+	      digitalWrite(V6_CHARGING_PIN,LOW);
       }
       else { // !V6
 #endif // OEV6
 #ifdef CHARGING_REG
-	pinCharging.write(0);
+	      pinCharging.write(0);
 #endif
 #ifdef OEV6
       }
@@ -763,7 +763,7 @@ uint8_t J1772EVSEController::doPost()
       // save state for Relay 2 on
 #ifdef OEV6
       if (isV6()) {
-	digitalWrite(V6_CHARGING_PIN2,HIGH);
+	      digitalWrite(V6_CHARGING_PIN2,HIGH);
       }
       else { // !V6
 #endif // OEV6
@@ -796,42 +796,39 @@ uint8_t J1772EVSEController::doPost()
       // valid svcState is L1 - one hot, L2 both hot, OG - open ground both off, SR - stuck relay when shld be off
       //
       if (RelayOff == none) { // relay not stuck on when off
-	switch ( Relay1 ) {
-	case ( both ): //
-	  if ( Relay2 == none ) svcState = L2;
-	  if (StuckRelayChkEnabled()) {
-	    if ( Relay2 != none ) svcState = SR;
-	  }
-	  break;
-	case ( none ): //
-	  if (GndChkEnabled()) {
-	    if ( Relay2 == none ) svcState = OG;
-	  }
-	  if ( Relay2 == both ) svcState = L2;
-	  if ( Relay2 == L1 || Relay2 == L2 ) svcState = L1;
-	  break;
-	case ( L1on ): // L1 or L2
-	case ( L2on ):
-	  if (StuckRelayChkEnabled()) {
-	    if ( Relay2 != none ) svcState = SR;
-	  }
-	if ( Relay2 == none ) svcState = L1;
-	if ( (Relay1 == L1on) && (Relay2 == L2on)) svcState = L2;
-	if ( (Relay1 == L2on) && (Relay2 == L1on)) svcState = L2;
-	break;
-	} // end switch
+	      switch ( Relay1 ) {
+	      case ( both ): //
+	        if ( Relay2 == none ) svcState = L2;
+	        if (StuckRelayChkEnabled()) {
+	          if ( Relay2 != none ) svcState = SR;
+	        }
+	        break;
+	      case ( none ): //
+	        if ( Relay2 == both ) svcState = L2;
+	        if ( Relay2 == L1 || Relay2 == L2 ) svcState = L1;
+	        break;
+	      case ( L1on ): // L1 or L2
+	      case ( L2on ):
+	        if (StuckRelayChkEnabled()) {
+	          if ( Relay2 != none ) svcState = SR;
+	        }
+	      if ( Relay2 == none ) svcState = L1;
+	      if ( (Relay1 == L1on) && (Relay2 == L2on)) svcState = L2;
+	      if ( (Relay1 == L2on) && (Relay2 == L1on)) svcState = L2;
+	      break;
+	      } // end switch
       }
       else { // Relay stuck on
-	if (StuckRelayChkEnabled()) {
-	  svcState = SR;
-	}
+	      if (StuckRelayChkEnabled()) {
+	        svcState = SR;
+	      }
       }
 #ifdef SERDBG
       if (SerDbgEnabled()) {
-	Serial.print("RelayOff: ");Serial.println((int)RelayOff);
-	Serial.print("Relay1: ");Serial.println((int)Relay1);
-	Serial.print("Relay2: ");Serial.println((int)Relay2);
-	Serial.print("SvcState: ");Serial.println((int)svcState);
+	      Serial.print("RelayOff: ");Serial.println((int)RelayOff);
+	      Serial.print("Relay1: ");Serial.println((int)Relay1);
+	      Serial.print("Relay2: ");Serial.println((int)Relay2);
+	      Serial.print("SvcState: ");Serial.println((int)svcState);
       }
 #endif //#ifdef SERDBG
 
