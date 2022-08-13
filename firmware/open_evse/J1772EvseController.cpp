@@ -1172,36 +1172,43 @@ void J1772EVSEController::Init()
 
 }
 
-void J1772EVSEController::ReadPilot(uint16_t *plow,uint16_t *phigh)
+void
+J1772EVSEController::ReadPilot(uint16_t *plow,uint16_t *phigh)
 {
   uint16_t pl = 1023;
   uint16_t ph = 0;
 
   // 1x = 114us 20x = 2.3ms 100x = 11.3ms
-  for (int i=0;i < PILOT_LOOP_CNT;i++) {
+  for (int i=0;i < PILOT_LOOP_CNT;i++)
+  {
     uint16_t reading = adcPilot.read();  // measures pilot voltage
     
-    if (reading > ph) {
+    if (reading > ph)
+    {
       ph = reading;
     }
-    else if (reading < pl) {
+    else if (reading < pl)
+    {
       pl = reading;
     }
   }
 
-  if (m_Pilot.GetState() != PILOT_STATE_N12) {
+  if (m_Pilot.GetState() != PILOT_STATE_N12)
+  {
     // update prev state
     if (EvConnected()) SetEvConnectedPrev();
     else ClrEvConnectedPrev();
 
     // can determine connected state only if not -12VDC
-    if (ph >= m_ThreshData.m_ThreshAB) {
+    if (ph >= m_ThreshData.m_ThreshAB)
+    {
       ClrEvConnected();
 #ifdef MENNEKES_LOCK
       if (!MennekesIsManual()) m_MennekesLock.Unlock(0);
 #endif // MENNEKES_LOCK
     }
-    else {
+    else
+    {
       SetEvConnected();
 #ifdef MENNEKES_LOCK
       if (!MennekesIsManual()) m_MennekesLock.Lock(0);
@@ -1418,35 +1425,35 @@ void J1772EVSEController::Update(uint8_t forcetransition)
 
     if (prevevsestate != EVSE_STATE_GFCI_FAULT) { // state transition
       if (((uint8_t)(m_GfiTripCnt+1)) < 254) {
-	m_GfiTripCnt++;
-	eeprom_write_byte((uint8_t*)EOFS_GFI_TRIP_CNT,m_GfiTripCnt);
+	      m_GfiTripCnt++;
+	      eeprom_write_byte((uint8_t*)EOFS_GFI_TRIP_CNT,m_GfiTripCnt);
       }
       m_GfiRetryCnt = 0;
       m_GfiFaultStartMs = curms;
     }
     else { // was already in GFI fault
       if (!EvConnected()) {
-	// EV disconnected - cancel fault
-	m_EvseState = EVSE_STATE_UNKNOWN;
-	m_Gfi.Reset();
-	return;
+  	    // EV disconnected - cancel fault
+  	    m_EvseState = EVSE_STATE_UNKNOWN;
+    	  m_Gfi.Reset();
+  	    return;
       }
 
       if ((curms - m_GfiFaultStartMs) >= GFI_TIMEOUT) {
 #ifdef FT_GFI_RETRY
-	g_OBD.LcdMsg("Reset","GFI");
-	delay(250);
+      	g_OBD.LcdMsg("Reset","GFI");
+      	delay(250);
 #endif // FT_GFI_RETRY
-	m_GfiRetryCnt++;
+  	    m_GfiRetryCnt++;
 	
-	if ((GFI_RETRY_COUNT != 255) && (m_GfiRetryCnt > GFI_RETRY_COUNT)) {
-	  HardFault(1);
-	  return;
-	}
-	else {
-	  m_Gfi.Reset();
-	  m_GfiFaultStartMs = 0;
-	}
+  	    if ((GFI_RETRY_COUNT != 255) && (m_GfiRetryCnt > GFI_RETRY_COUNT)) {
+  	      HardFault(1);
+      	  return;
+      	}
+      	else {
+      	  m_Gfi.Reset();
+      	  m_GfiFaultStartMs = 0;
+      	}
       }
     }
 

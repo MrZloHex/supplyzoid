@@ -60,7 +60,7 @@ void Gfi::Reset()
   testSuccess = 0;
 #endif // GFI_SELFTEST
 
-  if (pin.read()) m_GfiFault = 1; // if interrupt pin is high, set fault
+  if (!pin.read()) m_GfiFault = 1; // if interrupt pin is high, set fault
   else m_GfiFault = 0;
 }
 
