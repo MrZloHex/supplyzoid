@@ -32,7 +32,7 @@ void Gfi::Init(uint8_t v6)
 {
   pin.init(GFI_REG,GFI_IDX,DigitalPin::INP);
   // GFI triggers on rising edge
-  attachInterrupt(GFI_INTERRUPT,gfi_isr,RISING);
+  attachInterrupt(GFI_INTERRUPT,gfi_isr,FALLING);
 
 #ifdef GFI_SELFTEST
   volatile uint8_t *reg = GFITEST_REG;
@@ -68,6 +68,8 @@ void Gfi::Reset()
 
 uint8_t Gfi::SelfTest()
 {
+  Serial.print("GFI SELFTEST: ");
+
   int i;
   // wait for GFI pin to clear
   for (i=0;i < 20;i++) {
@@ -75,7 +77,11 @@ uint8_t Gfi::SelfTest()
     if (pin.read()) break;
     delay(50);
   }
-  if (i == 20) return 2;
+  if (i == 20)
+  {
+    Serial.println(2);
+    return 2;
+  }
 
   testInProgress = 1;
   testSuccess = 0;
@@ -92,7 +98,11 @@ uint8_t Gfi::SelfTest()
     if (!pin.read()) break;
     delay(50);
   }
-  if (i == 40) return 3;
+  if (i == 40)
+  {
+    Serial.println(3);
+    return 3;
+  }
 
 #ifndef OPENEVSE_2
   // sometimes getting spurious GFI faults when testing just before closing
@@ -106,6 +116,7 @@ uint8_t Gfi::SelfTest()
   m_GfiFault = 0;
   testInProgress = 0;
 
+  Serial.println(0);
   return 0;
 }
 #endif // GFI_SELFTEST

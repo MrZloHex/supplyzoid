@@ -151,20 +151,18 @@ typedef unsigned long time_t;
 extern AutoCurrentCapacityController g_ACCController;
 #endif
 
-#ifdef OPENEVSE_2
+
 // If the AC voltage is > 150,000 mV, then it's L2. Else, L1.
-#define L2_VOLTAGE_THRESHOLD (150000)
 #define VOLTMETER
 // 35 ms is just a bit longer than 1.5 cycles at 50 Hz
 #define VOLTMETER_POLL_INTERVAL (35)
 // This is just a wild guess
 // #define VOLTMETER_SCALE_FACTOR (266)     // original guess
 //#define DEFAULT_VOLT_SCALE_FACTOR (262)        // calibrated for Craig K OpenEVSE II build
-#define DEFAULT_VOLT_SCALE_FACTOR (298)        // calibrated for lincomatic's OEII
+#define DEFAULT_VOLT_SCALE_FACTOR (274)        // calibrated for lincomatic's OEII
 // #define VOLTMETER_OFFSET_FACTOR (40000)  // original guess
 //#define DEFAULT_VOLT_OFFSET (46800)     // calibrated for Craig K OpenEVSE II build
-#define DEFAULT_VOLT_OFFSET (12018)     // calibrated for lincomatic's OEII
-#endif // OPENEVSE_2
+#define DEFAULT_VOLT_OFFSET (1221)     // calibrated for lincomatic's OEII
 
 // GFI support
 #define GFI
@@ -178,7 +176,7 @@ extern AutoCurrentCapacityController g_ACCController;
 //    disabled, will retry POST continuously until it passes
 // 2) if enabled, any a fault occurs immediately after charge is initiated,
 //    hard fault until power cycled. Otherwise, do the standard delay/retry sequence
-#define UL_COMPLIANT
+// #define UL_COMPLIANT
 
 #ifdef UL_COMPLIANT
 #define ADVPWR
@@ -463,7 +461,7 @@ extern AutoCurrentCapacityController g_ACCController;
 #ifdef VOLTMETER
 // N.B. Note, ADC2 is already used as PP_PIN so beware of potential clashes
 // voltmeter pin is ADC2 on OPENEVSE_2
-#define VOLTMETER_PIN 2 // analog AC Line voltage voltmeter pin ADCx
+#define VOLTMETER_PIN 0 // analog AC Line voltage voltmeter pin ADCx
 #endif // VOLTMETER
 #ifdef OPENEVSE_2
 // This pin must match the last write to CHARGING_PIN, modulo a delay. If
@@ -707,14 +705,14 @@ extern AutoCurrentCapacityController g_ACCController;
 #ifdef OPENEVSE_2
 #define DEFAULT_CURRENT_SCALE_FACTOR 186   // OpenEVSE II with a 27 Ohm burden resistor, after a 2-point calibration at 12.5A and 50A
 #else
-#define DEFAULT_CURRENT_SCALE_FACTOR 220   // OpenEVSE v2.5 and v3 with a 22 Ohm burden resistor (note that the schematic may say 28 Ohms by mistake)
+#define DEFAULT_CURRENT_SCALE_FACTOR 35 // OpenEVSE v2.5 and v3 with a 22 Ohm burden resistor (note that the schematic may say 28 Ohms by mistake)
 #endif
 
 // subtract this from ammeter current reading to correct zero offset
 #ifdef OPENEVSE_2
 #define DEFAULT_AMMETER_CURRENT_OFFSET 230 // OpenEVSE II with a 27 Ohm burden resistor, after a 2-point calibration at 12.5A and 50A
 #else
-#define DEFAULT_AMMETER_CURRENT_OFFSET 0   // OpenEVSE v2.5 and v3 with a 22 Ohm burden resistor.  Could use a more thorough calibration exercise to nails this down.
+#define DEFAULT_AMMETER_CURRENT_OFFSET 75   // OpenEVSE v2.5 and v3 with a 22 Ohm burden resistor.  Could use a more thorough calibration exercise to nails this down.
 #endif
 
 // The maximum number of milliseconds to sample an ammeter pin in order to find three zero-crossings.
@@ -748,7 +746,6 @@ extern AutoCurrentCapacityController g_ACCController;
 #else
 #define TEMPERATURE_AMBIENT_THROTTLE_DOWN 650
 #endif
-
 // If the OpenEVSE responds nicely to the lower current drawn and temperatures in the enclosure
 // recover to this level we can kick the current back up to the user's original amperage setting.
 #ifdef OPENEVSE_2

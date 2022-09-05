@@ -57,51 +57,14 @@ static inline unsigned long ulong_sqrt(unsigned long in)
 
 void J1772EVSEController::readAmmeter()
 {
-  WDT_RESET();
-
-  unsigned long sum = 0;
-  uint8_t zero_crossings = 0;
-  unsigned long last_zero_crossing_time = 0, now_ms;
-  uint8_t is_first_sample = 1;
-  uint16_t last_sample;
-  unsigned int sample_count = 0;
-  for(unsigned long start = millis(); ((now_ms = millis()) - start) < CURRENT_SAMPLE_INTERVAL; ) {
+  unsigned int peak = 0;
+  for(unsigned long start = millis(); (millis() - start) < CURRENT_SAMPLE_INTERVAL; ) {
     // the A/d is 0 to 1023.
-    uint16_t sample = adcCurrent.read();
-    // If this isn't the first sample, and if the sign of the value differs from the
-    // sign of the previous value, then count that as a zero crossing.
-    if (!is_first_sample && ((last_sample > 512) != (sample > 512))) {
-      // Once we've seen a zero crossing, don't look for one for a little bit.
-      // It's possible that a little noise near zero could cause a two-sample
-      // inversion.
-      if ((now_ms - last_zero_crossing_time) > CURRENT_ZERO_DEBOUNCE_INTERVAL) {
-        zero_crossings++;
-        last_zero_crossing_time = now_ms;
-      }
-    }
-    is_first_sample = 0;
-    last_sample = sample;
-    switch(zero_crossings) {
-    case 0:
-      continue; // Still waiting to start sampling
-    case 1:
-    case 2:
-      // Gather the sum-of-the-squares and count how many samples we've collected.
-      sum += (unsigned long)(((long)sample - 512) * ((long)sample - 512));
-      sample_count++;
-      continue;
-    case 3:
-      // The answer is the square root of the mean of the squares.
-      // But additionally, that value must be scaled to a real current value.
-      // we will do that elsewhere
-      m_AmmeterReading = ulong_sqrt(sum / sample_count);
-      return;
-    }
+    uint16_t val = adcCurrent.read();
+    if (val > peak) peak = val;
   }
   // ran out of time. Assume that it's simply not oscillating any.
-  m_AmmeterReading = 0;
-
-  WDT_RESET();
+  m_AmmeterReading = (uint32_t)peak;
 }
 
 #define MA_PTS 32 // # points in moving average MUST BE power of 2
@@ -1439,22 +1402,22 @@ void J1772EVSEController::Update(uint8_t forcetransition)
   	    return;
       }
 
-      if ((curms - m_GfiFaultStartMs) >= GFI_TIMEOUT) {
-#ifdef FT_GFI_RETRY
-      	g_OBD.LcdMsg("Reset","GFI");
-      	delay(250);
-#endif // FT_GFI_RETRY
-  	    m_GfiRetryCnt++;
+//       if ((curms - m_GfiFaultStartMs) >= GFI_TIMEOUT) {
+// #ifdef FT_GFI_RETRY
+//       	g_OBD.LcdMsg("Reset","GFI");
+//       	delay(250);
+// #endif // FT_GFI_RETRY
+//   	    m_GfiRetryCnt++;
 	
-  	    if ((GFI_RETRY_COUNT != 255) && (m_GfiRetryCnt > GFI_RETRY_COUNT)) {
-  	      HardFault(1);
-      	  return;
-      	}
-      	else {
-      	  m_Gfi.Reset();
-      	  m_GfiFaultStartMs = 0;
-      	}
-      }
+//   	    if ((GFI_RETRY_COUNT != 255) && (m_GfiRetryCnt > GFI_RETRY_COUNT)) {
+//   	      HardFault(1);
+//       	  return;
+//       	}
+//       	else {
+//       	  m_Gfi.Reset();
+//       	  m_GfiFaultStartMs = 0;
+//       	}
+//       }
     }
 
     nofault = 0;
@@ -1684,9 +1647,10 @@ if (TempChkEnabled()) {
       if (GfiSelfTestEnabled() && m_Gfi.SelfTest()) {
        // GFI test failed - hard fault
         m_EvseState = EVSE_STATE_GFI_TEST_FAILED;
-	m_Pilot.SetState(PILOT_STATE_P12);
-	HardFault(1);
-	return;
+	      m_Pilot.SetState(PILOT_STATE_P12);
+        Serial.println("HARD FAULT: 1688");
+	      HardFault(1);
+      	return;
       }
 #endif // UL_GFI_SELFTEST
 
@@ -1708,6 +1672,7 @@ if (TempChkEnabled()) {
       // vent required not supported
       chargingOff(); // turn off charging current
       m_Pilot.SetState(PILOT_STATE_P12);
+      Serial.println("HARD FAULT: 1712");
       HardFault(1);
     }
     else if (m_EvseState == EVSE_STATE_GFCI_FAULT) {
@@ -1734,6 +1699,7 @@ if (TempChkEnabled()) {
       // and keep checking
       m_Pilot.SetPWM(m_CurrentCapacity);
       m_Pilot.SetState(PILOT_STATE_P12);
+      Serial.println("HARD FAULT: 1739");
       HardFault(1);
     }
     else if (m_EvseState == EVSE_STATE_NO_GROUND) {
@@ -1747,6 +1713,7 @@ if (TempChkEnabled()) {
 #ifdef UL_COMPLIANT
       // per discussion w/ UL Fred Reyes 20150217
       // always hard fault stuck relay
+      Serial.println("HARD FAULT: 1753");
       HardFault(0);
 #endif // UL_COMPLIANT
     }
@@ -1785,6 +1752,7 @@ if (TempChkEnabled()) {
   if (!nofault && (prevevsestate == EVSE_STATE_C)) {
     // if fault happens immediately (within 2 sec) after charging starts, hard fault
     if ((curms - m_ChargeOnTimeMS) <= 2000) {
+      Serial.println("HARD FAULT: 1792");
       HardFault(1);
       return;
     }
@@ -1805,7 +1773,7 @@ if (TempChkEnabled()) {
     
 #ifndef FAKE_CHARGING_CURRENT
     readAmmeter();
-    uint32_t ma = MovingAverage(m_AmmeterReading);
+    uint32_t ma = m_AmmeterReading;
     if (ma != 0xffffffff) {
       m_ChargingCurrent = ma * m_CurrentScaleFactor - m_AmmeterCurrentOffset;  // subtract it
       if (m_ChargingCurrent < 0) {
@@ -1835,6 +1803,7 @@ if (TempChkEnabled()) {
 	  chargingOff(); // open the EVSE relays hopefully the EV has already discon
 
 	  // spin until EV is disconnected
+    Serial.println("HARD FAULT: 1843");
 	  HardFault(1);
 	  
 	  m_OverCurrentStartMs = 0; // clear overcurrent
