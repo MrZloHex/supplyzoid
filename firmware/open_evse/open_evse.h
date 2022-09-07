@@ -450,7 +450,7 @@ extern AutoCurrentCapacityController g_ACCController;
 #define MAX_CURRENT_CAPACITY_L1 16 // J1772 Max for L1 on a 20A circuit = 16, 15A circuit = 12
 #endif
 #ifndef MAX_CURRENT_CAPACITY_L2
-#define MAX_CURRENT_CAPACITY_L2 80 // J1772 Max for L2 = 80
+#define MAX_CURRENT_CAPACITY_L2 30 // J1772 Max for L2 = 80
 #endif
 
 //J1772EVSEController
