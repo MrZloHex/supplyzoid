@@ -26,6 +26,7 @@
 
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
+#include "OCPP.h"
 
 /* USER CODE END Includes */
 
@@ -57,6 +58,9 @@ void SystemClock_Config(void);
 
 /* Private user code ---------------------------------------------------------*/
 /* USER CODE BEGIN 0 */
+
+OCPP *ocpp = {0};
+
 
 /* USER CODE END 0 */
 
@@ -94,6 +98,8 @@ int main(void)
   MX_USART1_UART_Init();
   MX_USART2_UART_Init();
   /* USER CODE BEGIN 2 */
+
+  ocpp_init(&ocpp);
 
   /* USER CODE END 2 */
 
