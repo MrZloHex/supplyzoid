@@ -27,6 +27,9 @@
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
 #include "OCPP.h"
+#include "RAPI.h"
+
+#include "serial.h"
 
 /* USER CODE END Includes */
 
@@ -59,7 +62,9 @@ void SystemClock_Config(void);
 /* Private user code ---------------------------------------------------------*/
 /* USER CODE BEGIN 0 */
 
-OCPP *ocpp = {0};
+
+static OCPP ocpp = {0};
+static RAPI rapi = {0};
 
 
 /* USER CODE END 0 */
@@ -98,23 +103,24 @@ int main(void)
   MX_USART1_UART_Init();
   MX_USART2_UART_Init();
   /* USER CODE BEGIN 2 */
+  uprintf(&huart2, 100, 10, "hello\r");
+  // uprintf(&huart1, 100, 100, "[2,\"1\",\"BootNotification\",{\"chargePointVendor\":\"EV Solutions\",\"chargePointModel\":\"PROTOTYPE\"}]\n");
+  uprintf(&huart1, 100, 10, "hello\n");
 
-  ocpp_init(&ocpp);
 
-  /* USER CODE END 2 */
+  ocpp_init(&ocpp, &huart1, &hrtc);
+  rapi_init(&rapi, &huart2);
 
-  /* Infinite loop */
-  /* USER CODE BEGIN WHILE */
+
   while (1)
   {
-    /* USER CODE END WHILE */
-    HAL_GPIO_WritePin(GPIOB, GPIO_PIN_2, GPIO_PIN_SET);
-    HAL_Delay(1000);
-    HAL_GPIO_WritePin(GPIOB, GPIO_PIN_2, GPIO_PIN_RESET);
-    HAL_Delay(1000);
-    /* USER CODE BEGIN 3 */
+    ocpp_update(&ocpp, &rapi);
+    // rapi_update(&rapi, &ocpp);
+    if (HAL_GetTick() % 100 == 0)
+    {
+        uprintf(&huart1, 100, 10, "sus\n");
+    }
   }
-  /* USER CODE END 3 */
 }
 
 /**
@@ -182,6 +188,8 @@ void Error_Handler(void)
   /* User can add his own implementation to report the HAL error return state */
   __disable_irq();
   HAL_GPIO_WritePin(GPIOB, GPIO_PIN_3, GPIO_PIN_SET);
+  rapi_deinit(&rapi);
+  ocpp_deinit(&ocpp);
   while (1)
   {
   }

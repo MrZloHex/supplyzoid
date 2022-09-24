@@ -2,6 +2,12 @@
 #define __OCPP_TYPES_H__
 
 #include "stdbool.h"
+#include "stdint.h"
+#include "usart.h"
+
+
+#define OCPP_BUF_LEN 512
+
 
 #define ERROR_P 0
 typedef unsigned char OCPPResult;
@@ -80,16 +86,33 @@ typedef struct OCPPMessage_S
 	OCPPCallError  	call_error;
 } OCPPMessage;
 
-
+/**
+ * @brief Main OCPP Type
+ * 
+ * @param _transaction_id 	Transaction ID
+ * @param _id 				ID of OCPP message
+ * @param _wait_resp		Flag which indicates if Server should send response, not a request
+ * @param _booted 			Flag of main boot of device
+ * 
+ * @param pres_msg		Present OCPP message
+ * @param last_msg		Previous OCPP message
+ * 
+ */
 typedef struct OCPP_S
 {
 	uint32_t _transaction_id;
 	uint32_t _id;
-	bool _waiting_for_resp;
+	bool _wait_resp;
 	bool _booted;
 
-	OCPPMessage now;
-	OCPPMessage last;
+	OCPPMessage pres_msg;
+	OCPPMessage last_msg;
+
+	UART_HandleTypeDef *uart;
+	RTC_HandleTypeDef *rtc;
+
+	char buffer[OCPP_BUF_LEN];
+	size_t buf_i;
 } OCPP;
 
 #endif /* __OCPP_TYPES_H__ */
