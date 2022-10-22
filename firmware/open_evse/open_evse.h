@@ -59,8 +59,16 @@ typedef unsigned long time_t;
 //Language preferences: Add your custom languagefile here. See Language_default.h for more info.
 //#include "Language_norwegian.h"
 
-//-- begin features
+#define RAPI
+#define RAPI_SERIAL
+#define RAPI_SENDER
 
+#define AUTH_LOCK 0
+#undef AUTH_LOCK_REG
+
+#undef SERDBG
+
+//-- begin features
 #ifndef PLATFORMIO
 //#define OCPP
 // support V6 hardware
@@ -99,7 +107,6 @@ typedef unsigned long time_t;
 //#define AUTH_LOCK 1
 
 // serial remote api
-// #define RAPI
 
 // RAPI over serial
 // #define RAPI_SERIAL
@@ -370,7 +377,6 @@ extern AutoCurrentCapacityController g_ACCController;
 #endif
 
 // for testing print various diagnostic messages to the UART
-#define SERDBG
 
 //
 // begin functional tests

@@ -62,7 +62,9 @@ void EnergyMeter::calcUsage()
   if (dms > KWH_CALC_INTERVAL_MS) {
       uint32_t mv = g_EvseController.GetVoltage();
       uint32_t ma = g_EvseController.GetChargingCurrent();
+  #ifdef DEBUG
       Serial.print("mA: ");Serial.println(ma);
+  #endif
       /*
        * The straightforward formula to compute 'milliwatt-seconds' would be:
        *     mws = (mv/1000) * (ma/1000) * dms;
@@ -90,8 +92,8 @@ void EnergyMeter::calcUsage()
        * by the compiler, so the revised equation, although it looks quite
        * complex, only requires one divide operation.
        */
-      // uint32_t mws = (mv/16) * (ma/4) / 15625 * dms;
-      uint32_t mws = (mv/1000) * (ma/1000) * dms;
+      uint32_t mws = (mv/16) * (ma/4) / 15625 * dms;
+      // uint32_t mws = (mv/1000) * (ma/1000) * dms;
 #ifdef THREEPHASE
       // Multiply calculation by 3 to get 3-phase energy.
       // Typically you'd multiply by sqrt(3), but because voltage is measured to

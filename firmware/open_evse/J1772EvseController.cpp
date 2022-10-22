@@ -1672,7 +1672,9 @@ if (TempChkEnabled()) {
       // vent required not supported
       chargingOff(); // turn off charging current
       m_Pilot.SetState(PILOT_STATE_P12);
+      #ifdef DEBUG
       Serial.println("HARD FAULT: 1712");
+      #endif
       HardFault(1);
     }
     else if (m_EvseState == EVSE_STATE_GFCI_FAULT) {
@@ -1699,7 +1701,9 @@ if (TempChkEnabled()) {
       // and keep checking
       m_Pilot.SetPWM(m_CurrentCapacity);
       m_Pilot.SetState(PILOT_STATE_P12);
+      #ifdef DEBUG
       Serial.println("HARD FAULT: 1739");
+      #endif
       HardFault(1);
     }
     else if (m_EvseState == EVSE_STATE_NO_GROUND) {
@@ -1803,7 +1807,9 @@ if (TempChkEnabled()) {
 	  chargingOff(); // open the EVSE relays hopefully the EV has already discon
 
 	  // spin until EV is disconnected
+      #ifdef DEBUG
     Serial.println("HARD FAULT: 1843");
+    #endif
 	  HardFault(1);
 	  
 	  m_OverCurrentStartMs = 0; // clear overcurrent

@@ -682,7 +682,9 @@ void OnboardDisplay::Update(int8_t updmode)
         LcdMsg_P(g_psSvcReq,g_psGfciFault);
       }
       else {
+      #ifdef DEBUG
       Serial.println("PROBABLY HERE IS GFCI FAULT");
+      #endif
 	// 2nd line will be updated below with auto retry count
         LcdPrint_P(0,g_psGfciFault);
       }

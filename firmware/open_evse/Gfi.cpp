@@ -68,8 +68,9 @@ void Gfi::Reset()
 
 uint8_t Gfi::SelfTest()
 {
+  #ifdef DEBUG
   Serial.print("GFI SELFTEST: ");
-
+  #endif
   int i;
   // wait for GFI pin to clear
   for (i=0;i < 20;i++) {
@@ -79,7 +80,9 @@ uint8_t Gfi::SelfTest()
   }
   if (i == 20)
   {
+  #ifdef DEBUG
     Serial.println(2);
+  #endif
     return 2;
   }
 
@@ -100,7 +103,9 @@ uint8_t Gfi::SelfTest()
   }
   if (i == 40)
   {
+  #ifdef DEBUG
     Serial.println(3);
+  #endif
     return 3;
   }
 
@@ -116,7 +121,9 @@ uint8_t Gfi::SelfTest()
   m_GfiFault = 0;
   testInProgress = 0;
 
+  #ifdef DEBUG
   Serial.println(0);
+  #endif
   return 0;
 }
 #endif // GFI_SELFTEST
