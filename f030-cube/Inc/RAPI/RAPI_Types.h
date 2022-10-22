@@ -2,6 +2,7 @@
 #define RAPI_RAPI_TYPES_H_
 
 #include "stddef.h"
+#include "stdbool.h"
 #include "usart.h"
 
 #define RAPI_BUF_LEN 32
@@ -42,6 +43,11 @@
 typedef struct
 {
 	UART_HandleTypeDef *uart;
+	bool got_msg;
+	bool proc_msg;
+	char *buffer;
+	size_t buf_i;
+
 	char  *buf_cmd;
 	size_t buf_index;
 

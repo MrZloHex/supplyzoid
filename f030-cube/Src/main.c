@@ -66,6 +66,38 @@ void SystemClock_Config(void);
 static OCPP ocpp = {0};
 static RAPI rapi = {0};
 
+void
+HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart)
+{
+  // OCPP
+  if (huart->Instance == ocpp.uart->Instance)
+  {
+    if (ocpp.buffer[ocpp.buf_i] == '\n')
+    {
+      ocpp.buffer[ocpp.buf_i] = 0;
+      ocpp.got_msg = true;
+    }
+    else
+    {
+		  HAL_UART_Receive_IT(ocpp.uart, (uint8_t *)&ocpp.buffer[++ocpp.buf_i], 1);
+    }
+  }
+  // RAPI
+  else if (huart->Instance == rapi.uart->Instance)
+  {
+    if (rapi.buffer[rapi.buf_i] == '\r')
+    {
+      rapi.buffer[rapi.buf_i] = 0;
+      rapi.got_msg = true;
+    }
+    else
+    {
+		  HAL_UART_Receive_IT(rapi.uart, (uint8_t *)&rapi.buffer[++rapi.buf_i], 1);
+    }
+  }
+
+}
+
 
 /* USER CODE END 0 */
 
@@ -79,7 +111,7 @@ int main(void)
 
   /* USER CODE END 1 */
 
-  /* MCU Configuration---nucleo_f030r8-----------------------------------------------------*/
+  /* MCU Configuration--------------------------------------------------------*/
 
   /* Reset of all peripherals, Initializes the Flash interface and the Systick. */
   HAL_Init();
@@ -103,6 +135,7 @@ int main(void)
   MX_USART1_UART_Init();
   MX_USART2_UART_Init();
   /* USER CODE BEGIN 2 */
+
   uprintf(&huart2, 100, 10, "hello\r");
   // uprintf(&huart1, 100, 100, "[2,\"1\",\"BootNotification\",{\"chargePointVendor\":\"EV Solutions\",\"chargePointModel\":\"PROTOTYPE\"}]\n");
   uprintf(&huart1, 100, 10, "hello\n");
@@ -112,15 +145,22 @@ int main(void)
   rapi_init(&rapi, &huart2);
 
 
+  /* USER CODE END 2 */
+
+  /* Infinite loop */
+  /* USER CODE BEGIN WHILE */
   while (1)
   {
+    /* USER CODE END WHILE */
+
+    /* USER CODE BEGIN 3 */
+
+    rapi_update(&rapi, &ocpp);
     ocpp_update(&ocpp, &rapi);
-    // rapi_update(&rapi, &ocpp);
-    if (HAL_GetTick() % 100 == 0)
-    {
-        uprintf(&huart1, 100, 10, "sus\n");
-    }
+
+
   }
+  /* USER CODE END 3 */
 }
 
 /**

@@ -55,7 +55,7 @@ ocpp_remote_stop_transaction_req
 		return;
 
 	ocpp_stop_transaction_req(ocpp, rapi);
-	ocpp_send_req(ocpp, STOP_TRANSACTION);
+	ocpp_send_req(ocpp, ACT_STOP_TRANSACTION);
 }
 
 void

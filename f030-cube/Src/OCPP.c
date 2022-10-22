@@ -3,6 +3,7 @@
 #include "stdlib.h"
 #include "mjson.h"
 #include "serial.h"
+#include "string.h"
 #include "convert.h"
 
 
@@ -25,6 +26,11 @@ ocpp_init
 	RTC_HandleTypeDef *rtc
 )
 {
+    memset(ocpp->buffer, 0, OCPP_BUF_LEN);
+	memset(ocpp->cmd_buf, 0, OCPP_BUF_LEN);
+	ocpp->buf_i = 0;
+	ocpp->got_msg = false;
+	ocpp->proc_msg = true;
 	ocpp->uart = uart;
 	ocpp->rtc = rtc;
 
@@ -82,46 +88,25 @@ ocpp_update
 	RAPI *rapi
 )
 {
-		char buffer[OCPP_BUF_LEN] = {0};
+	if (ocpp->got_msg && ocpp->proc_msg)
+	{
+		strcpy(ocpp->cmd_buf, ocpp->buffer);
+		ocpp->got_msg = false;
+		ocpp->proc_msg = false;
+	}
 
-	USART_Result state = uread(ocpp->uart, 100, buffer, OCPP_BUF_LEN, '\n');
-	
-	// if (state != USART_IO_TIMEOUT) uprintf(ocpp->uart, 100, 6, "S %d\n", state);
+	if (!ocpp->got_msg && HAL_UART_GetState(ocpp->uart) == HAL_UART_STATE_READY)
+	{
+		HAL_UART_Receive_IT(ocpp->uart, (uint8_t *)&ocpp->buffer[0], 1);
+		ocpp->buf_i = 0;
+	}
 
-	if (state == USART_IO_OK) uprintf(ocpp->uart, 1000, OCPP_BUF_LEN+10, "`%s`\n", buffer);
-
-	if (state == USART_IO_ERROR) Error_Handler();
-	// uint8_t ch = 0;
-	// HAL_StatusTypeDef state = HAL_UART_Receive(ocpp->uart, &ch, 1, 100);
-	// if (state == HAL_OK)
-	// {
-	// // 	if (ch != '\n')
-	// // 	{
-	// 		// ocpp->buffer[(ocpp->buf_i)++] = ch;
-	// uprintf(ocpp->uart, 1000, 6, "`%c`\n", ch);
-	// // 	}
-
-	// // 	if (ocpp->buf_i >= OCPP_BUF_LEN)
-	// // 	{
-	// // 		memset(ocpp->buffer, 0, ocpp->buf_i);
-	// // 		ocpp->buf_i = 0;
-	// // 		return;
-	// // 	}
-
-	// // 	if (mjson(ocpp->buffer, ocpp->buf_i, NULL, NULL) > 0)
-	// // 	{
-	// // 		ocpp->buffer[ocpp->buf_i] = '\0';
-
-	// // 		ocpp_handle_message(ocpp, rapi);
-
-	// // 		memset(ocpp->buffer, 0, ocpp->buf_i);
-	// // 		ocpp->buf_i = 0;
-	// // 	}
-	// }
-	// else if (state != HAL_TIMEOUT)
-	// {
-	// 	uprintf(ocpp->uart, 100, 6, "S %d\n", state);
-	// }
+	if (!ocpp->proc_msg)
+	{
+		// uprintf(rapi->uart, 10, 1024, "goT `%s`\r", ocpp->cmd_buf);
+		ocpp_handle_message(ocpp, rapi);
+		ocpp->proc_msg = true;
+	}
 }
 
 void
@@ -131,11 +116,8 @@ ocpp_handle_message
 	RAPI *rapi
 )
 {
-	uprintf(ocpp->uart, 1000, 556, "HANDLE NEW MESSAGE: %s\n", ocpp->buffer);
-	
-
-	OCPPResult res_parse = ocpp_parse_message(ocpp);
-	if (res_parse == ERROR_P)
+	// uprintf(ocpp->uart, 1000, 556, "HANDLE NEW MESSAGE: %s\n", ocpp->buffer);
+	if (ocpp_parse_message(ocpp) == RES_ERROR)
 		return;
 
 
@@ -148,15 +130,15 @@ ocpp_handle_message
 	{
 		if (ocpp->_wait_resp)
 		{
-			if (ocpp->last_msg.call.action == START_TRANSACTION)
+			if (ocpp->last_msg.call.action == ACT_START_TRANSACTION)
 				ocpp_start_transaction_conf(ocpp);
-			else if (ocpp->last_msg.call.action == STOP_TRANSACTION)
+			else if (ocpp->last_msg.call.action == ACT_STOP_TRANSACTION)
 				ocpp_stop_transaction_conf(ocpp);
-			else if (ocpp->last_msg.call.action == METER_VALUES)
+			else if (ocpp->last_msg.call.action == ACT_METER_VALUES)
 				ocpp_meter_values_conf(ocpp);
-			else if (ocpp->last_msg.call.action == HEARTBEAT)
+			else if (ocpp->last_msg.call.action == ACT_HEARTBEAT)
 				ocpp_heartbeat_conf(ocpp);
-			else if (ocpp->last_msg.call.action == DATA_TRANSFER)
+			else if (ocpp->last_msg.call.action == ACT_DATA_TRANSFER)
 				ocpp_data_transfer_conf(ocpp);
 			// else
 				// printf("NOT IMPLEMETED\n");
@@ -164,11 +146,11 @@ ocpp_handle_message
 		else
 		{
 			ocpp_next(ocpp);
-			if (ocpp->last_msg.call.action == REMOTE_START_TRANSACTION)
+			if (ocpp->last_msg.call.action == ACT_REMOTE_START_TRANSACTION)
 				ocpp_remote_start_transaction_req(ocpp, rapi);
-			else if (ocpp->last_msg.call.action == REMOTE_STOP_TRANSACTION)
+			else if (ocpp->last_msg.call.action == ACT_REMOTE_STOP_TRANSACTION)
 				ocpp_remote_stop_transaction_req(ocpp, rapi);
-			else if (ocpp->last_msg.call.action == RESET)
+			else if (ocpp->last_msg.call.action == ACT_RESET)
 				ocpp_reset_req(ocpp, rapi);
 			// else
 				// printf("NOT IMPLEMETED\n");
@@ -179,65 +161,26 @@ ocpp_handle_message
 OCPPResult
 ocpp_parse_message(OCPP *ocpp)
 {
-	OCPPMessageType msg_type = ocpp_determine_message_type(ocpp);
-	if (msg_type == ERROR_P)
-		return ERROR_P;
+	if (ocpp_determine_message_type(ocpp) == RES_ERROR) { return RES_ERROR; }
+	if (ocpp_get_message_id(ocpp) == RES_ERROR) { return RES_ERROR; }
 
-	ocpp->pres_msg.type = msg_type;
-
-	OCPPMessageID msg_id = ocpp_get_message_id(ocpp);
-	if (msg_id == ERROR_P)
-		return ERROR_P;
-	strcpy(ocpp->pres_msg.ID, msg_id);
-	free(msg_id);
-
-	if (msg_type == CALL)
+	if (ocpp->pres_msg.type == CALL)
 	{
-		OCPPCallAction action = ocpp_get_action(ocpp);
-		if (action == 0)
-			return ERROR_P;
-
-		ocpp->pres_msg.call.action = action;
-
-		char payload[PAYLOAD_LEN];
-		OCPPResult res = ocpp_get_payload(ocpp, CALL, payload);
-		if (res == ERROR_P)
-			return ERROR_P;
-
-		strcpy(ocpp->pres_msg.call.payload, payload);
-
+		if (ocpp_get_action(ocpp) == RES_ERROR) { return RES_ERROR; }
+		if (ocpp_get_payload(ocpp, CALL) == RES_ERROR) { return RES_ERROR; }
 	}
-	else if (msg_type == CALLRESULT)
+	else if (ocpp->pres_msg.type == CALLRESULT)
 	{
-		char payload[PAYLOAD_LEN];
-		OCPPResult res = ocpp_get_payload(ocpp, CALLRESULT, payload);
-		if (res == ERROR_P)
-			return ERROR_P;
-
-		strcpy(ocpp->pres_msg.call_result.payload, payload);
-
+		if (ocpp_get_payload(ocpp, CALLRESULT) == RES_ERROR) { return RES_ERROR; }
 		// printf("NEW CALL RESULT REQ:\n");
 		// printf("\tID: `%ld`\n", ocpp->pres_msg.ID);
 		// printf("\tPAYLOAD: `%s`\n", ocpp->pres_msg.call_result.payload);
 	}
-	else if (msg_type == CALLERROR)
+	else if (ocpp->pres_msg.type == CALLERROR)
 	{
-		OCPPCallErrorCode err_code = ocpp_get_call_error_code(ocpp);
-		ocpp->pres_msg.call_error.error_code = err_code;
-
-		char description[DSCR_LEN];
-		OCPPResult res_d = ocpp_get_call_error_descr(ocpp, description);
-		if (res_d == ERROR_P)
-			return ERROR_P;
-
-		strcpy(ocpp->pres_msg.call_error.error_dscr, description);
-
-		char details[PAYLOAD_LEN];
-		OCPPResult res = ocpp_get_payload(ocpp, CALLERROR, details);
-		if (res == ERROR_P)
-			return ERROR_P;
-		strcpy(ocpp->pres_msg.call_error.error_details, details);
-
+		if (ocpp_get_call_error_code(ocpp) == RES_ERROR) { return RES_ERROR; }
+		if (ocpp_get_call_error_descr(ocpp) == RES_ERROR) {return RES_ERROR; }
+		if (ocpp_get_payload(ocpp, CALLERROR) == RES_ERROR) { return RES_ERROR; }
 		// printf("NEW CALL ERROR REQ:\n");
 		// printf("\tID: `%ld`\n", ocpp->pres_msg.ID);
 		// printf("\tERROR CODE: `%d`\n", ocpp->pres_msg.call_error.error_code);
@@ -245,7 +188,7 @@ ocpp_parse_message(OCPP *ocpp)
 		// printf("\tERROR DETAILS: `%s`\n", ocpp->pres_msg.call_error.error_details);
 	}
 
-	return !ERROR_P;
+	return RES_OK;
 }
 
 void
@@ -256,21 +199,21 @@ ocpp_send_req
 )
 {
 	char action_str[ACTION_LEN];
-	if (action == BOOT_NOTIFICATION)
+	if (action == ACT_BOOT_NOTIFICATION)
 		strcpy(action_str, "BootNotification");
-	else if (action == START_TRANSACTION)
+	else if (action == ACT_START_TRANSACTION)
 		strcpy(action_str, "StartTransaction");
-	else if (action == STOP_TRANSACTION)
+	else if (action == ACT_STOP_TRANSACTION)
 		strcpy(action_str, "StopTransaction");
-	else if (action == STATUS_NOTIFICATION)
+	else if (action == ACT_STATUS_NOTIFICATION)
 		strcpy(action_str, "StatusNotification");
-	else if (action == METER_VALUES)
+	else if (action == ACT_METER_VALUES)
 		strcpy(action_str, "MeterValues");
-	else if (action == HEARTBEAT)
+	else if (action == ACT_HEARTBEAT)
 		strcpy(action_str, "HeartBeat");
-	else if (action == DATA_TRANSFER)
+	else if (action == ACT_DATA_TRANSFER)
 		strcpy(action_str, "DataTransfer");
-	else if (action == RESET)
+	else if (action == ACT_RESET)
 		strcpy(action_str, "Reset");
 	else
 	{
@@ -297,7 +240,7 @@ ocpp_send_req
 	// SENDING
 
 	ocpp->_id++;
-	if (action != STATUS_NOTIFICATION)
+	if (action != ACT_STATUS_NOTIFICATION)
 		ocpp->_wait_resp = true;
 
 	ocpp_next(ocpp);
@@ -351,67 +294,62 @@ ocpp_send_resp
 
 
 
-OCPPMessageType
+OCPPResult
 ocpp_determine_message_type(OCPP *ocpp)
 {
-	double type;
-	int res = mjson_get_number(ocpp->buffer, ocpp->buf_i, POS_MSG_TYPE, &type);
-	if (res <= 0)
-		return ERROR_P;
-	switch ((int)type) {
-        case CALL:
-            return CALL;
-        case CALLRESULT:
-            return CALLRESULT;
-        case CALLERROR:
-			return CALLERROR;
-        default:
-            return ERROR_P;
-    }
+	double type = 0;
+	int res = mjson_get_number(ocpp->cmd_buf, strlen(ocpp->cmd_buf), POS_MSG_TYPE, &type);
+	if (res == 0 || !IS_MSG_TYPE((uint32_t)type))
+		return RES_ERROR;
+
+	ocpp->pres_msg.type = (OCPPMessageType)type;
+	// uprintf(ocpp->uart, 1000, 10, "type: %u\n", (OCPPMessageType)type);
+	return RES_OK;
 }
 
 
-OCPPMessageID
+OCPPResult
 ocpp_get_message_id(OCPP *ocpp)
 {
-	char buf[50];
-	int res = mjson_get_string(ocpp->buffer, ocpp->buf_i, POS_MSG_ID, buf, 50);
+	char buf[ID_LEN] = {0};
+	int res = mjson_get_string(ocpp->cmd_buf, strlen(ocpp->cmd_buf), POS_MSG_ID, buf, ID_LEN);
 	if (res <= 0)
-		return ERROR_P;
-	size_t id_len = strlen(buf);
-	OCPPMessageID id = (char *)malloc(id_len+1);
-	strcpy(id, buf);
-	id[id_len] = 0;
-	return id;
+		return RES_ERROR;
+
+	strcpy(ocpp->pres_msg.ID, buf);
+	// uprintf(ocpp->uart, 1000, 20+ID_LEN, "id: %s\n", buf);
+	return RES_OK;
 }
 
-OCPPCallAction
+OCPPResult
 ocpp_get_action(OCPP *ocpp)
 {
 	char buf[ACTION_LEN];
-	int res = mjson_get_string(ocpp->buffer, ocpp->buf_i, POS_CL_ACT, buf, ACTION_LEN);
+	int res = mjson_get_string(ocpp->cmd_buf, strlen(ocpp->cmd_buf), POS_CL_ACT, buf, ACTION_LEN);
 	if (res <= 0)
-		return ERROR_P;
+		return RES_ERROR;
 	
-	if (strcmp(buf, "RemoteStartTransaction"))
-		return REMOTE_START_TRANSACTION;
-	else if (strcmp(buf, "RemoteStopTransaction"))
-		return REMOTE_STOP_TRANSACTION;
-	else if (strcmp(buf, "Reset"))
-		return RESET;
+	if (strcmp(buf, "RemoteStartTransaction") == 0)
+		ocpp->pres_msg.call.action = ACT_REMOTE_START_TRANSACTION;
+	else if (strcmp(buf, "RemoteStopTransaction") == 0)
+		ocpp->pres_msg.call.action = ACT_REMOTE_STOP_TRANSACTION;
+	else if (strcmp(buf, "Reset") == 0)
+		ocpp->pres_msg.call.action = ACT_RESET;
 	else
-		return ERROR_P;
+		return RES_ERROR;
+	
+
+	return RES_OK;
 }
 
 OCPPResult
 ocpp_get_payload
 (
 	OCPP *ocpp,
-	OCPPMessageType type,
-	char *dst
+	OCPPMessageType type
 )
 {
-	char path[5];
+	char path[5] = {0};
 	if (type == CALL)
 		strcpy(path, POS_CL_PAYLOAD);
 	else if (type == CALLRESULT)
@@ -419,54 +357,58 @@ ocpp_get_payload
 	else if (type == CALLERROR)
 		strcpy(path, POS_CE_ERR_DETL);
 	else
-		return ERROR_P;
+		return RES_ERROR;
 
 
 	const char *p;
     int n;
-	if (mjson_find(ocpp->buffer, ocpp->buf_i, path, &p, &n) != MJSON_TOK_OBJECT)
-		return ERROR_P;
+	if (mjson_find(ocpp->cmd_buf, strlen(ocpp->cmd_buf), path, &p, &n) != MJSON_TOK_OBJECT)
+		return RES_ERROR;
 
-	strncpy(dst, p, n);
-	return 1;
-}
+	if (type == CALL)
+		strncpy(ocpp->pres_msg.call.payload, p, n);
+	else if (type == CALLRESULT)
+		strncpy(ocpp->pres_msg.call_result.payload, p, n);
+	else if (type == CALLERROR)
+		strncpy(ocpp->pres_msg.call_error.error_details, p, n);
 
-OCPPCallErrorCode
-ocpp_get_call_error_code(OCPP *ocpp)
-{
-	char buf[ERR_CODE_LEN];
-	int res = mjson_get_string(ocpp->buffer, ocpp->buf_i, POS_CE_ERR_CODE, buf, ERR_CODE_LEN);
-	if (res <= 0)
-		return ERROR_P;
-	
-	if (strcmp(buf, "GenericError"))
-		return GENERIC_ERROR;
-	else
-		return ERROR_P;
+	return RES_OK;
 }
 
 OCPPResult
-ocpp_get_call_error_descr
-(
-	OCPP *ocpp,
-	char *dscr
-)
+ocpp_get_call_error_code(OCPP *ocpp)
+{
+	char buf[ERR_CODE_LEN];
+	int res = mjson_get_string(ocpp->cmd_buf, strlen(ocpp->cmd_buf), POS_CE_ERR_CODE, buf, ERR_CODE_LEN);
+	if (res <= 0)
+		return RES_ERROR;
+	
+	if (strcmp(buf, "GenericError") == 0)
+		ocpp->pres_msg.call_error.error_code = GENERIC_ERROR;
+	else
+		return RES_ERROR;
+
+	return RES_OK;
+}
+
+OCPPResult
+ocpp_get_call_error_descr(OCPP *ocpp)
 {
 	char buf[DSCR_LEN];
-	int res = mjson_get_string(ocpp->buffer, ocpp->buf_i, POS_CE_ERR_DSCR, buf, DSCR_LEN);
+	int res = mjson_get_string(ocpp->cmd_buf, strlen(ocpp->cmd_buf), POS_CE_ERR_DSCR, buf, DSCR_LEN);
 	if (res <= 0)
-		return ERROR_P;
+		return RES_ERROR;
 
-	strcpy(dscr, buf);
+	strcpy(ocpp->pres_msg.call_error.error_dscr, buf);
 
-	return !ERROR_P;
+	return RES_OK;
 }
 
 
 void
 ocpp_set_msg_id(OCPP *ocpp)
 {
-	char id[50];
+	char id[ID_LEN];
 	int_to_charset(ocpp->_id, id, 1);
 	ocpp->_id++;
 	strcpy(ocpp->pres_msg.ID, id);

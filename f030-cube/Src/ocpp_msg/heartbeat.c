@@ -11,7 +11,7 @@ ocpp_heartbeat_req
 	char payload[PAYLOAD_LEN] = "{}";
 
 	ocpp->pres_msg.type = CALL;
-	ocpp->pres_msg.call.action = HEARTBEAT;
+	ocpp->pres_msg.call.action = ACT_HEARTBEAT;
 	strcpy(ocpp->pres_msg.call.payload, payload);
 }
 
@@ -21,7 +21,7 @@ ocpp_heartbeat_conf
 	OCPP *ocpp
 )
 {
-	if (!strcmp(ocpp->last_msg.ID, ocpp->pres_msg.ID))
+	if (strcmp(ocpp->last_msg.ID, ocpp->pres_msg.ID) != 0)
 		return;
 
 	ocpp->_wait_resp = false;

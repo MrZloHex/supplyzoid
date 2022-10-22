@@ -26,7 +26,7 @@ void
 rapi_deinit(RAPI *rapi);
 
 
-bool
+void
 rapi_update
 (
 	RAPI *rapi,

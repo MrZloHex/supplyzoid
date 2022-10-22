@@ -19,7 +19,7 @@ ocpp_data_transfer_req
 	);
 
 	ocpp->pres_msg.type = CALL;
-	ocpp->pres_msg.call.action = DATA_TRANSFER;
+	ocpp->pres_msg.call.action = ACT_DATA_TRANSFER;
 	strcpy(ocpp->pres_msg.call.payload, payload);
 }
 
@@ -29,7 +29,7 @@ ocpp_data_transfer_conf
 	OCPP *ocpp
 )
 {
-	if (!strcmp(ocpp->last_msg.ID, ocpp->pres_msg.ID))
+	if (strcmp(ocpp->last_msg.ID, ocpp->pres_msg.ID) != 0)
 		return;
 
 	ocpp->_wait_resp = false;

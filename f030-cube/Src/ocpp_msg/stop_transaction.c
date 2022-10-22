@@ -2,6 +2,8 @@
 #include "rapi_msg/get_energy_usage.h"
 
 #include "mjson.h"
+#include "serial.h"
+#include "time.h"
 
 void
 ocpp_stop_transaction_req
@@ -21,7 +23,7 @@ ocpp_stop_transaction_req
 	uint32_t wh = ws / 3600;
 
 	char time[25] = {0};
-	// get_rtc_time(rtc, time);
+	get_rtc_time(ocpp->rtc, time);
 
 	char payload[PAYLOAD_LEN];
 	mjson_snprintf
@@ -38,7 +40,7 @@ ocpp_stop_transaction_req
 
 	
 	ocpp->pres_msg.type = CALL;
-	ocpp->pres_msg.call.action = STOP_TRANSACTION;
+	ocpp->pres_msg.call.action = ACT_STOP_TRANSACTION;
 	strcpy(ocpp->pres_msg.call.payload, payload);
 }
 
@@ -48,7 +50,7 @@ ocpp_stop_transaction_conf
 	OCPP *ocpp
 )
 {
-	if (!strcmp(ocpp->last_msg.ID, ocpp->pres_msg.ID))
+	if (strcmp(ocpp->last_msg.ID, ocpp->pres_msg.ID) != 0)
 		return;
 
 	ocpp->_wait_resp = false;
@@ -67,12 +69,12 @@ ocpp_stop_transaction_conf
 	if (res_st < 1)
 		return;
 
-	// if (strcmp("Accepted", status))
-	// 	usart_ocpp_println_str("TRANSACTION FINISHED\n");
-	// else if (strcmp("Rejected", status))
-	// 	usart_ocpp_println_str("FAILED TO FINISH TRANSACTION");
-	// else
-	// 	return;
+	if (strcmp("Accepted", status) == 0)
+		uprintf(ocpp->uart, 1000, 64, "TRANSACTION FINISHED\n");
+	else if (strcmp("Rejected", status) == 0)
+		uprintf(ocpp->uart, 1000, 64, "FAILED TO FINISH TRANSACTION\n");
+	else
+		return;
 
 }
 

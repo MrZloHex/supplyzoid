@@ -42,7 +42,7 @@ ocpp_status_notification_req
 	);
 
 	ocpp->pres_msg.type = CALL;
-	ocpp->pres_msg.call.action = STATUS_NOTIFICATION;
+	ocpp->pres_msg.call.action = ACT_STATUS_NOTIFICATION;
 	strcpy(ocpp->pres_msg.call.payload, payload);
 }
 

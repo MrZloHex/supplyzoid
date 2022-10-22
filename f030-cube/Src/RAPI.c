@@ -2,9 +2,9 @@
 // #include "usart_rapi.h"
 
 // #include "ocpp_msg/boot_notification.h"
-// #include "rapi_msg/boot_notification.h"
-// #include "rapi_msg/evse_state_transition.h"
-// #include "rapi_msg/ext_button.h"
+#include "rapi_msg/boot_notification.h"
+#include "rapi_msg/evse_state_transition.h"
+#include "rapi_msg/ext_button.h"
 // #include "OCPP.h"
 
 #include "stdlib.h"
@@ -21,6 +21,11 @@ rapi_init
 )
 {
 	rapi->uart = uart;
+	rapi->got_msg = false;
+	rapi->proc_msg = true; 
+
+    rapi->buffer = (char *)malloc(sizeof(char)*RAPI_BUF_LEN);
+	rapi->buf_i = 0;
     rapi->buf_cmd = (char *)malloc(sizeof(char)*RAPI_BUF_LEN);
 	rapi->buf_index = 0;
     rapi->tokens = (char **)malloc(sizeof(char *)*RAPI_MAX_TOKENS);
@@ -31,7 +36,9 @@ void
 rapi_reset(RAPI *rapi)
 {
 	memset(rapi->buf_cmd, 0, RAPI_BUF_LEN);
+	memset(rapi->buffer, 0, RAPI_BUF_LEN);
 	rapi->buf_index = 0;
+	rapi->buf_i = 0;
 }
 
 void
@@ -42,24 +49,33 @@ rapi_deinit(RAPI *rapi)
 }
 
 
-bool
+void
 rapi_update
 (
 	RAPI *rapi,
 	OCPP *ocpp
 )
 {
-	char buffer[RAPI_BUF_LEN] = {0};
+	if (rapi->got_msg && rapi->proc_msg)
+	{
+		strcpy(rapi->buf_cmd, rapi->buffer);
+		rapi->got_msg = false;
+		rapi->proc_msg = false;
+	}
 
-	USART_Result state = uread(rapi->uart, 100, buffer, 100, '\r');
-	
-	uprintf(rapi->uart, 100, 6, "S %d\r", state);
+	if (!rapi->got_msg && HAL_UART_GetState(rapi->uart) == HAL_UART_STATE_READY)
+	{
+		HAL_UART_Receive_IT(rapi->uart, (uint8_t *)&rapi->buffer[0], 1);
+		rapi->buf_i = 0;
+	}
 
-	if (state == USART_IO_OK) uprintf(rapi->uart, 1000, 110, "`%s`\r", buffer);
-
-	if (state == USART_IO_ERROR) Error_Handler();
-
-	return false;
+	if (!rapi->proc_msg)
+	{
+		// uprintf(rapi->uart, 10, 1024, "goT `%s`\r", rapi->buf_cmd);
+		if (rapi_is_msg_correct(rapi))
+			rapi_process_cmd(rapi, ocpp);
+		rapi->proc_msg = true;
+	}
 }
 
 
@@ -70,12 +86,13 @@ rapi_process_cmd
 	OCPP *ocpp
 )
 {
-	for (size_t i = 0; i < rapi->token_index; ++i)
-	{
-		uprintf(rapi->uart, 100, 64, "NEW TOKEN: `");
-		uprintf(rapi->uart, 100, 64, rapi->tokens[i]);
-		uprintf(rapi->uart, 100, 64, "`\r");
-	}
+	// uprintf(rapi->uart, 10, 1024, "goT `%s`\r", rapi->buf_cmd);
+	// for (size_t i = 0; i < rapi->token_index; ++i)
+	// {
+	// 	uprintf(rapi->uart, 100, 64, "NEW TOKEN: `");
+	// 	uprintf(rapi->uart, 100, 64, rapi->tokens[i]);
+	// 	uprintf(rapi->uart, 100, 64, "`\r");
+	// }
 
 	char *cmd = rapi->tokens[0];
 	switch (*cmd)
@@ -84,13 +101,13 @@ rapi_process_cmd
 			switch (*(cmd+1))
 			{
 				case 'B':
-					// rapi_boot_notification_req(rapi, ocpp);
+					rapi_boot_notification_req(rapi, ocpp);
 					break;
 				case 'T':
-					// rapi_evse_state_transition_req(rapi, ocpp);
+					rapi_evse_state_transition_req(rapi, ocpp);
 					break;
 				case 'N':
-					// rapi_ext_button_req(rapi);
+					rapi_ext_button_req(rapi);
 					break;
 				default:
 					uprintf(rapi->uart, 100, 25,"ERROR: Unknown command\r");
@@ -107,7 +124,7 @@ rapi_process_cmd
 void
 rapi_send_req(RAPI *rapi)
 {
-	uprintf(rapi->uart, 1000, RAPI_BUF_LEN, "%s\r", rapi->buf_cmd);
+	uprintf(rapi->uart, 1000, RAPI_BUF_LEN, "%s", rapi->buf_cmd);
 	rapi_reset(rapi);
 }
 
@@ -118,11 +135,29 @@ rapi_get_resp
 	OCPP *ocpp
 )
 {
+	if (HAL_UART_AbortReceive(rapi->uart) != HAL_OK) { return false; }
 	rapi_reset(rapi);
-	bool upd = false;
-	do
-		upd = rapi_update(rapi, ocpp);
-	while (!upd);
+
+	while (1)
+	{
+		HAL_StatusTypeDef res = HAL_UART_Receive(rapi->uart, (uint8_t *)rapi->buf_cmd, 1, 100);
+		if (res == HAL_ERROR)
+			return false;
+		else if (res == HAL_OK)
+			if (*(rapi->buf_cmd) == '$')
+				break;
+	}
+
+	if (uread(rapi->uart, 10, (rapi->buf_cmd)+1, RAPI_BUF_LEN-1, RAPI_EOC) == USART_IO_OK)
+	{
+		// uprintf(rapi->uart, 100, RAPI_BUF_LEN+4, "`%s`\r", rapi->buf_cmd);
+		if (!rapi_is_msg_correct(rapi))
+		{
+			return false;
+		}
+	}
+
+	rapi->buf_index = strlen(rapi->buf_cmd);
 	
 
 	if (rapi->buf_cmd[2] == 'K')

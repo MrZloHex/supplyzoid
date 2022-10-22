@@ -1,6 +1,8 @@
 #include "ocpp_msg/boot_notification.h"
 
 #include "mjson.h"
+#include "time.h"
+#include "serial.h"
 
 void
 ocpp_boot_notification_req
@@ -20,7 +22,7 @@ ocpp_boot_notification_req
 	);
 
 	ocpp->pres_msg.type = CALL;
-	ocpp->pres_msg.call.action = BOOT_NOTIFICATION;
+	ocpp->pres_msg.call.action = ACT_BOOT_NOTIFICATION;
 	strcpy(ocpp->pres_msg.call.payload, payload);
 }
 
@@ -31,8 +33,12 @@ ocpp_boot_notification_conf
 	RAPI *rapi
 )
 {
-	if (!strcmp(ocpp->pres_msg.ID, ocpp->last_msg.ID))
+	// uprintf(ocpp->uart, 100, 10,"BOO\n");
+	if (strcmp(ocpp->pres_msg.ID, ocpp->last_msg.ID) != 0)
+	{
+	// uprintf(ocpp->uart, 100, 40, "I: `%s`, `%s`\n", ocpp->pres_msg.ID, ocpp->last_msg.ID);
 		return;
+	}
 
 	ocpp->_wait_resp = false;
 
@@ -54,9 +60,9 @@ ocpp_boot_notification_conf
 	if (res_st == -1)
 		return;
 
-	if (strcmp(status, "Accepted"))
+	if (strcmp(status, "Accepted") == 0)
 		ocpp->_booted = true;
-	else if (strcmp(status, "Pending") || strcmp(status, "Rejected"))
+	else if (strcmp(status, "Pending") == 0 || strcmp(status, "Rejected") == 0)
 		ocpp->_booted = false;
 	else
 		return;
@@ -66,6 +72,6 @@ ocpp_boot_notification_conf
 	if (res_time == -1)
 		return;
 
-	// adjust_rtc_time(rtc, time);
-
+	uprintf(ocpp->uart, 1000, 10,"TED\n");
+	adjust_rtc_time(ocpp->rtc, time);
 }

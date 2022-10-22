@@ -56,7 +56,7 @@ ocpp_remote_start_transaction_req
 
 
 	ocpp_start_transaction_req(ocpp, rapi, id_tag);
-	ocpp_send_req(ocpp, START_TRANSACTION);
+	ocpp_send_req(ocpp, ACT_START_TRANSACTION);
 }
 
 void

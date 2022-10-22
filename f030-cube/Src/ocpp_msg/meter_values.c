@@ -19,7 +19,8 @@ ocpp_meter_values_req
 	uint32_t ws;
 	rapi_get_energy_usage_resp(rapi, &ws, NULL);
 	uint32_t wh = ws / 3600;
-
+	(void)wh;
+	
 	char payload[PAYLOAD_LEN];
 	mjson_snprintf
 	(
@@ -32,7 +33,7 @@ ocpp_meter_values_req
 	);
 
 	ocpp->pres_msg.type = CALL;
-	ocpp->pres_msg.call.action = METER_VALUES;
+	ocpp->pres_msg.call.action = ACT_METER_VALUES;
 	strcpy(ocpp->pres_msg.call.payload, payload);
 }
 
@@ -42,7 +43,7 @@ ocpp_meter_values_conf
 	OCPP *ocpp
 )
 {
-	if (!strcmp(ocpp->last_msg.ID, ocpp->pres_msg.ID))
+	if (strcmp(ocpp->last_msg.ID, ocpp->pres_msg.ID) != 0)
 		return;
 
 	ocpp->_wait_resp = false;

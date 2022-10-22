@@ -19,7 +19,6 @@
 
 #include "RAPI/RAPI_Types.h"
 #include "OCPP/OCPP_Types.h"
-#include "OCPP/OCPP_States.h"
 
 
 
@@ -77,32 +76,27 @@ ocpp_send_resp
 
 
 
-OCPPMessageType
+OCPPResult
 ocpp_determine_message_type(OCPP *ocpp);
 
-OCPPMessageID
+OCPPResult
 ocpp_get_message_id(OCPP *ocpp);
 
-OCPPCallAction
+OCPPResult
 ocpp_get_action(OCPP *ocpp);
 
 OCPPResult
 ocpp_get_payload
 (
 	OCPP *ocpp,
-	OCPPMessageType type,
-	char *dst
+	OCPPMessageType type
 );
 
-OCPPCallErrorCode
+OCPPResult
 ocpp_get_call_error_code(OCPP *ocpp);
 
 OCPPResult
-ocpp_get_call_error_descr
-(
-	OCPP *ocpp,
-	char *dscr
-);
+ocpp_get_call_error_descr(OCPP *ocpp);
 
 void
 ocpp_set_msg_id(OCPP *ocpp);

@@ -12,7 +12,7 @@ rapi_boot_notification_req
 {
 	// handle BOOT TROUBLES
 	ocpp_boot_notification_req(ocpp);
-	ocpp_send_req(ocpp, BOOT_NOTIFICATION);
+	ocpp_send_req(ocpp, ACT_BOOT_NOTIFICATION);
 
 }
 

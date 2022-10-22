@@ -28,9 +28,9 @@ ocpp_reset_req
 		return;
 
 	uint8_t reset_type = 0;
-	if (strcmp(reset_type_str, "Hard"))
+	if (strcmp(reset_type_str, "Hard") == 0)
 		reset_type = 1;
-	else if (strcmp(reset_type_str, "Soft"))
+	else if (strcmp(reset_type_str, "Soft") == 0)
 		reset_type = 2;
 	else
 		return;

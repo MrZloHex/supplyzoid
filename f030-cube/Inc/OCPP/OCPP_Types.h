@@ -4,20 +4,24 @@
 #include "stdbool.h"
 #include "stdint.h"
 #include "usart.h"
+#include "OCPP/OCPP_States.h"
 
 
 #define OCPP_BUF_LEN 512
 
 
-#define ERROR_P 0
-typedef unsigned char OCPPResult;
+typedef enum OCPPResult_E
+{
+	RES_ERROR = 0U,
+	RES_OK    = 1U
+} OCPPResult;
 
 typedef char CiString20[21];
 typedef char CiString25[26];
 
 #define ACTION_LEN   30
 #define PAYLOAD_LEN  256
-#define ID_LEN		 50
+#define ID_LEN		 64
 #define DSCR_LEN     255
 #define ERR_CODE_LEN 30
 #define REQ_LEN 	 512
@@ -26,32 +30,34 @@ typedef char CiString25[26];
 #define POS_MSG_TYPE "$[0]"
 #define POS_MSG_ID   "$[1]"
 
-typedef unsigned char OCPPMessageType;
+#define IS_MSG_TYPE(type) (type == CALL || type == CALLRESULT || type == CALLERROR)
+
+typedef enum OCPPMessageType_E
+{
+	CALL       = 2U,
+	CALLRESULT = 3U,
+	CALLERROR  = 4U
+} OCPPMessageType;
+
+
 typedef char * OCPPMessageID;
 
 
 
 
 // [2,"1","BootNotification",{"chargingStation":{"model":"SingleSocketCharger","vendorName":"VendorX"}}]
-#define CALL       2
-
 #define POS_CL_ACT     "$[2]"
 #define POS_CL_PAYLOAD "$[3]"
-typedef unsigned char OCPPCallAction;
-
 typedef struct
 {
 	OCPPCallAction action;
 	char          *payload; // JSON
-
 } OCPPCall;
 
 
 
 
 // [3,"1",{"currentTime":"2013-02-01T20:53:32.486Z","interval":3,"status":"Accepted"}]
-#define CALLRESULT 3
-
 #define POS_CR_PAYLOAD "$[2]"
 
 typedef struct
@@ -62,12 +68,9 @@ typedef struct
 
 
 // [4,"19223201","GenericError","Any other error not covered by the previous ones",{}]
-#define CALLERROR  4
-
 #define POS_CE_ERR_CODE "$[2]"
 #define POS_CE_ERR_DSCR "$[3]"
 #define POS_CE_ERR_DETL "$[4]"
-typedef unsigned char OCPPCallErrorCode;
 
 typedef struct
 {
@@ -113,6 +116,10 @@ typedef struct OCPP_S
 
 	char buffer[OCPP_BUF_LEN];
 	size_t buf_i;
+	bool got_msg;
+
+	char cmd_buf[OCPP_BUF_LEN];
+	bool proc_msg;
 } OCPP;
 
 #endif /* __OCPP_TYPES_H__ */

@@ -2,6 +2,8 @@
 #include "rapi_msg/get_energy_usage.h"
 
 #include "mjson.h"
+#include "serial.h"
+#include "time.h"
 
 void
 ocpp_start_transaction_req
@@ -22,7 +24,7 @@ ocpp_start_transaction_req
 	uint32_t wh = ws / 3600;
 
 	char time[25] = {0};
-	// get_rtc_time(rtc, time);
+	get_rtc_time(ocpp->rtc, time);
 
 	char payload[PAYLOAD_LEN];
 	mjson_snprintf
@@ -40,7 +42,7 @@ ocpp_start_transaction_req
 	);
 
 	ocpp->pres_msg.type = CALL;
-	ocpp->pres_msg.call.action = START_TRANSACTION;
+	ocpp->pres_msg.call.action = ACT_START_TRANSACTION;
 	strcpy(ocpp->pres_msg.call.payload, payload);
 }
 
@@ -50,7 +52,7 @@ ocpp_start_transaction_conf
 	OCPP *ocpp
 )
 {
-	if (!strcmp(ocpp->pres_msg.ID, ocpp->last_msg.ID))
+	if (strcmp(ocpp->pres_msg.ID, ocpp->last_msg.ID) != 0)
 		return;
 
 	ocpp->_wait_resp = false;
@@ -72,14 +74,14 @@ ocpp_start_transaction_conf
 	if (res_st < 1)
 		return;
 
-	if (strcmp("Accepted", status))
+	if (strcmp("Accepted", status) == 0)
 	{
 		ocpp->_transaction_id = (int)transaction_id;
-		// usart_ocpp_println_str("TRANSACTION CONFIRMED");
+		// uprintf(ocpp->uart, 1000, 64, "TRANSACTION CONFIRMED\n");
 	}
-	else if (strcmp("Rejected", status))
+	else if (strcmp("Rejected", status) == 0)
 	{
-		// usart_ocpp_println_str("TRANSACTION REJECTED");
+		// uprintf(ocpp->uart, 1000, 64, "TRANSACTION REJECTED\n");
 	}
 	else
 	{
