@@ -37,6 +37,8 @@ ocpp_init
 	ocpp->_transaction_id = 0;
 	ocpp->_id = 1;
 	ocpp->_wait_resp = false;
+	ocpp->_is_transaction = false;
+	ocpp->millis = HAL_GetTick();
 	ocpp->_booted = false;
 
 	ocpp->pres_msg.call.payload 			= (char *) malloc(sizeof(char)*PAYLOAD_LEN);
@@ -106,6 +108,16 @@ ocpp_update
 		// uprintf(rapi->uart, 10, 1024, "goT `%s`\r", ocpp->cmd_buf);
 		ocpp_handle_message(ocpp, rapi);
 		ocpp->proc_msg = true;
+	}
+
+	if (ocpp->_is_transaction)
+	{
+		if ((ocpp->millis + 5000) <= HAL_GetTick())
+		{
+			ocpp->millis = HAL_GetTick();
+			ocpp_meter_values_req(ocpp, rapi);
+			ocpp_send_req(ocpp, ACT_METER_VALUES);
+		}
 	}
 }
 

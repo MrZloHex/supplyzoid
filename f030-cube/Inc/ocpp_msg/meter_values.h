@@ -3,6 +3,14 @@
 
 #include "OCPP.h"
 
+typedef enum OCPPMeterValuesValue_E
+{
+	Voltage,
+	Current,
+	Power,
+	PowerConsumption
+} OCPPMeterValuesValue;
+
 void
 ocpp_meter_values_req
 (

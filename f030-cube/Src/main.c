@@ -72,6 +72,8 @@ HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart)
   // OCPP
   if (huart->Instance == ocpp.uart->Instance)
   {
+    // TODO length of buffer
+    // TOOD make timeout on hardware timer
     if (ocpp.buffer[ocpp.buf_i] == '\n')
     {
       ocpp.buffer[ocpp.buf_i] = 0;
@@ -136,7 +138,7 @@ int main(void)
   MX_USART2_UART_Init();
   /* USER CODE BEGIN 2 */
 
-  uprintf(&huart2, 100, 10, "hello\r");
+  // uprintf(&huart2, 100, 10, "hello\r");
   // uprintf(&huart1, 100, 100, "[2,\"1\",\"BootNotification\",{\"chargePointVendor\":\"EV Solutions\",\"chargePointModel\":\"PROTOTYPE\"}]\n");
   uprintf(&huart1, 100, 10, "hello\n");
 

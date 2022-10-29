@@ -54,6 +54,8 @@ ocpp_remote_stop_transaction_req
 	if (!resp)
 		return;
 
+	ocpp->_is_transaction = false;
+
 	ocpp_stop_transaction_req(ocpp, rapi);
 	ocpp_send_req(ocpp, ACT_STOP_TRANSACTION);
 }

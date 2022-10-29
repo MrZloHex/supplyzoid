@@ -12,8 +12,10 @@
 #ifndef __OCPP_H__
 #define __OCPP_H__
 
-#define VENDOR "EV Solutions"
-#define MODEL  "PROTOTYPE"
+// #define VENDOR "EV Solutions"
+#define VENDOR "Mother"
+// #define MODEL  "PROTOTYPE"
+#define MODEL  "Fucker"
 
 #include "string.h"
 

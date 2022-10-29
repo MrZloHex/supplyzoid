@@ -54,6 +54,7 @@ ocpp_remote_start_transaction_req
 	if (!resp)
 		return;
 
+	ocpp->_is_transaction = true;
 
 	ocpp_start_transaction_req(ocpp, rapi, id_tag);
 	ocpp_send_req(ocpp, ACT_START_TRANSACTION);

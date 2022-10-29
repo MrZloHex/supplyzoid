@@ -21,11 +21,25 @@ char *ChargePointErrorCode[] = {
 	"WeakSignal"
 };
 
+char *ChargePointStatus[] = {
+	"Available",
+	"Preparing",
+	"Charging",
+	"SuspendedEVSE",
+	"SuspendedEV",
+	"Finishing",
+	"Reserved",
+	"Unavailable",
+	"Faulted"
+};
+
 void
 ocpp_status_notification_req
 (
     OCPP *ocpp,
-    RAPI *rapi
+    RAPI *rapi,
+	OCPPChargePointStatus status,
+	OCPPChargePointErrorCode error
 )
 {
 	char payload[PAYLOAD_LEN];
@@ -36,9 +50,9 @@ ocpp_status_notification_req
 		"connectorId",
 		1,
 		"errorCode",
-		ChargePointErrorCode[NO_ERROR],
-		"status"
-		// evse_get_state(evse)
+		ChargePointErrorCode[error],
+		"status",
+		ChargePointStatus[status]
 	);
 
 	ocpp->pres_msg.type = CALL;

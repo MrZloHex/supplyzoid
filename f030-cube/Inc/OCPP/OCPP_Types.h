@@ -106,6 +106,8 @@ typedef struct OCPP_S
 	uint32_t _transaction_id;
 	uint32_t _id;
 	bool _wait_resp;
+	bool _is_transaction;
+	uint32_t millis;
 	bool _booted;
 
 	OCPPMessage pres_msg;

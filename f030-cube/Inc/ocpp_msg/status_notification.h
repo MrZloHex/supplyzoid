@@ -11,7 +11,9 @@ void
 ocpp_status_notification_req
 (
     OCPP *ocpp,
-    RAPI *rapi
+    RAPI *rapi,
+    OCPPChargePointStatus state,
+	OCPPChargePointErrorCode error
 );
 
 void

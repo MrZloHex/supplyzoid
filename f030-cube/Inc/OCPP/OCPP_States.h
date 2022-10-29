@@ -30,6 +30,38 @@ typedef enum OCPPCallErrorCode_E
     GENERIC_ERROR                  = 10U,
 } OCPPCallErrorCode;
 
+typedef enum OCPPChargePointStatus_E
+{
+    Available       = 0U,
+    Preparing       = 1U,
+    Charging        = 2U,
+    SuspendedEVSE   = 3U,
+    SuspendedEV     = 4U,
+    Finishing       = 5U,
+    Reserved        = 6U,
+    Unavailable     = 7U,
+    Faulted         = 8U,
+} OCPPChargePointStatus;
+
+typedef enum OCPPChargePointErrorCode_E
+{
+	NoError,
+	ConnectorLockFailure,
+	EVCommunicationError,
+	GroundFailure,
+	HighTemperature,
+	InternalError,
+	LocalListConflict,
+	OtherError,
+	OverCurrentFailure,
+	OverVoltage,
+	PowerMeterFailure,
+	PowerSwitchFailure,
+	ReaderFailure,
+	ResetFailure,
+	UnderVoltage,
+	WeakSignal
+} OCPPChargePointErrorCode;
 
 // REGISTRATION STATUS
 #define REG_ACCEPTED 1
