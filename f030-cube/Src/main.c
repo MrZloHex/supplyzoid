@@ -21,6 +21,7 @@
 #include "i2c.h"
 #include "iwdg.h"
 #include "rtc.h"
+#include "tim.h"
 #include "usart.h"
 #include "gpio.h"
 
@@ -72,8 +73,7 @@ HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart)
   // OCPP
   if (huart->Instance == ocpp.uart->Instance)
   {
-    // TODO length of buffer
-    // TOOD make timeout on hardware timer
+    __HAL_TIM_SET_COUNTER(&htim6, 0);
     if (ocpp.buffer[ocpp.buf_i] == '\n')
     {
       ocpp.buffer[ocpp.buf_i] = 0;
@@ -87,6 +87,7 @@ HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart)
   // RAPI
   else if (huart->Instance == rapi.uart->Instance)
   {
+    __HAL_TIM_SET_COUNTER(&htim14, 0);
     if (rapi.buffer[rapi.buf_i] == '\r')
     {
       rapi.buffer[rapi.buf_i] = 0;
@@ -98,6 +99,29 @@ HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart)
     }
   }
 
+}
+
+void
+HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
+{
+  if (htim->Instance == htim6.Instance)
+  {
+    if (ocpp.buf_i > 0)
+    {
+      __HAL_TIM_SET_COUNTER(htim, 0);
+      ocpp.buf_i = 0;
+	  	HAL_UART_Receive_IT(ocpp.uart, (uint8_t *)&ocpp.buffer[0], 1);
+    }
+  }
+  else if (htim->Instance == htim14.Instance)
+  {
+    if (rapi.buf_i > 0)
+    {
+      __HAL_TIM_SET_COUNTER(htim, 0);
+      rapi.buf_i = 0;
+		  HAL_UART_Receive_IT(rapi.uart, (uint8_t *)&rapi.buffer[0], 1);
+    }
+  }
 }
 
 
@@ -136,6 +160,8 @@ int main(void)
   MX_RTC_Init();
   MX_USART1_UART_Init();
   MX_USART2_UART_Init();
+  MX_TIM6_Init();
+  MX_TIM14_Init();
   /* USER CODE BEGIN 2 */
 
   // uprintf(&huart2, 100, 10, "hello\r");
@@ -159,8 +185,6 @@ int main(void)
 
     rapi_update(&rapi, &ocpp);
     ocpp_update(&ocpp, &rapi);
-
-
   }
   /* USER CODE END 3 */
 }

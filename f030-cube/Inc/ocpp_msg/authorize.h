@@ -4,9 +4,10 @@
 #include "OCPP.h"
 
 void
-ocpp_aithorize_req
+ocpp_authorize_req
 (
-	OCPP *ocpp
+	OCPP *ocpp,
+	OCPP_IdTag id_tag
 );
 
 void

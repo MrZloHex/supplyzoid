@@ -16,6 +16,7 @@
 #include "ocpp_msg/heartbeat.h"
 #include "ocpp_msg/data_transfer.h"
 #include "ocpp_msg/reset.h"
+#include "ocpp_msg/change_availability.h"
 
 
 void
@@ -97,12 +98,6 @@ ocpp_update
 		ocpp->proc_msg = false;
 	}
 
-	if (!ocpp->got_msg && HAL_UART_GetState(ocpp->uart) == HAL_UART_STATE_READY)
-	{
-		HAL_UART_Receive_IT(ocpp->uart, (uint8_t *)&ocpp->buffer[0], 1);
-		ocpp->buf_i = 0;
-	}
-
 	if (!ocpp->proc_msg)
 	{
 		// uprintf(rapi->uart, 10, 1024, "goT `%s`\r", ocpp->cmd_buf);
@@ -110,15 +105,22 @@ ocpp_update
 		ocpp->proc_msg = true;
 	}
 
-	if (ocpp->_is_transaction)
+	if (!ocpp->got_msg && HAL_UART_GetState(ocpp->uart) == HAL_UART_STATE_READY)
 	{
-		if ((ocpp->millis + 5000) <= HAL_GetTick())
-		{
-			ocpp->millis = HAL_GetTick();
-			ocpp_meter_values_req(ocpp, rapi);
-			ocpp_send_req(ocpp, ACT_METER_VALUES);
-		}
+		HAL_UART_Receive_IT(ocpp->uart, (uint8_t *)&ocpp->buffer[0], 1);
+		ocpp->buf_i = 0;
 	}
+
+
+	// if (ocpp->_is_transaction)
+	// {
+	// 	if ((ocpp->millis + 5000) <= HAL_GetTick())
+	// 	{
+	// 		ocpp->millis = HAL_GetTick();
+	// 		ocpp_meter_values_req(ocpp, rapi);
+	// 		ocpp_send_req(ocpp, ACT_METER_VALUES);
+	// 	}
+	// }
 }
 
 void
@@ -164,6 +166,8 @@ ocpp_handle_message
 				ocpp_remote_stop_transaction_req(ocpp, rapi);
 			else if (ocpp->last_msg.call.action == ACT_RESET)
 				ocpp_reset_req(ocpp, rapi);
+			else if (ocpp->last_msg.call.action == ACT_CHANGE_AVAILABILITY)
+				ocpp_change_availability_req(ocpp);
 			// else
 				// printf("NOT IMPLEMETED\n");
 		}
@@ -227,6 +231,8 @@ ocpp_send_req
 		strcpy(action_str, "DataTransfer");
 	else if (action == ACT_RESET)
 		strcpy(action_str, "Reset");
+	else if (action == ACT_AUTHORIZE)
+		strcpy(action_str, "Authorize");
 	else
 	{
 		// printf("NO SUCH REQUEST AVAILABLE\n");
@@ -252,8 +258,7 @@ ocpp_send_req
 	// SENDING
 
 	ocpp->_id++;
-	if (action != ACT_STATUS_NOTIFICATION)
-		ocpp->_wait_resp = true;
+	ocpp->_wait_resp = true;
 
 	ocpp_next(ocpp);
 }
@@ -345,6 +350,8 @@ ocpp_get_action(OCPP *ocpp)
 		ocpp->pres_msg.call.action = ACT_REMOTE_START_TRANSACTION;
 	else if (strcmp(buf, "RemoteStopTransaction") == 0)
 		ocpp->pres_msg.call.action = ACT_REMOTE_STOP_TRANSACTION;
+	else if (strcmp(buf, "ChangeAvailability") == 0)
+		ocpp->pres_msg.call.action = ACT_CHANGE_AVAILABILITY;
 	else if (strcmp(buf, "Reset") == 0)
 		ocpp->pres_msg.call.action = ACT_RESET;
 	else

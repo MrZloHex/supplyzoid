@@ -1,5 +1,6 @@
 #include "ocpp_msg/remote_start_transaction.h"
 #include "ocpp_msg/start_transaction.h"
+#include "ocpp_msg/authorize.h"
 
 #include "rapi_msg/get_state.h"
 #include "rapi_msg/set_auth_lock.h"
@@ -18,10 +19,14 @@ ocpp_remote_start_transaction_req
 	
 	size_t pay_len = strlen(ocpp->last_msg.call.payload);
 
-	char id_tag[21];
-	int res_id = mjson_get_string(ocpp->last_msg.call.payload, pay_len, P_ID_TAG, id_tag, 20);
+	OCPP_IdTag id_tag;
+	int res_id = mjson_get_string(ocpp->last_msg.call.payload, pay_len, P_ID_TAG, id_tag, OCPP_IdTag_Len-1);
 	if (res_id == -1)
 		return;
+
+	ocpp_authorize_req(ocpp, id_tag);
+	ocpp_send_req(ocpp, ACT_AUTHORIZE);
+	HAL_UART_Receive_IT(ocpp->uart, (uint8_t *)&ocpp->buffer[0], 1);
 
 	rapi_get_state_req(rapi);
 	rapi_send_req(rapi);

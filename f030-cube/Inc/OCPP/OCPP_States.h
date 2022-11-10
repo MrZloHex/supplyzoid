@@ -12,7 +12,9 @@ typedef enum OCPPCallAction_E
     ACT_METER_VALUES             = 7U,
     ACT_HEARTBEAT                = 8U,
     ACT_DATA_TRANSFER        	 = 9U,
-    ACT_RESET                    = 10U
+    ACT_RESET                    = 10U,
+    ACT_AUTHORIZE                = 11U,
+    ACT_CHANGE_AVAILABILITY      = 12U
 } OCPPCallAction;
 
 

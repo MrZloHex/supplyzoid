@@ -9,6 +9,9 @@
 
 #define OCPP_BUF_LEN 512
 
+#define OCPP_IdTag_Len 21
+typedef char OCPP_IdTag[OCPP_IdTag_Len];
+
 
 typedef enum OCPPResult_E
 {

@@ -10,7 +10,7 @@ ocpp_start_transaction_req
 (
 	OCPP *ocpp,
 	RAPI *rapi,
-	char id_tag[21]
+	OCPP_IdTag id_tag
 )
 {
 	rapi_get_energy_usage_req(rapi);
