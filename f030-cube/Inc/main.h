@@ -51,6 +51,7 @@ extern "C" {
 
 /* Exported functions prototypes ---------------------------------------------*/
 void Error_Handler(void);
+void Error_Handler_with_err(const char *err);
 
 /* USER CODE BEGIN EFP */
 
