@@ -44,12 +44,12 @@ HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart)
 			{
 				controller.ocpp.accumulative_buffer[controller.ocpp.acc_buf_index] = 0;
 				controller.ocpp.msg_received = true;
-				controller_set_task(&controller, TASK_TRANSFER_MSG_OCPP);
+				controller_set_simpletask(&controller, TASK_OCPP_TRANSFER_MSG);
 			}
 			else
 			{
 				// EMPTY MSG
-				controller_set_task(&controller, TASK_GET_MSG_OCPP);
+				controller_set_simpletask(&controller, TASK_OCPP_GET_MSG);
 			}
 		}
 		else
@@ -57,7 +57,7 @@ HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart)
 			if (controller.ocpp.acc_buf_index == OCPP_BUF_LEN -1)
 			{
 				// SET GLOBAL FAULT OF BUFFER OVERFLOW
-				controller_set_task(&controller, TASK_GET_MSG_OCPP);
+				controller_set_simpletask(&controller, TASK_OCPP_GET_MSG);
 			}
 			else
 			{
@@ -75,18 +75,18 @@ HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart)
 			{
 				controller.rapi.accumulative_buffer[controller.rapi.acc_buf_index] = 0;
 				controller.rapi.msg_received = true;
-				controller_set_task(&controller, TASK_TRANSFER_MSG_RAPI);
+				controller_set_simpletask(&controller, TASK_RAPI_TRANSFER_MSG);
 			}
 			else
 			{
-				controller_set_task(&controller, TASK_GET_MSG_RAPI);
+				controller_set_simpletask(&controller, TASK_RAPI_GET_MSG);
 			}
 		}
 		else
 		{
 			if (controller.rapi.acc_buf_index == RAPI_BUF_LEN -1)
 			{
-				controller_set_task(&controller, TASK_GET_MSG_RAPI);
+				controller_set_simpletask(&controller, TASK_RAPI_GET_MSG);
 			}
 			else
 			{

@@ -4,6 +4,8 @@
 #include "serial.h"
 #include "convert.h"
 
+#include "rapi_msg/boot_notification.h"
+
 void
 _controller_rapi_initialize
 (
@@ -62,7 +64,7 @@ _controller_rapi_transfer(Controller_RAPI *rapi)
 	return CTRL_PTCL_OK;
 }
 
-void
+Controller_Task
 _controller_rapi_process(Controller_RAPI *rapi)
 {
 #ifdef DEBUG
@@ -77,6 +79,8 @@ _controller_rapi_process(Controller_RAPI *rapi)
 		return;
 	}
 
+	Controller_Task task = { .type = NO_TASK };
+
 	char *cmd = rapi->tokens[0];
 	switch (*cmd)
 	{
@@ -84,7 +88,7 @@ _controller_rapi_process(Controller_RAPI *rapi)
 			switch (*(cmd+1))
 			{
 				case 'B':
-					// rapi_boot_notification_req(rapi, ocpp);
+					task = rapi_boot_notification_req(rapi);
 					break;
 				case 'T':
 					// rapi_evse_state_transition_req(rapi, ocpp);
@@ -102,6 +106,8 @@ _controller_rapi_process(Controller_RAPI *rapi)
 		default:
 			uprintf(rapi->uart, 100, 25,"ERROR: Unknown command\r");
 	}
+
+	return task;
 }
 
 

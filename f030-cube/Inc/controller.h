@@ -44,6 +44,9 @@ Controller_Queue_Result
 controller_get_task(Controller *controller, Controller_Task *task);
 
 Controller_Queue_Result
+controller_set_simpletask(Controller *controller, Controller_TaskType type);
+
+Controller_Queue_Result
 controller_set_task(Controller *controller, Controller_Task task);
 
 #endif /* __CONTROLLER_H__ */

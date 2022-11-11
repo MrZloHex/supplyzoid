@@ -41,7 +41,7 @@ _controller_queue_dequeue(Controller_Queue *queue, Controller_Task *task)
 
 	if (queue->size == 0)
 	{
-		*task = NO_TASK;
+		task->type = NO_TASK;
 		return CTRL_QUE_EMPTY;
 	}
 

@@ -3,6 +3,8 @@
 #include "string.h"
 #include "serial.h"
 
+#include "ocpp_msg/boot_notification.h"
+
 void
 _controller_ocpp_initialize
 (
@@ -70,4 +72,37 @@ _controller_ocpp_process(Controller_OCPP *ocpp)
 #endif
 
 	ocpp->msg_processed = true;
+}
+
+void
+_controller_ocpp_make_req(Controller_OCPP *ocpp, Task_OCPP_MakeReq req)
+{
+	switch (req.action)
+	{
+		case ACT_BOOT_NOTIFICATION:
+			ocpp_boot_notification_req(ocpp);
+			break;
+
+		case ACT_START_TRANSACTION:
+			break;
+
+		case ACT_STOP_TRANSACTION:
+			break;
+
+		case ACT_STATUS_NOTIFICATION:
+			break;
+
+		case ACT_METER_VALUES:
+			break;
+
+		case ACT_HEARTBEAT:
+			break;
+
+		case ACT_AUTHORIZE:
+			break;
+
+		default:
+			// EXIT WITH ERROR
+			return;
+	}
 }

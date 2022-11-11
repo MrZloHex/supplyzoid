@@ -10,6 +10,9 @@
 
 #define DEBUG
 
+#include "ocpp_types.h"
+#include "stdbool.h"
+
 typedef enum Controller_ResultType_E
 {
 	CTRL_OK                 = 0x0U,
@@ -72,15 +75,33 @@ typedef struct Controller_Result_S
 
 
 
-typedef enum Controller_Task_E
+typedef enum Controller_TaskType_E
 {
-	TASK_GET_MSG_RAPI			= 0x0U,
-	TASK_PROC_MSG_RAPI			= 0x1U,
-	TASK_TRANSFER_MSG_RAPI		= 0x2U,
-	TASK_GET_MSG_OCPP			= 0x3U,
-	TASK_PROC_MSG_OCPP			= 0x4U,
-	TASK_TRANSFER_MSG_OCPP		= 0x5U,
-	NO_TASK						= 0x6U
+	TASK_RAPI_GET_MSG			= 0x0U,
+	TASK_RAPI_PROC_MSG			= 0x1U,
+	TASK_RAPI_TRANSFER_MSG		= 0x2U,
+	TASK_OCPP_GET_MSG			= 0x3U,
+	TASK_OCPP_PROC_MSG			= 0x4U,
+	TASK_OCPP_TRANSFER_MSG		= 0x5U,
+	TASK_OCPP_MAKE_REQ			= 0x6U,
+	TASK_OCPP_SEND_REQ			= 0X7U,
+	NO_TASK						= 0x8U
+} Controller_TaskType;
+
+typedef struct Task_OCPP_MakeReq_S
+{
+	OCPP_CallAction action;
+} Task_OCPP_MakeReq;
+
+typedef union Task_Data_U
+{
+	Task_OCPP_MakeReq ocpp_make_req;
+} Task_Data;
+
+typedef struct Controller_Task_S
+{
+	Controller_TaskType type;
+	Task_Data 			data;
 } Controller_Task;
 
 #endif /* __CONTROLLER_TYPES_H__ */

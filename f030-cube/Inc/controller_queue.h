@@ -14,9 +14,9 @@
 typedef struct Controller_Queue_S
 {
 	Controller_Task *queue;
-	size_t 	 		    capacity;
-	size_t			    size;
-	ptrdiff_t			front, rear;
+	size_t			capacity;
+	size_t			size;
+	ptrdiff_t		front, rear;
 } Controller_Queue;
 
 Controller_Queue_Result

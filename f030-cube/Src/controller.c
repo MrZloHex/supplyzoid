@@ -18,12 +18,12 @@ controller_initialize
 		CONTROLLER_ERROR(CTRL_QUEUE_ERR, queue_err, res);
 	}
 
-	res = controller_set_task(controller, TASK_GET_MSG_OCPP);
+	res = controller_set_simpletask(controller, TASK_OCPP_GET_MSG);
 	if (res != CTRL_QUE_OK)
 	{
 		CONTROLLER_ERROR(CTRL_QUEUE_ERR, queue_err, res);
 	}
-	res = controller_set_task(controller, TASK_GET_MSG_RAPI);
+	res = controller_set_simpletask(controller, TASK_RAPI_GET_MSG);
 	if (res != CTRL_QUE_OK)
 	{
 		CONTROLLER_ERROR(CTRL_QUEUE_ERR, queue_err, res);
@@ -40,57 +40,62 @@ controller_initialize
 Controller_Result
 controller_update(Controller *controller)
 {
-	Controller_Task task = NO_TASK;
+	Controller_Task task = { .type = NO_TASK };
 	Controller_Queue_Result q_res = controller_get_task(controller, &task);
 	if (q_res != CTRL_QUE_OK) { CONTROLLER_ERROR(CTRL_QUEUE_ERR, queue_err, q_res); }
 	
 #ifdef DEBUG
-	if (task != NO_TASK)
+	if (task.type != NO_TASK)
 	{
-		uprintf(controller->ocpp.uart, 1000, 100, "TASK %u\n", task);
+		uprintf(controller->ocpp.uart, 1000, 100, "TASK %u\n", task.type);
 	}
 #endif
 
 	Controller_Protocol_Result res;
-	switch (task)
+	switch (task.type)
 	{
 		case NO_TASK:
 			break;
 
-		case TASK_GET_MSG_OCPP:
+		case TASK_OCPP_GET_MSG:
 			res = _controller_ocpp_start_recv(&(controller->ocpp));
 			if (res != CTRL_PTCL_OK) { CONTROLLER_OCPP_ERROR(res); }
 			break;
 
-		case TASK_TRANSFER_MSG_OCPP:
+		case TASK_OCPP_TRANSFER_MSG:
 			res = _controller_ocpp_transfer(&(controller->ocpp));
 			if (res != CTRL_PTCL_OK) { CONTROLLER_OCPP_ERROR(res); }
-			q_res = controller_set_task(controller, TASK_GET_MSG_OCPP);
+			q_res = controller_set_simpletask(controller, TASK_OCPP_GET_MSG);
 			if (q_res != CTRL_QUE_OK) { CONTROLLER_ERROR(CTRL_QUEUE_ERR, queue_err, q_res); }
-			q_res = controller_set_task(controller, TASK_PROC_MSG_OCPP);
+			q_res = controller_set_simpletask(controller, TASK_OCPP_PROC_MSG);
 			if (q_res != CTRL_QUE_OK) { CONTROLLER_ERROR(CTRL_QUEUE_ERR, queue_err, q_res); }
 			break;
 
-		case TASK_PROC_MSG_OCPP:
+		case TASK_OCPP_PROC_MSG:
 			_controller_ocpp_process(&(controller->ocpp));
 			break;
 
-		case TASK_GET_MSG_RAPI:
+		case TASK_OCPP_MAKE_REQ:
+			_controller_ocpp_make_req(&(controller->ocpp), task.data.ocpp_make_req);
+			break;
+
+		case TASK_RAPI_GET_MSG:
 			res = _controller_rapi_start_recv(&(controller->rapi));
 			if (res != CTRL_PTCL_OK) { CONTROLLER_RAPI_ERROR(res); }
 			break;
 
-		case TASK_TRANSFER_MSG_RAPI:
+		case TASK_RAPI_TRANSFER_MSG:
 			res = _controller_rapi_transfer(&(controller->rapi));
 			if (res != CTRL_PTCL_OK) { CONTROLLER_RAPI_ERROR(res); }
-			q_res = controller_set_task(controller, TASK_GET_MSG_RAPI);
+			q_res = controller_set_simpletask(controller, TASK_RAPI_GET_MSG);
 			if (q_res != CTRL_QUE_OK) { CONTROLLER_ERROR(CTRL_QUEUE_ERR, queue_err, q_res); }
-			q_res = controller_set_task(controller, TASK_PROC_MSG_RAPI);
+			q_res = controller_set_simpletask(controller, TASK_RAPI_PROC_MSG);
 			if (q_res != CTRL_QUE_OK) { CONTROLLER_ERROR(CTRL_QUEUE_ERR, queue_err, q_res); }
 			break;
 
-		case TASK_PROC_MSG_RAPI:
-			_controller_rapi_process(&(controller->rapi));
+		case TASK_RAPI_PROC_MSG:
+			q_res = controller_set_task(controller, _controller_rapi_process(&(controller->rapi)));
+			if (q_res != CTRL_QUE_OK) { CONTROLLER_ERROR(CTRL_QUEUE_ERR, queue_err, q_res); }
 			break;
 
 		
@@ -107,6 +112,13 @@ Controller_Queue_Result
 controller_get_task(Controller *controller, Controller_Task *task)
 {
 	return _controller_queue_dequeue(&(controller->queue), task);
+}
+
+Controller_Queue_Result
+controller_set_simpletask(Controller *controller, Controller_TaskType type)
+{
+	Controller_Task task = { .type = type };
+	return controller_set_task(controller, task);
 }
 
 Controller_Queue_Result
