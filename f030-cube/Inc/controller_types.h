@@ -8,6 +8,8 @@
 #ifndef __CONTROLLER_TYPES_H__
 #define __CONTROLLER_TYPES_H__
 
+#define DEBUG
+
 typedef enum Controller_ResultType_E
 {
 	CTRL_OK                 = 0x0U,

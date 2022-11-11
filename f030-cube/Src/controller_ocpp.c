@@ -65,6 +65,9 @@ _controller_ocpp_transfer(Controller_OCPP *ocpp)
 void
 _controller_ocpp_process(Controller_OCPP *ocpp)
 {
+#ifdef DEBUG
 	uprintf(ocpp->uart, 1000, 600, "GOT `%s`\n", ocpp->processive_buffer);
+#endif
+
 	ocpp->msg_processed = true;
 }

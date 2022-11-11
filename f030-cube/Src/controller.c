@@ -43,10 +43,13 @@ controller_update(Controller *controller)
 	Controller_Task task = NO_TASK;
 	Controller_Queue_Result q_res = controller_get_task(controller, &task);
 	if (q_res != CTRL_QUE_OK) { CONTROLLER_ERROR(CTRL_QUEUE_ERR, queue_err, q_res); }
+	
+#ifdef DEBUG
 	if (task != NO_TASK)
 	{
-		// uprintf(controller->ocpp.uart, 1000, 100, "TASK %u\n", task);
+		uprintf(controller->ocpp.uart, 1000, 100, "TASK %u\n", task);
 	}
+#endif
 
 	Controller_Protocol_Result res;
 	switch (task)
