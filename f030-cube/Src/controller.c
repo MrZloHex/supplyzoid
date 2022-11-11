@@ -43,6 +43,10 @@ controller_update(Controller *controller)
 	Controller_Task task = NO_TASK;
 	Controller_Queue_Result q_res = controller_get_task(controller, &task);
 	if (q_res != CTRL_QUE_OK) { CONTROLLER_ERROR(CTRL_QUEUE_ERR, queue_err, q_res); }
+	if (task != NO_TASK)
+	{
+		// uprintf(controller->ocpp.uart, 1000, 100, "TASK %u\n", task);
+	}
 
 	Controller_Protocol_Result res;
 	switch (task)
@@ -58,14 +62,14 @@ controller_update(Controller *controller)
 		case TASK_TRANSFER_MSG_OCPP:
 			res = _controller_ocpp_transfer(&(controller->ocpp));
 			if (res != CTRL_PTCL_OK) { CONTROLLER_OCPP_ERROR(res); }
+			q_res = controller_set_task(controller, TASK_GET_MSG_OCPP);
+			if (q_res != CTRL_QUE_OK) { CONTROLLER_ERROR(CTRL_QUEUE_ERR, queue_err, q_res); }
 			q_res = controller_set_task(controller, TASK_PROC_MSG_OCPP);
 			if (q_res != CTRL_QUE_OK) { CONTROLLER_ERROR(CTRL_QUEUE_ERR, queue_err, q_res); }
 			break;
 
 		case TASK_PROC_MSG_OCPP:
 			_controller_ocpp_process(&(controller->ocpp));
-			q_res = controller_set_task(controller, TASK_GET_MSG_OCPP);
-			if (q_res != CTRL_QUE_OK) { CONTROLLER_ERROR(CTRL_QUEUE_ERR, queue_err, q_res); }
 			break;
 
 		case TASK_GET_MSG_RAPI:
@@ -76,6 +80,8 @@ controller_update(Controller *controller)
 		case TASK_TRANSFER_MSG_RAPI:
 			res = _controller_rapi_transfer(&(controller->rapi));
 			if (res != CTRL_PTCL_OK) { CONTROLLER_RAPI_ERROR(res); }
+			q_res = controller_set_task(controller, TASK_GET_MSG_RAPI);
+			if (q_res != CTRL_QUE_OK) { CONTROLLER_ERROR(CTRL_QUEUE_ERR, queue_err, q_res); }
 			q_res = controller_set_task(controller, TASK_PROC_MSG_RAPI);
 			if (q_res != CTRL_QUE_OK) { CONTROLLER_ERROR(CTRL_QUEUE_ERR, queue_err, q_res); }
 			break;

@@ -22,10 +22,8 @@ typedef struct Controller_OCPP_S
 	RTC_HandleTypeDef *rtc;
 
 	char accumulative_buffer[OCPP_BUF_LEN];
-	size_t acc_buf_index;
-
 	char processive_buffer[OCPP_BUF_LEN];
-	size_t prc_buf_index;
+	size_t acc_buf_index;
 
 	bool msg_received;
 	bool msg_processed;

@@ -19,7 +19,6 @@ _controller_ocpp_initialize
 	memset(ocpp->accumulative_buffer, 0, OCPP_BUF_LEN);
 	memset(ocpp->processive_buffer,   0, OCPP_BUF_LEN);
 	ocpp->acc_buf_index = 0;
-	ocpp->prc_buf_index = 0;
 
 	ocpp->msg_received = false;
 	ocpp->msg_processed = true;

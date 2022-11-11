@@ -40,13 +40,29 @@ HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart)
 		__HAL_TIM_SET_COUNTER(controller.ocpp.tim, 0);
 		if (controller.ocpp.accumulative_buffer[controller.ocpp.acc_buf_index] == '\n')
 		{
-			controller.ocpp.accumulative_buffer[controller.ocpp.acc_buf_index] = 0;
-			controller.ocpp.msg_received = true;
-			controller_set_task(&controller, TASK_TRANSFER_MSG_OCPP);
+			if (controller.ocpp.acc_buf_index > 0)
+			{
+				controller.ocpp.accumulative_buffer[controller.ocpp.acc_buf_index] = 0;
+				controller.ocpp.msg_received = true;
+				controller_set_task(&controller, TASK_TRANSFER_MSG_OCPP);
+			}
+			else
+			{
+				// EMPTY MSG
+				controller_set_task(&controller, TASK_GET_MSG_OCPP);
+			}
 		}
 		else
 		{
-			HAL_UART_Receive_IT(controller.ocpp.uart, (uint8_t *)&controller.ocpp.accumulative_buffer[++controller.ocpp.acc_buf_index], 1);
+			if (controller.ocpp.acc_buf_index == OCPP_BUF_LEN -1)
+			{
+				// SET GLOBAL FAULT OF BUFFER OVERFLOW
+				controller_set_task(&controller, TASK_GET_MSG_OCPP);
+			}
+			else
+			{
+				HAL_UART_Receive_IT(controller.ocpp.uart, (uint8_t *)&controller.ocpp.accumulative_buffer[++controller.ocpp.acc_buf_index], 1);
+			}
 		}
 	}
 	// RAPI
@@ -55,13 +71,27 @@ HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart)
 		__HAL_TIM_SET_COUNTER(controller.rapi.tim, 0);
 		if (controller.rapi.accumulative_buffer[controller.rapi.acc_buf_index] == '\r')
 		{
-			controller.rapi.accumulative_buffer[controller.rapi.acc_buf_index] = 0;
-			controller.rapi.msg_received = true;
-			controller_set_task(&controller, TASK_TRANSFER_MSG_RAPI);
+			if (controller.rapi.acc_buf_index > 0)
+			{
+				controller.rapi.accumulative_buffer[controller.rapi.acc_buf_index] = 0;
+				controller.rapi.msg_received = true;
+				controller_set_task(&controller, TASK_TRANSFER_MSG_RAPI);
+			}
+			else
+			{
+				controller_set_task(&controller, TASK_GET_MSG_RAPI);
+			}
 		}
 		else
 		{
-			HAL_UART_Receive_IT(controller.rapi.uart, (uint8_t *)&controller.rapi.accumulative_buffer[++controller.rapi.acc_buf_index], 1);
+			if (controller.rapi.acc_buf_index == RAPI_BUF_LEN -1)
+			{
+				controller_set_task(&controller, TASK_GET_MSG_RAPI);
+			}
+			else
+			{
+				HAL_UART_Receive_IT(controller.rapi.uart, (uint8_t *)&controller.rapi.accumulative_buffer[++controller.rapi.acc_buf_index], 1);
+			}
 		}
 	}
 
@@ -110,8 +140,8 @@ int main(void)
 	MX_TIM14_Init();
 
 	uprintf(&huart2, 100, 10, "hello\r");
-	// uprintf(&huart1, 100, 100, "[2,\"1\",\"BootNotification\",{\"chargePointVendor\":\"EV Solutions\",\"chargePointModel\":\"PROTOTYPE\"}]\n");
 	uprintf(&huart1, 100, 10, "hello\n");
+	// uprintf(&huart1, 100, 100, "[2,\"1\",\"BootNotification\",{\"chargePointVendor\":\"EV Solutions\",\"chargePointModel\":\"PROTOTYPE\"}]\n");
 
 	Controller_Result res = controller_initialize
 							(
