@@ -27,6 +27,8 @@
 #define DSCR_LEN     255
 #define ERR_CODE_LEN 30
 
+#define MAX_EXPECTED_MSG 16
+
 
 typedef enum OCPP_MessageType_E
 {
@@ -69,6 +71,11 @@ typedef struct OCPP_Message_S
 	OCPP_MessageData	data;
 } OCPP_Message;
 
+typedef struct OCPP_Expected_Message_S
+{
+	
+} OCPP_Expected_Message;
+
 typedef struct Controller_OCPP_S
 {
 	UART_HandleTypeDef *uart;
@@ -84,6 +91,9 @@ typedef struct Controller_OCPP_S
 
 	OCPP_Message message;
 	size_t id_msg;
+
+	OCPP_Expected_Message ex_msg[MAX_EXPECTED_MSG];
+	size_t q_ex_msg;
 } Controller_OCPP;
 
 void
@@ -104,10 +114,10 @@ _controller_ocpp_transfer(Controller_OCPP *ocpp);
 void
 _controller_ocpp_process(Controller_OCPP *ocpp);
 
-Controller_Task
+Controller_TaskResult
 _controller_ocpp_make_req(Controller_OCPP *ocpp, Task_OCPP_MakeReq req);
 
-void
+Controller_Protocol_Result
 _controller_ocpp_send_req(Controller_OCPP *ocpp, Task_OCPP_SendReq req);
 
 

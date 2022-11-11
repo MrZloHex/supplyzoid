@@ -19,7 +19,8 @@ typedef enum Controller_ResultType_E
 	CTRL_ERR                = 0x1U,
 	CTRL_QUEUE_ERR			= 0x2U,
 	CTRL_OCPP_ERR 			= 0x3U,
-	CTRL_RAPI_ERR 			= 0x4U
+	CTRL_RAPI_ERR 			= 0x4U,
+	CTRL_TASK_ERR			= 0x5U
 } Controller_ResultType;
 
 typedef enum Controller_Queue_Result_E
@@ -41,13 +42,16 @@ typedef enum Controller_Protocol_Result_E
 	CTRL_PTCL_PRC_BUF_FULL	= 0x5U,
 	CTRL_PTCL_ACC_BUF_EMPT  = 0x6U,
 	CTRL_PTCL_PRC_BUF_EMPT  = 0x7U,
+	CTRL_PTCL_NON_VALID_MSG	= 0x8U,
+	CTRL_PTCL_UNKNOWN_MSG	= 0x9U,
+	CTRL_PTCL_NO_SUCH_MSG	= 0x10U
 } Controller_Protocol_Result;
 
 typedef union Controller_Errors_U
 {
-	Controller_Queue_Result queue_err;
-	Controller_Protocol_Result ocpp_err;
-	Controller_Protocol_Result rapi_err;
+	Controller_Queue_Result		queue_err;
+	Controller_Protocol_Result	ocpp_err;
+	Controller_Protocol_Result	rapi_err;
 } Controller_Errors;
 
 typedef struct Controller_Result_S
@@ -55,23 +59,6 @@ typedef struct Controller_Result_S
 	Controller_ResultType	type;
 	Controller_Errors 		errors;
 } Controller_Result;
-
-#define CONTROLLER_OKAY												Controller_Result __res =						\
-																	{												\
-																		.type = CTRL_OK								\
-																	};												\
-																	return __res;
-
-#define CONTROLLER_ERROR(__err_type__, __err_field__, __error__) 	Controller_Result __res = 						\
-																	{												\
-																		.type = __err_type__,						\
-																		.errors = { .__err_field__ = __error__ }	\
-																	};												\
-																	return __res;
-
-
-#define CONTROLLER_OCPP_ERROR(__error__)	CONTROLLER_ERROR(CTRL_OCPP_ERR, ocpp_err, __error__)
-#define CONTROLLER_RAPI_ERROR(__error__)	CONTROLLER_ERROR(CTRL_RAPI_ERR, rapi_err, __error__)
 
 
 
@@ -109,5 +96,47 @@ typedef struct Controller_Task_S
 	Controller_TaskType type;
 	Task_Data 			data;
 } Controller_Task;
+
+typedef struct Controller_TaskResult_S
+{
+	Controller_ResultType	type;
+	Controller_Errors 		errors;
+	Controller_Task 		task;
+} Controller_TaskResult;
+
+
+
+#define CONTROLLER_OKAY													Controller_Result __res =						\
+																		{												\
+																			.type = CTRL_OK								\
+																		};												\
+																		return __res;
+
+#define CONTROLLER_ERROR(__err_type__, __err_field__, __error__) 		Controller_Result __res = 						\
+																		{												\
+																			.type = __err_type__,						\
+																			.errors = { .__err_field__ = __error__ }	\
+																		};												\
+																		return __res;
+
+
+#define CONTROLLER_OCPP_ERROR(__error__)								CONTROLLER_ERROR(CTRL_OCPP_ERR, ocpp_err, __error__)
+#define CONTROLLER_RAPI_ERROR(__error__)								CONTROLLER_ERROR(CTRL_RAPI_ERR, rapi_err, __error__)
+
+#define CONTROLLER_TASK_RESULT(__task__) 								Controller_TaskResult __res =					\
+																		{												\
+																			.type = CTRL_OK, .task = __task__			\
+																		};												\
+																		return __res;
+
+#define CONTROLLER_TASK_ERROR(__err_type__, __err_field__, __error__)	Controller_TaskResult __res =					\
+																		{												\
+																			.type = __err_type__,						\
+																			.errors = { .__err_field__ = __error__ }	\
+																		};												\
+																		return __res;
+
+#define CONTROLLER_TASK_OCPP_ERROR(__error__)							CONTROLLER_TASK_ERROR(CTRL_OCPP_ERR, ocpp_err, __error__)
+#define CONTROLLER_TASK_RAPI_ERROR(__error__)							CONTROLLER_TASK_ERROR(CTRL_RAPI_ERR, rapi_err, __error__)
 
 #endif /* __CONTROLLER_TYPES_H__ */

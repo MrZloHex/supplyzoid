@@ -52,6 +52,7 @@ controller_update(Controller *controller)
 #endif
 
 	Controller_Protocol_Result res;
+	Controller_TaskResult t_res;
 	switch (task.type)
 	{
 		case NO_TASK:
@@ -76,7 +77,9 @@ controller_update(Controller *controller)
 			break;
 
 		case TASK_OCPP_MAKE_REQ:
-			q_res = controller_set_task(controller, _controller_ocpp_make_req(&(controller->ocpp), task.data.ocpp_make_req));
+			t_res = _controller_ocpp_make_req(&(controller->ocpp), task.data.ocpp_make_req);
+			if (t_res.type != CTRL_OK) { CONTROLLER_RAPI_ERROR(t_res.errors.rapi_err) }
+			q_res = controller_set_task(controller, t_res.task);
 			if (q_res != CTRL_QUE_OK) { CONTROLLER_ERROR(CTRL_QUEUE_ERR, queue_err, q_res); }
 			break;
 
@@ -99,7 +102,9 @@ controller_update(Controller *controller)
 			break;
 
 		case TASK_RAPI_PROC_MSG:
-			q_res = controller_set_task(controller, _controller_rapi_process(&(controller->rapi)));
+			t_res = _controller_rapi_process(&(controller->rapi));
+			if (t_res.type != CTRL_OK) { CONTROLLER_RAPI_ERROR(t_res.errors.rapi_err) }
+			q_res = controller_set_task(controller, t_res.task);
 			if (q_res != CTRL_QUE_OK) { CONTROLLER_ERROR(CTRL_QUEUE_ERR, queue_err, q_res); }
 			break;
 

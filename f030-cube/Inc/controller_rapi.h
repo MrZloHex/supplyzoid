@@ -50,7 +50,7 @@ _controller_rapi_start_recv(Controller_RAPI *rapi);
 Controller_Protocol_Result
 _controller_rapi_transfer(Controller_RAPI *rapi);
 
-Controller_Task
+Controller_TaskResult
 _controller_rapi_process(Controller_RAPI *rapi);
 
 bool

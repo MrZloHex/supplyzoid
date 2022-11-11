@@ -94,7 +94,7 @@ _controller_ocpp_process(Controller_OCPP *ocpp)
 	ocpp->msg_processed = true;
 }
 
-Controller_Task
+Controller_TaskResult
 _controller_ocpp_make_req(Controller_OCPP *ocpp, Task_OCPP_MakeReq req)
 {
 	switch (req.action)
@@ -121,22 +121,20 @@ _controller_ocpp_make_req(Controller_OCPP *ocpp, Task_OCPP_MakeReq req)
 		case ACT_AUTHORIZE:
 			break;
 
-		default:
-			// EXIT WITH ERROR
-			return;
+		default:;
+			CONTROLLER_TASK_OCPP_ERROR(CTRL_PTCL_NO_SUCH_MSG);
 	}
 
 	Controller_Task task = { .type = TASK_OCPP_SEND_REQ, .data.ocpp_send_req.action = req.action };
-	return task;
+	CONTROLLER_TASK_RESULT(task);
 }
 
-void
+Controller_Protocol_Result
 _controller_ocpp_send_req(Controller_OCPP *ocpp, Task_OCPP_SendReq req)
 {
 	if (req.action > ACT_AUTHORIZE)
 	{
-		// EXIT WITH ERROR THAT NO SUCH CHAR POINT REQ
-		return;
+		return CTRL_PTCL_NO_SUCH_MSG;
 	}
 
 	char action_str[ACTION_LEN];
@@ -156,9 +154,9 @@ _controller_ocpp_send_req(Controller_OCPP *ocpp, Task_OCPP_SendReq req)
 		ocpp->message.data.call.payload
 	);
 
-	// SENDING
-	uprintf(ocpp->uart, 1000, OCPP_BUF_LEN, "%s\n", request);
-	// SENDING
+	USART_Result res = uprintf(ocpp->uart, 1000, OCPP_BUF_LEN+1, "%s\n", request);
+
+	return (Controller_Protocol_Result)res;
 }
 
 void

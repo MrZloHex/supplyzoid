@@ -64,7 +64,7 @@ _controller_rapi_transfer(Controller_RAPI *rapi)
 	return CTRL_PTCL_OK;
 }
 
-Controller_Task
+Controller_TaskResult
 _controller_rapi_process(Controller_RAPI *rapi)
 {
 #ifdef DEBUG
@@ -76,8 +76,7 @@ _controller_rapi_process(Controller_RAPI *rapi)
 
 	if (!_rapi_msg_validator(rapi))
 	{
-		// MAKE EXIT WITH ERROR
-		return task;
+		CONTROLLER_TASK_RAPI_ERROR(CTRL_PTCL_NON_VALID_MSG);
 	}
 
 
@@ -96,18 +95,18 @@ _controller_rapi_process(Controller_RAPI *rapi)
 				case 'N':
 					// rapi_ext_button_req(rapi);
 					break;
-				default:
-					uprintf(rapi->uart, 100, 25,"ERROR: Unknown command\r");
+				default:;
+					CONTROLLER_TASK_RAPI_ERROR(CTRL_PTCL_UNKNOWN_MSG);
 			}
 			break;
 		case 'O':
 		case 'N':
 			break;
-		default:
-			uprintf(rapi->uart, 100, 25,"ERROR: Unknown command\r");
+		default:;
+			CONTROLLER_TASK_RAPI_ERROR(CTRL_PTCL_UNKNOWN_MSG);
 	}
 
-	return task;
+	CONTROLLER_TASK_RESULT(task);
 }
 
 
