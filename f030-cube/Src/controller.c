@@ -90,6 +90,7 @@ controller_update(Controller *controller)
 			break;
 
 		case TASK_PROC_MSG_RAPI:
+			_controller_rapi_process(&(controller->rapi));
 			break;
 
 		
