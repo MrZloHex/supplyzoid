@@ -76,7 +76,12 @@ controller_update(Controller *controller)
 			break;
 
 		case TASK_OCPP_MAKE_REQ:
-			_controller_ocpp_make_req(&(controller->ocpp), task.data.ocpp_make_req);
+			q_res = controller_set_task(controller, _controller_ocpp_make_req(&(controller->ocpp), task.data.ocpp_make_req));
+			if (q_res != CTRL_QUE_OK) { CONTROLLER_ERROR(CTRL_QUEUE_ERR, queue_err, q_res); }
+			break;
+
+		case TASK_OCPP_SEND_REQ:
+			_controller_ocpp_send_req(&(controller->ocpp), task.data.ocpp_send_req);
 			break;
 
 		case TASK_RAPI_GET_MSG:

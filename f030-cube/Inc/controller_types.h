@@ -93,9 +93,15 @@ typedef struct Task_OCPP_MakeReq_S
 	OCPP_CallAction action;
 } Task_OCPP_MakeReq;
 
+typedef struct Task_OCPP_SendReq_S
+{
+	OCPP_CallAction action;
+} Task_OCPP_SendReq;
+
 typedef union Task_Data_U
 {
 	Task_OCPP_MakeReq ocpp_make_req;
+	Task_OCPP_SendReq ocpp_send_req;
 } Task_Data;
 
 typedef struct Controller_Task_S

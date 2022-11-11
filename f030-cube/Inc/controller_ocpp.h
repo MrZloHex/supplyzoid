@@ -83,6 +83,7 @@ typedef struct Controller_OCPP_S
 	bool msg_processed;
 
 	OCPP_Message message;
+	size_t id_msg;
 } Controller_OCPP;
 
 void
@@ -103,7 +104,14 @@ _controller_ocpp_transfer(Controller_OCPP *ocpp);
 void
 _controller_ocpp_process(Controller_OCPP *ocpp);
 
-void
+Controller_Task
 _controller_ocpp_make_req(Controller_OCPP *ocpp, Task_OCPP_MakeReq req);
+
+void
+_controller_ocpp_send_req(Controller_OCPP *ocpp, Task_OCPP_SendReq req);
+
+
+void
+_ocpp_set_id_msg(Controller_OCPP *ocpp);
 
 #endif /* __CONTROLLER_OCPP_H__ */

@@ -8,7 +8,7 @@ rapi_boot_notification_req(Controller_RAPI *rapi)
 {
 	uprintf(rapi->uart, 1000, 100, "BOOT NOTIFICAZTION\r");
 	// handle BOOT TROUBLES
-	Controller_Task task = { .type = TASK_OCPP_MAKE_REQ, .data.ocpp_make_req = ACT_BOOT_NOTIFICATION };
+	Controller_Task task = { .type = TASK_OCPP_MAKE_REQ, .data = { .ocpp_make_req = { ACT_BOOT_NOTIFICATION }}};
 	return task;
 }
 

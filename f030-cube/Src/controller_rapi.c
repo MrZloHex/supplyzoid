@@ -72,14 +72,14 @@ _controller_rapi_process(Controller_RAPI *rapi)
 #endif
 	
 	rapi->msg_processed = true;
+	Controller_Task task = { .type = NO_TASK };
 
 	if (!_rapi_msg_validator(rapi))
 	{
 		// MAKE EXIT WITH ERROR
-		return;
+		return task;
 	}
 
-	Controller_Task task = { .type = NO_TASK };
 
 	char *cmd = rapi->tokens[0];
 	switch (*cmd)
