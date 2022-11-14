@@ -84,7 +84,7 @@ _controller_ocpp_transfer(Controller_OCPP *ocpp)
 	return CTRL_PTCL_OK;
 }
 
-void
+Controller_TaskResult
 _controller_ocpp_process(Controller_OCPP *ocpp)
 {
 #ifdef DEBUG
@@ -92,6 +92,11 @@ _controller_ocpp_process(Controller_OCPP *ocpp)
 #endif
 
 	ocpp->msg_processed = true;
+	Controller_Task task = { .type = NO_TASK };
+
+	_ocpp_parce_msg(ocpp);
+
+	CONTROLLER_TASK_RESULT(task);
 }
 
 Controller_TaskResult
@@ -156,7 +161,137 @@ _controller_ocpp_send_req(Controller_OCPP *ocpp, Task_OCPP_SendReq req)
 
 	USART_Result res = uprintf(ocpp->uart, 1000, OCPP_BUF_LEN+1, "%s\n", request);
 
+	_ocpp_add_expected_msg(ocpp, req.action);
+
 	return (Controller_Protocol_Result)res;
+}
+
+
+
+bool
+_ocpp_parce_msg(Controller_OCPP *ocpp)
+{
+	if (!_ocpp_determine_message_type(ocpp))	{ return false; }
+	if (!_ocpp_get_message_id(ocpp))			{ return false; }
+
+	if (ocpp->message.type == CALL)
+	{
+		if (!_ocpp_get_action(ocpp))			{ return false; }
+		// if (!_ocpp_get_payload(ocpp, CALL))		{ return false; }
+	}
+	else if (ocpp->message.type == CALLRESULT)
+	{
+	// 	if (ocpp_get_payload(ocpp, CALLRESULT) == RES_ERROR) { return RES_ERROR; }
+	// 	// printf("NEW CALL RESULT REQ:\n");
+	// 	// printf("\tID: `%ld`\n", ocpp->pres_msg.ID);
+	// 	// printf("\tPAYLOAD: `%s`\n", ocpp->pres_msg.call_result.payload);
+	// }
+	// else if (ocpp->message.type == CALLERROR)
+	// {
+	// 	if (ocpp_get_call_error_code(ocpp) == RES_ERROR) { return RES_ERROR; }
+	// 	if (ocpp_get_call_error_descr(ocpp) == RES_ERROR) {return RES_ERROR; }
+		// if (ocpp_get_payload(ocpp, CALLERROR) == RES_ERROR) { return RES_ERROR; }
+		// printf("NEW CALL ERROR REQ:\n");
+		// printf("\tID: `%ld`\n", ocpp->pres_msg.ID);
+		// printf("\tERROR CODE: `%d`\n", ocpp->pres_msg.call_error.error_code);
+		// printf("\tERROR DESCRIPTION: `%s`\n", ocpp->pres_msg.call_error.error_dscr);
+		// printf("\tERROR DETAILS: `%s`\n", ocpp->pres_msg.call_error.error_details);
+	}
+
+	return true;
+}
+
+bool
+_ocpp_determine_message_type(Controller_OCPP *ocpp)
+{
+	double type = 0;
+	int res = mjson_get_number(ocpp->processive_buffer, strlen(ocpp->processive_buffer), POS_MSG_TYPE, &type);
+	if (res == 0 || !IS_MSG_TYPE((uint32_t)type))
+		return false;
+
+	ocpp->message.type = (OCPP_MessageType)type;
+	// uprintf(ocpp->uart, 1000, 10, "type: %u\n", (OCPPMessageType)type);
+	return true;
+}
+
+bool
+_ocpp_get_message_id(Controller_OCPP *ocpp)
+{
+	char buf[ID_LEN] = {0};
+	int res = mjson_get_string(ocpp->processive_buffer, strlen(ocpp->processive_buffer), POS_MSG_ID, buf, ID_LEN);
+	if (res <= 0)
+		return false;
+
+	strcpy(ocpp->message.id, buf);
+	// uprintf(ocpp->uart, 1000, 20+ID_LEN, "id: %s\n", buf);
+	return true;
+}
+
+bool
+_ocpp_get_action(Controller_OCPP *ocpp)
+{
+	char buf[ACTION_LEN];
+	int res = mjson_get_string(ocpp->processive_buffer, strlen(ocpp->processive_buffer), POS_CL_ACT, buf, ACTION_LEN);
+	if (res <= 0)
+		return false;
+	
+	if (strcmp(buf, "RemoteStartTransaction") == 0)
+		ocpp->message.data.call.action = ACT_REMOTE_START_TRANSACTION;
+	else if (strcmp(buf, "RemoteStopTransaction") == 0)
+		ocpp->message.data.call.action = ACT_REMOTE_STOP_TRANSACTION;
+	else if (strcmp(buf, "ChangeAvailability") == 0)
+		ocpp->message.data.call.action = ACT_CHANGE_AVAILABILITY;
+	else if (strcmp(buf, "Reset") == 0)
+		ocpp->message.data.call.action = ACT_RESET;
+	else
+		return false;
+	
+
+	return true;
+}
+
+bool
+ocpp_get_payload(Controller_OCPP *ocpp, OCPP_MessageType type)
+{
+	char path[5] = {0};
+	if (type == CALL)
+		strcpy(path, POS_CL_PAYLOAD);
+	else if (type == CALLRESULT)
+		strcpy(path, POS_CR_PAYLOAD);
+	else if (type == CALLERROR)
+		strcpy(path, POS_CE_ERR_DETL);
+	else
+		return false;
+
+
+	const char *p;
+    int n;
+	if (mjson_find(ocpp->processive_buffer, strlen(ocpp->processive_buffer), path, &p, &n) != MJSON_TOK_OBJECT)
+		return false;
+
+	if (type == CALL)
+		strncpy(ocpp->message.data.call.payload, p, n);
+	else if (type == CALLRESULT)
+		strncpy(ocpp->message.data.call_result.payload, p, n);
+	else if (type == CALLERROR)
+		strncpy(ocpp->message.data.call_error.error_details, p, n);
+
+	return true;
+}
+
+void
+_ocpp_add_expected_msg(Controller_OCPP *ocpp, OCPP_CallAction action)
+{
+	if (ocpp->q_ex_msg == MAX_EXPECTED_MSG)
+	{
+		// exit with error code!
+		return;
+	}
+
+	OCPP_Expected_Message ex_msg = { .call_action = action }; 
+	strcpy(ex_msg.id, ocpp->message.id);
+
+	ocpp->expected_msgs[ocpp->q_ex_msg++] = ex_msg;
 }
 
 void

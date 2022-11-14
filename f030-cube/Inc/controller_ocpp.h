@@ -13,10 +13,10 @@
 #include "usart.h"
 #include "stdbool.h"
 
-// #define VENDOR "EV Solutions"
-#define VENDOR "Mother"
-// #define MODEL  "PROTOTYPE"
-#define MODEL  "Fucker"
+#define VENDOR "EV Solutions"
+// #define VENDOR "Mother"
+#define MODEL  "PROTOTYPE"
+// #define MODEL  "Fucker"
 
 
 #define OCPP_BUF_LEN 512
@@ -29,6 +29,16 @@
 
 #define MAX_EXPECTED_MSG 16
 
+#define POS_MSG_TYPE	"$[0]"
+#define POS_MSG_ID		"$[1]"
+#define POS_CL_ACT    	"$[2]"
+#define POS_CL_PAYLOAD	"$[3]"
+#define POS_CR_PAYLOAD	"$[2]"
+#define POS_CE_ERR_CODE	"$[2]"
+#define POS_CE_ERR_DSCR	"$[3]"
+#define POS_CE_ERR_DETL	"$[4]"
+
+#define IS_MSG_TYPE(type) (type == CALL || type == CALLRESULT || type == CALLERROR)
 
 typedef enum OCPP_MessageType_E
 {
@@ -73,7 +83,8 @@ typedef struct OCPP_Message_S
 
 typedef struct OCPP_Expected_Message_S
 {
-	
+	OCPP_MessageID id;
+	OCPP_CallAction call_action;
 } OCPP_Expected_Message;
 
 typedef struct Controller_OCPP_S
@@ -92,7 +103,7 @@ typedef struct Controller_OCPP_S
 	OCPP_Message message;
 	size_t id_msg;
 
-	OCPP_Expected_Message ex_msg[MAX_EXPECTED_MSG];
+	OCPP_Expected_Message expected_msgs[MAX_EXPECTED_MSG];
 	size_t q_ex_msg;
 } Controller_OCPP;
 
@@ -111,7 +122,7 @@ _controller_ocpp_start_recv(Controller_OCPP *ocpp);
 Controller_Protocol_Result
 _controller_ocpp_transfer(Controller_OCPP *ocpp);
 
-void
+Controller_TaskResult
 _controller_ocpp_process(Controller_OCPP *ocpp);
 
 Controller_TaskResult
@@ -120,6 +131,21 @@ _controller_ocpp_make_req(Controller_OCPP *ocpp, Task_OCPP_MakeReq req);
 Controller_Protocol_Result
 _controller_ocpp_send_req(Controller_OCPP *ocpp, Task_OCPP_SendReq req);
 
+
+bool
+_ocpp_parce_msg(Controller_OCPP *ocpp);
+
+bool
+_ocpp_determine_message_type(Controller_OCPP *ocpp);
+
+bool
+_ocpp_get_message_id(Controller_OCPP *ocpp);
+
+bool
+_ocpp_get_action(Controller_OCPP *ocpp);
+
+void
+_ocpp_add_expected_msg(Controller_OCPP *ocpp, OCPP_CallAction action);
 
 void
 _ocpp_set_id_msg(Controller_OCPP *ocpp);
