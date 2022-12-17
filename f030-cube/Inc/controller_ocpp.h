@@ -119,21 +119,18 @@ _controller_ocpp_initialize
 Controller_Protocol_Result
 _controller_ocpp_transfer(Controller_OCPP *ocpp);
 
-void
-_controller_ocpp_process_income(Controller_OCPP *ocpp);
+Controller_Protocol_Result
+_controller_ocpp_process_income
+(
+	Controller_OCPP *ocpp,
+	Controller_TaskWrap *wrap
+);
 
-// Controller_Protocol_Result
-// _controller_ocpp_start_recv(Controller_OCPP *ocpp);
+Controller_Protocol_Result
+_controller_ocpp_make_req(Controller_OCPP *ocpp, OCPP_CallAction req);
 
-
-// Controller_TaskResult
-// _controller_ocpp_process(Controller_OCPP *ocpp);
-
-// Controller_TaskResult
-// _controller_ocpp_make_req(Controller_OCPP *ocpp, Task_OCPP_MakeReq req);
-
-// Controller_Protocol_Result
-// _controller_ocpp_send_req(Controller_OCPP *ocpp, Task_OCPP_SendReq req);
+Controller_Protocol_Result
+_controller_ocpp_send_req(Controller_OCPP *ocpp, OCPP_CallAction req);
 
 
 bool

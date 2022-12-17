@@ -4,7 +4,7 @@
 #include "serial.h"
 #include "convert.h"
 
-#include "rapi_msg/boot_notification.h"
+#include "task_sequences/boot_sequence/bs_task_1.h"
 
 void
 _controller_rapi_initialize
@@ -46,81 +46,57 @@ _controller_rapi_transfer(Controller_RAPI *rapi)
 	return CTRL_PTCL_OK;
 }
 
-void
-_controller_rapi_process_income(Controller_RAPI *rapi)
+Controller_Protocol_Result
+_controller_rapi_process_income
+(
+	Controller_RAPI *rapi,
+	Controller_TaskWrap *wrap
+)
 {
-	uprintf(rapi->uart, 1000, 100, "GOT MSG: `%s`\r", rapi->processive_buffer);
-	// if (_rapi_msg_validator(rapi))
-	{
-
-	}
+#ifdef DEBUG
+	uprintf(rapi->uart, 1000, 100, "GOT `%s`\r", rapi->processive_buffer);
+#endif
 	rapi->msg_processed = true;
+
+	if (!_rapi_msg_validator(rapi))
+	{
+		return CTRL_PTCL_NON_VALID_MSG;
+	}
+
+	if (wrap == NULL)
+	{
+		return CTRL_PTCL_NULL_PTR;
+	}
+
+	char *cmd = rapi->tokens[0];
+	switch (*cmd)
+	{
+		case 'A':
+			switch (*(cmd+1))
+			{
+				case 'B':
+					BS_TASK_WRAP(wrap);
+					// task = rapi_boot_notification_req(rapi);
+					break;
+				case 'T':
+					// rapi_evse_state_transition_req(rapi, ocpp);
+					break;
+				case 'N':
+					// rapi_ext_button_req(rapi);
+					break;
+				default:;
+					return CTRL_PTCL_UNKNOWN_MSG;
+			}
+			break;
+		case 'O':
+		case 'N':
+			break;
+		default:;
+			return CTRL_PTCL_UNKNOWN_MSG;
+	}
+
+	return CTRL_PTCL_OK;
 }
-
-// Controller_Protocol_Result
-// _controller_rapi_start_recv(Controller_RAPI *rapi)
-// {
-// 	if (rapi->msg_received)
-// 	{
-// 		return CTRL_PTCL_ACC_BUF_FULL;
-// 	}
-
-// 	rapi->acc_buf_index = 0;
-// 	HAL_StatusTypeDef res = HAL_UART_Receive_IT
-// 							(
-// 								rapi->uart,
-// 								(uint8_t *)&rapi->accumulative_buffer[0],
-// 								1
-// 							);
-
-// 	return (Controller_Protocol_Result)res;
-// }
-
-
-// Controller_TaskResult
-// _controller_rapi_process(Controller_RAPI *rapi)
-// {
-// #ifdef DEBUG
-// 	uprintf(rapi->uart, 1000, 600, "GOT `%s`\r", rapi->processive_buffer);
-// #endif
-	
-// 	rapi->msg_processed = true;
-// 	Controller_Task task = { .type = NO_TASK };
-
-// 	if (!_rapi_msg_validator(rapi))
-// 	{
-// 		CONTROLLER_TASK_RAPI_ERROR(CTRL_PTCL_NON_VALID_MSG);
-// 	}
-
-
-// 	char *cmd = rapi->tokens[0];
-// 	switch (*cmd)
-// 	{
-// 		case 'A':
-// 			switch (*(cmd+1))
-// 			{
-// 				case 'B':
-// 					task = rapi_boot_notification_req(rapi);
-// 					break;
-// 				case 'T':
-// 					// rapi_evse_state_transition_req(rapi, ocpp);
-// 					break;
-// 				case 'N':
-// 					// rapi_ext_button_req(rapi);
-// 					break;
-// 				default:;
-// 					CONTROLLER_TASK_RAPI_ERROR(CTRL_PTCL_UNKNOWN_MSG);
-// 			}
-// 			break;
-// 		case 'O':
-// 		case 'N':
-// 			break;
-// 		default:;
-// 			CONTROLLER_TASK_RAPI_ERROR(CTRL_PTCL_UNKNOWN_MSG);
-// 	}
-
-// 	CONTROLLER_TASK_RESULT(task);
-// }
 
 
 

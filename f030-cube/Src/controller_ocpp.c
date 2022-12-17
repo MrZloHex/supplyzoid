@@ -66,118 +66,88 @@ _controller_ocpp_transfer(Controller_OCPP *ocpp)
 	return CTRL_PTCL_OK;
 }
 
-void
-_controller_ocpp_process_income(Controller_OCPP *ocpp)
+Controller_Protocol_Result
+_controller_ocpp_process_income
+(
+	Controller_OCPP *ocpp,
+	Controller_TaskWrap *wrap
+)
 {
-	uprintf(ocpp->uart, 1000, 100, "GOT MSG: `%s`\n", ocpp->processive_buffer);
-	// if (_ocpp_parse_msg(ocpp))
-	{
+#ifdef DEBUG
+	uprintf(ocpp->uart, 1000, 600, "GOT `%s`\n", ocpp->processive_buffer);
+#endif
 
-	}
 	ocpp->msg_processed = true;
+
+	if (!_ocpp_parse_msg(ocpp))
+	{
+		return CTRL_PTCL_NON_VALID_MSG;
+	}
+	
+	return CTRL_PTCL_OK;
 }
 
-// Controller_Protocol_Result
-// _controller_ocpp_start_recv(Controller_OCPP *ocpp)
-// {
-// 	if (ocpp->msg_received)
-// 	{
-// 		return CTRL_PTCL_ACC_BUF_FULL;
-// 	}
+Controller_Protocol_Result
+_controller_ocpp_make_req(Controller_OCPP *ocpp, OCPP_CallAction req)
+{
+	switch (req)
+	{
+		case ACT_BOOT_NOTIFICATION:
+			ocpp_boot_notification_req(ocpp);
+			break;
 
-// 	ocpp->acc_buf_index = 0;
-// 	HAL_StatusTypeDef res = HAL_UART_Receive_IT
-// 							(
-// 								ocpp->uart,
-// 								(uint8_t *)&ocpp->accumulative_buffer[0],
-// 								1
-// 							);
+		case ACT_START_TRANSACTION:
+			break;
 
-// 	return (Controller_Protocol_Result)res;
-// }
+		case ACT_STOP_TRANSACTION:
+			break;
 
+		case ACT_STATUS_NOTIFICATION:
+			break;
 
-// Controller_TaskResult
-// _controller_ocpp_process(Controller_OCPP *ocpp)
-// {
-// #ifdef DEBUG
-// 	uprintf(ocpp->uart, 1000, 600, "GOT `%s`\n", ocpp->processive_buffer);
-// #endif
+		case ACT_METER_VALUES:
+			break;
 
-// 	ocpp->msg_processed = true;
-// 	Controller_Task task = { .type = NO_TASK };
+		case ACT_HEARTBEAT:
+			break;
 
-// 	_ocpp_parce_msg(ocpp);
+		case ACT_AUTHORIZE:
+			break;
 
-// 	CONTROLLER_TASK_RESULT(task);
-// }
+		default:;
+			return CTRL_PTCL_NO_SUCH_MSG;
+	}
+}
 
-// Controller_TaskResult
-// _controller_ocpp_make_req(Controller_OCPP *ocpp, Task_OCPP_MakeReq req)
-// {
-// 	switch (req.action)
-// 	{
-// 		case ACT_BOOT_NOTIFICATION:
-// 			ocpp_boot_notification_req(ocpp);
-// 			break;
+Controller_Protocol_Result
+_controller_ocpp_send_req(Controller_OCPP *ocpp, OCPP_CallAction req)
+{
+	if (req > ACT_AUTHORIZE)
+	{
+		return CTRL_PTCL_NO_SUCH_MSG;
+	}
 
-// 		case ACT_START_TRANSACTION:
-// 			break;
+	char action_str[ACTION_LEN];
+	strcpy(action_str, k_ACTIONS_STRINGS[req]);
 
-// 		case ACT_STOP_TRANSACTION:
-// 			break;
+	_ocpp_set_id_msg(ocpp);
 
-// 		case ACT_STATUS_NOTIFICATION:
-// 			break;
+	char request[OCPP_BUF_LEN];
 
-// 		case ACT_METER_VALUES:
-// 			break;
+	mjson_snprintf
+	(
+		request, OCPP_BUF_LEN,
+		"[%u,%Q,%Q,%s]",
+		CALL,
+		ocpp->message.id,
+		action_str,
+		ocpp->message.data.call.payload
+	);
 
-// 		case ACT_HEARTBEAT:
-// 			break;
+	USART_Result res = uprintf(ocpp->uart, 1000, OCPP_BUF_LEN+1, "%s\n", request);
 
-// 		case ACT_AUTHORIZE:
-// 			break;
-
-// 		default:;
-// 			CONTROLLER_TASK_OCPP_ERROR(CTRL_PTCL_NO_SUCH_MSG);
-// 	}
-
-// 	Controller_Task task = { .type = TASK_OCPP_SEND_REQ, .data.ocpp_send_req.action = req.action };
-// 	CONTROLLER_TASK_RESULT(task);
-// }
-
-// Controller_Protocol_Result
-// _controller_ocpp_send_req(Controller_OCPP *ocpp, Task_OCPP_SendReq req)
-// {
-// 	if (req.action > ACT_AUTHORIZE)
-// 	{
-// 		return CTRL_PTCL_NO_SUCH_MSG;
-// 	}
-
-// 	char action_str[ACTION_LEN];
-// 	strcpy(action_str, k_ACTIONS_STRINGS[req.action]);
-
-// 	_ocpp_set_id_msg(ocpp);
-
-// 	char request[OCPP_BUF_LEN];
-
-// 	mjson_snprintf
-// 	(
-// 		request, OCPP_BUF_LEN,
-// 		"[%u,%Q,%Q,%s]",
-// 		CALL,
-// 		ocpp->message.id,
-// 		action_str,
-// 		ocpp->message.data.call.payload
-// 	);
-
-// 	USART_Result res = uprintf(ocpp->uart, 1000, OCPP_BUF_LEN+1, "%s\n", request);
-
-// 	_ocpp_add_expected_msg(ocpp, req.action);
-
-// 	return (Controller_Protocol_Result)res;
-// }
+	return (Controller_Protocol_Result)res;
+}
 
 
 

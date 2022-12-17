@@ -20,18 +20,6 @@ controller_initialize
 		CONTROLLER_ERROR(CTRL_TSET_ERR, tset_err, res);
 	}
 
-	Controller_TaskWrap wrap =
-	{
-		.type = WRAP_IN_PROGRESS,
-        .task = 
-        {
-        	.type = TASK_PROCESS,
-        	.func = rss_task_1
-        }
-
-	};
-	_controller_taskset_push(&(controller->task_set), wrap);
-
 	_controller_ocpp_initialize(&(controller->ocpp), ocpp_uart, ocpp_tim, rtc);
 	_controller_rapi_initialize(&(controller->rapi), rapi_uart, rapi_tim);
 	CONTROLLER_OKAY;
@@ -40,13 +28,25 @@ controller_initialize
 Controller_Result
 controller_update(Controller *controller)
 {
+	Controller_TaskSet_Result tres;
+	Controller_TaskWrap wrap;
+
 	// UPDATE MESSAGES ON OCPP UART
 	if (controller->ocpp.msg_received)
 	{
 		if (_controller_ocpp_transfer(&(controller->ocpp)) == CTRL_PTCL_OK)
 		{
 			HAL_UART_Receive_IT(controller->ocpp.uart, (uint8_t *)&(controller->ocpp.accumulative_buffer[0]), 1);
-			_controller_ocpp_process_income(&(controller->ocpp));
+			Controller_Protocol_Result res = _controller_ocpp_process_income(&(controller->ocpp), &wrap);
+			if (res != CTRL_PTCL_OK)
+			{
+				CONTROLLER_OCPP_ERROR(res);
+			}
+			tres = _controller_taskset_push(&(controller->task_set), wrap);
+			if (tres != CTRL_SET_OK)
+			{
+				CONTROLLER_ERROR(CTRL_TSET_ERR, tset_err, tres);
+			}
 		}
 	}
 
@@ -56,7 +56,16 @@ controller_update(Controller *controller)
 		if (_controller_rapi_transfer(&(controller->rapi)) == CTRL_PTCL_OK)
 		{
 			HAL_UART_Receive_IT(controller->rapi.uart, (uint8_t *)&(controller->rapi.accumulative_buffer[0]), 1);
-			_controller_rapi_process_income(&(controller->rapi));
+			Controller_Protocol_Result res = _controller_rapi_process_income(&(controller->rapi), &wrap);
+			if (res != CTRL_PTCL_OK)
+			{
+				CONTROLLER_OCPP_ERROR(res);
+			}
+			tres = _controller_taskset_push(&(controller->task_set), wrap);
+			if (tres != CTRL_SET_OK)
+			{
+				CONTROLLER_ERROR(CTRL_TSET_ERR, tset_err, tres);
+			}
 		}
 	}
 
@@ -66,7 +75,7 @@ controller_update(Controller *controller)
 		CONTROLLER_OKAY;
 	}
 
-	Controller_TaskSet_Result tres = _controller_taskset_iterate(&(controller->task_set));
+	tres = _controller_taskset_iterate(&(controller->task_set));
 	if (tres != CTRL_SET_OK)
 	{
 		CONTROLLER_ERROR(CTRL_TSET_ERR, tset_err, tres);

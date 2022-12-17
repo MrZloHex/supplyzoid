@@ -47,8 +47,12 @@ _controller_rapi_initialize
 Controller_Protocol_Result
 _controller_rapi_transfer(Controller_RAPI *rapi);
 
-void
-_controller_rapi_process_income(Controller_RAPI *rapi);
+Controller_Protocol_Result
+_controller_rapi_process_income
+(
+	Controller_RAPI *rapi,
+	Controller_TaskWrap *wrap
+);
 
 // Controller_Protocol_Result
 // _controller_rapi_start_recv(Controller_RAPI *rapi);
