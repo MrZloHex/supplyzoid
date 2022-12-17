@@ -46,14 +46,35 @@ _controller_ocpp_initialize
 	ocpp->id_msg = 1;
 }
 
+Controller_Protocol_Result
+_controller_ocpp_transfer(Controller_OCPP *ocpp)
+{
+	if (!ocpp->msg_received)
+	{
+		return CTRL_PTCL_ACC_BUF_EMPT;
+	}
+	if (!ocpp->msg_processed)
+	{
+		return CTRL_PTCL_PRC_BUF_FULL;
+	}
+
+	strcpy(ocpp->processive_buffer, ocpp->accumulative_buffer);
+	ocpp->acc_buf_index = 0;
+	ocpp->msg_received = false;
+	ocpp->msg_processed = false;
+
+	return CTRL_PTCL_OK;
+}
+
 void
 _controller_ocpp_process_income(Controller_OCPP *ocpp)
 {
-
-	if (_ocpp_parse_msg(ocpp))
+	uprintf(ocpp->uart, 1000, 100, "GOT MSG: `%s`\n", ocpp->processive_buffer);
+	// if (_ocpp_parse_msg(ocpp))
 	{
 
 	}
+	ocpp->msg_processed = true;
 }
 
 // Controller_Protocol_Result
@@ -75,24 +96,6 @@ _controller_ocpp_process_income(Controller_OCPP *ocpp)
 // 	return (Controller_Protocol_Result)res;
 // }
 
-// Controller_Protocol_Result
-// _controller_ocpp_transfer(Controller_OCPP *ocpp)
-// {
-// 	if (!ocpp->msg_received)
-// 	{
-// 		return CTRL_PTCL_ACC_BUF_EMPT;
-// 	}
-// 	if (!ocpp->msg_processed)
-// 	{
-// 		return CTRL_PTCL_PRC_BUF_FULL;
-// 	}
-
-// 	strcpy(ocpp->processive_buffer, ocpp->accumulative_buffer);
-// 	ocpp->msg_received = false;
-// 	ocpp->msg_processed = false;
-
-// 	return CTRL_PTCL_OK;
-// }
 
 // Controller_TaskResult
 // _controller_ocpp_process(Controller_OCPP *ocpp)

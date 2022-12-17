@@ -23,7 +23,7 @@
 #include "usart.h"
 #include "gpio.h"
 
-
+#include "string.h"
 #include "controller.h"
 #include "serial.h"
 

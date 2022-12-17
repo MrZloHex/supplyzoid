@@ -116,14 +116,15 @@ _controller_ocpp_initialize
 	RTC_HandleTypeDef *rtc
 );
 
+Controller_Protocol_Result
+_controller_ocpp_transfer(Controller_OCPP *ocpp);
+
 void
 _controller_ocpp_process_income(Controller_OCPP *ocpp);
 
 // Controller_Protocol_Result
 // _controller_ocpp_start_recv(Controller_OCPP *ocpp);
 
-// Controller_Protocol_Result
-// _controller_ocpp_transfer(Controller_OCPP *ocpp);
 
 // Controller_TaskResult
 // _controller_ocpp_process(Controller_OCPP *ocpp);

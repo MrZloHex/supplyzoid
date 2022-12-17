@@ -28,8 +28,27 @@ controller_initialize
 Controller_Result
 controller_update(Controller *controller)
 {
-	// _controller_ocpp_process_income(&(controller->ocpp));
-	// _controller_rapi_process_income(&(controller->rapi));
+	// UPDATE MESSAGES ON OCPP UART
+	if (controller->ocpp.msg_received)
+	{
+		if (_controller_ocpp_transfer(&(controller->ocpp)) == CTRL_PTCL_OK)
+		{
+			HAL_UART_Receive_IT(controller->ocpp.uart, (uint8_t *)&(controller->ocpp.accumulative_buffer[0]), 1);
+			_controller_ocpp_process_income(&(controller->ocpp));
+		}
+	}
+
+	// UPDATE MESSAGES ON RAPI UART
+	if (controller->rapi.msg_received)
+	{
+		if (_controller_rapi_transfer(&(controller->rapi)) == CTRL_PTCL_OK)
+		{
+			HAL_UART_Receive_IT(controller->rapi.uart, (uint8_t *)&(controller->rapi.accumulative_buffer[0]), 1);
+			_controller_rapi_process_income(&(controller->rapi));
+		}
+	}
+
+	// IF THERE ARE NO FACES (TASKS SORRY) - RETURN
 	if (controller->task_set.size == 0)
 	{
 		CONTROLLER_OKAY;
@@ -68,6 +87,7 @@ controller_update(Controller *controller)
 			CONTROLLER_ERROR(CTRL_TSET_ERR, tset_err, CTRL_SET_NULLPTR);
 		}
 
+		// EXECUTE TASK AND SET NEXT TASK
 		Task_Result task_res = task_wrap.task.func(controller);
 		if (task_res.type == TRES_NEXT)
 		{
@@ -84,6 +104,7 @@ controller_update(Controller *controller)
 
 	_controller_taskset_esc_iter(&(controller->task_set));
 
+	// CHECK FOR FINISHED TASKS AND DELETE THEM
 	tres = _controller_taskset_pop(&(controller->task_set));
 	if (tres != CTRL_SET_OK)
 	{

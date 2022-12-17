@@ -26,14 +26,35 @@ _controller_rapi_initialize
 	rapi->msg_processed = true;
 }
 
+Controller_Protocol_Result
+_controller_rapi_transfer(Controller_RAPI *rapi)
+{
+	if (!rapi->msg_received)
+	{
+		return CTRL_PTCL_ACC_BUF_EMPT;
+	}
+	if (!rapi->msg_processed)
+	{
+		return CTRL_PTCL_PRC_BUF_FULL;
+	}
+
+	strcpy(rapi->processive_buffer, rapi->accumulative_buffer);
+	rapi->acc_buf_index = 0;
+	rapi->msg_received = false;
+	rapi->msg_processed = false;
+
+	return CTRL_PTCL_OK;
+}
+
 void
 _controller_rapi_process_income(Controller_RAPI *rapi)
 {
-	if (_rapi_msg_validator(rapi))
+	uprintf(rapi->uart, 1000, 100, "GOT MSG: `%s`\r", rapi->processive_buffer);
+	// if (_rapi_msg_validator(rapi))
 	{
 
 	}
-
+	rapi->msg_processed = true;
 }
 
 // Controller_Protocol_Result
@@ -55,24 +76,6 @@ _controller_rapi_process_income(Controller_RAPI *rapi)
 // 	return (Controller_Protocol_Result)res;
 // }
 
-// Controller_Protocol_Result
-// _controller_rapi_transfer(Controller_RAPI *rapi)
-// {
-// 	if (!rapi->msg_received)
-// 	{
-// 		return CTRL_PTCL_ACC_BUF_EMPT;
-// 	}
-// 	if (!rapi->msg_processed)
-// 	{
-// 		return CTRL_PTCL_PRC_BUF_FULL;
-// 	}
-
-// 	strcpy(rapi->processive_buffer, rapi->accumulative_buffer);
-// 	rapi->msg_received = false;
-// 	rapi->msg_processed = false;
-
-// 	return CTRL_PTCL_OK;
-// }
 
 // Controller_TaskResult
 // _controller_rapi_process(Controller_RAPI *rapi)
