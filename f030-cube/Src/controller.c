@@ -1,7 +1,7 @@
 #include "controller.h"
 #include "serial.h"
 
-#include "task_sequences/boot_sequence/bs_task_1.h"
+#include "task_sequences/remote_start_sequence/rss_task_1.h"
 
 Controller_Result
 controller_initialize
@@ -19,6 +19,18 @@ controller_initialize
 	{
 		CONTROLLER_ERROR(CTRL_TSET_ERR, tset_err, res);
 	}
+
+	Controller_TaskWrap wrap =
+	{
+		.type = WRAP_IN_PROGRESS,
+        .task = 
+        {
+        	.type = TASK_PROCESS,
+        	.func = rss_task_1
+        }
+
+	};
+	_controller_taskset_push(&(controller->task_set), wrap);
 
 	_controller_ocpp_initialize(&(controller->ocpp), ocpp_uart, ocpp_tim, rtc);
 	_controller_rapi_initialize(&(controller->rapi), rapi_uart, rapi_tim);
