@@ -44,14 +44,17 @@ _controller_rapi_initialize
 	TIM_HandleTypeDef *tim
 );
 
-Controller_Protocol_Result
-_controller_rapi_start_recv(Controller_RAPI *rapi);
+void
+_controller_rapi_process_income(Controller_RAPI *rapi);
 
-Controller_Protocol_Result
-_controller_rapi_transfer(Controller_RAPI *rapi);
+// Controller_Protocol_Result
+// _controller_rapi_start_recv(Controller_RAPI *rapi);
 
-Controller_TaskResult
-_controller_rapi_process(Controller_RAPI *rapi);
+// Controller_Protocol_Result
+// _controller_rapi_transfer(Controller_RAPI *rapi);
+
+// Controller_TaskResult
+// _controller_rapi_process(Controller_RAPI *rapi);
 
 bool
 _rapi_msg_validator(Controller_RAPI *rapi);

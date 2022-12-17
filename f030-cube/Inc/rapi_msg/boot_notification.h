@@ -1,10 +1,10 @@
 #ifndef RAPI_BOOT_NOTIFICATION_H_
 #define RAPI_BOOT_NOTIFICATION_H_
 
-#include "controller_rapi.h"
+#include "controller.h"
 
-Controller_Task
-rapi_boot_notification_req(Controller_RAPI *rapi);
+Task_Result
+rapi_boot_notification_req(Controller *ctrl);
 
 void
 rapi_boot_notification_resp(Controller_RAPI *rapi);

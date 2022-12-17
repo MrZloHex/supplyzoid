@@ -116,24 +116,27 @@ _controller_ocpp_initialize
 	RTC_HandleTypeDef *rtc
 );
 
-Controller_Protocol_Result
-_controller_ocpp_start_recv(Controller_OCPP *ocpp);
+void
+_controller_ocpp_process_income(Controller_OCPP *ocpp);
 
-Controller_Protocol_Result
-_controller_ocpp_transfer(Controller_OCPP *ocpp);
+// Controller_Protocol_Result
+// _controller_ocpp_start_recv(Controller_OCPP *ocpp);
 
-Controller_TaskResult
-_controller_ocpp_process(Controller_OCPP *ocpp);
+// Controller_Protocol_Result
+// _controller_ocpp_transfer(Controller_OCPP *ocpp);
 
-Controller_TaskResult
-_controller_ocpp_make_req(Controller_OCPP *ocpp, Task_OCPP_MakeReq req);
+// Controller_TaskResult
+// _controller_ocpp_process(Controller_OCPP *ocpp);
 
-Controller_Protocol_Result
-_controller_ocpp_send_req(Controller_OCPP *ocpp, Task_OCPP_SendReq req);
+// Controller_TaskResult
+// _controller_ocpp_make_req(Controller_OCPP *ocpp, Task_OCPP_MakeReq req);
+
+// Controller_Protocol_Result
+// _controller_ocpp_send_req(Controller_OCPP *ocpp, Task_OCPP_SendReq req);
 
 
 bool
-_ocpp_parce_msg(Controller_OCPP *ocpp);
+_ocpp_parse_msg(Controller_OCPP *ocpp);
 
 bool
 _ocpp_determine_message_type(Controller_OCPP *ocpp);
@@ -144,8 +147,14 @@ _ocpp_get_message_id(Controller_OCPP *ocpp);
 bool
 _ocpp_get_action(Controller_OCPP *ocpp);
 
-void
-_ocpp_add_expected_msg(Controller_OCPP *ocpp, OCPP_CallAction action);
+bool
+_ocpp_get_payload(Controller_OCPP *ocpp, OCPP_MessageType type);
+
+bool
+_ocpp_get_call_error_code(Controller_OCPP *ocpp);
+
+bool
+_ocpp_get_call_error_descr(Controller_OCPP *ocpp);
 
 void
 _ocpp_set_id_msg(Controller_OCPP *ocpp);

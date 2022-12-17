@@ -46,130 +46,140 @@ _controller_ocpp_initialize
 	ocpp->id_msg = 1;
 }
 
-Controller_Protocol_Result
-_controller_ocpp_start_recv(Controller_OCPP *ocpp)
+void
+_controller_ocpp_process_income(Controller_OCPP *ocpp)
 {
-	if (ocpp->msg_received)
+
+	if (_ocpp_parse_msg(ocpp))
 	{
-		return CTRL_PTCL_ACC_BUF_FULL;
+
 	}
-
-	ocpp->acc_buf_index = 0;
-	HAL_StatusTypeDef res = HAL_UART_Receive_IT
-							(
-								ocpp->uart,
-								(uint8_t *)&ocpp->accumulative_buffer[0],
-								1
-							);
-
-	return (Controller_Protocol_Result)res;
 }
 
-Controller_Protocol_Result
-_controller_ocpp_transfer(Controller_OCPP *ocpp)
-{
-	if (!ocpp->msg_received)
-	{
-		return CTRL_PTCL_ACC_BUF_EMPT;
-	}
-	if (!ocpp->msg_processed)
-	{
-		return CTRL_PTCL_PRC_BUF_FULL;
-	}
+// Controller_Protocol_Result
+// _controller_ocpp_start_recv(Controller_OCPP *ocpp)
+// {
+// 	if (ocpp->msg_received)
+// 	{
+// 		return CTRL_PTCL_ACC_BUF_FULL;
+// 	}
 
-	strcpy(ocpp->processive_buffer, ocpp->accumulative_buffer);
-	ocpp->msg_received = false;
-	ocpp->msg_processed = false;
+// 	ocpp->acc_buf_index = 0;
+// 	HAL_StatusTypeDef res = HAL_UART_Receive_IT
+// 							(
+// 								ocpp->uart,
+// 								(uint8_t *)&ocpp->accumulative_buffer[0],
+// 								1
+// 							);
 
-	return CTRL_PTCL_OK;
-}
+// 	return (Controller_Protocol_Result)res;
+// }
 
-Controller_TaskResult
-_controller_ocpp_process(Controller_OCPP *ocpp)
-{
-#ifdef DEBUG
-	uprintf(ocpp->uart, 1000, 600, "GOT `%s`\n", ocpp->processive_buffer);
-#endif
+// Controller_Protocol_Result
+// _controller_ocpp_transfer(Controller_OCPP *ocpp)
+// {
+// 	if (!ocpp->msg_received)
+// 	{
+// 		return CTRL_PTCL_ACC_BUF_EMPT;
+// 	}
+// 	if (!ocpp->msg_processed)
+// 	{
+// 		return CTRL_PTCL_PRC_BUF_FULL;
+// 	}
 
-	ocpp->msg_processed = true;
-	Controller_Task task = { .type = NO_TASK };
+// 	strcpy(ocpp->processive_buffer, ocpp->accumulative_buffer);
+// 	ocpp->msg_received = false;
+// 	ocpp->msg_processed = false;
 
-	_ocpp_parce_msg(ocpp);
+// 	return CTRL_PTCL_OK;
+// }
 
-	CONTROLLER_TASK_RESULT(task);
-}
+// Controller_TaskResult
+// _controller_ocpp_process(Controller_OCPP *ocpp)
+// {
+// #ifdef DEBUG
+// 	uprintf(ocpp->uart, 1000, 600, "GOT `%s`\n", ocpp->processive_buffer);
+// #endif
 
-Controller_TaskResult
-_controller_ocpp_make_req(Controller_OCPP *ocpp, Task_OCPP_MakeReq req)
-{
-	switch (req.action)
-	{
-		case ACT_BOOT_NOTIFICATION:
-			ocpp_boot_notification_req(ocpp);
-			break;
+// 	ocpp->msg_processed = true;
+// 	Controller_Task task = { .type = NO_TASK };
 
-		case ACT_START_TRANSACTION:
-			break;
+// 	_ocpp_parce_msg(ocpp);
 
-		case ACT_STOP_TRANSACTION:
-			break;
+// 	CONTROLLER_TASK_RESULT(task);
+// }
 
-		case ACT_STATUS_NOTIFICATION:
-			break;
+// Controller_TaskResult
+// _controller_ocpp_make_req(Controller_OCPP *ocpp, Task_OCPP_MakeReq req)
+// {
+// 	switch (req.action)
+// 	{
+// 		case ACT_BOOT_NOTIFICATION:
+// 			ocpp_boot_notification_req(ocpp);
+// 			break;
 
-		case ACT_METER_VALUES:
-			break;
+// 		case ACT_START_TRANSACTION:
+// 			break;
 
-		case ACT_HEARTBEAT:
-			break;
+// 		case ACT_STOP_TRANSACTION:
+// 			break;
 
-		case ACT_AUTHORIZE:
-			break;
+// 		case ACT_STATUS_NOTIFICATION:
+// 			break;
 
-		default:;
-			CONTROLLER_TASK_OCPP_ERROR(CTRL_PTCL_NO_SUCH_MSG);
-	}
+// 		case ACT_METER_VALUES:
+// 			break;
 
-	Controller_Task task = { .type = TASK_OCPP_SEND_REQ, .data.ocpp_send_req.action = req.action };
-	CONTROLLER_TASK_RESULT(task);
-}
+// 		case ACT_HEARTBEAT:
+// 			break;
 
-Controller_Protocol_Result
-_controller_ocpp_send_req(Controller_OCPP *ocpp, Task_OCPP_SendReq req)
-{
-	if (req.action > ACT_AUTHORIZE)
-	{
-		return CTRL_PTCL_NO_SUCH_MSG;
-	}
+// 		case ACT_AUTHORIZE:
+// 			break;
 
-	char action_str[ACTION_LEN];
-	strcpy(action_str, k_ACTIONS_STRINGS[req.action]);
+// 		default:;
+// 			CONTROLLER_TASK_OCPP_ERROR(CTRL_PTCL_NO_SUCH_MSG);
+// 	}
 
-	_ocpp_set_id_msg(ocpp);
+// 	Controller_Task task = { .type = TASK_OCPP_SEND_REQ, .data.ocpp_send_req.action = req.action };
+// 	CONTROLLER_TASK_RESULT(task);
+// }
 
-	char request[OCPP_BUF_LEN];
+// Controller_Protocol_Result
+// _controller_ocpp_send_req(Controller_OCPP *ocpp, Task_OCPP_SendReq req)
+// {
+// 	if (req.action > ACT_AUTHORIZE)
+// 	{
+// 		return CTRL_PTCL_NO_SUCH_MSG;
+// 	}
 
-	mjson_snprintf
-	(
-		request, OCPP_BUF_LEN,
-		"[%u,%Q,%Q,%s]",
-		CALL,
-		ocpp->message.id,
-		action_str,
-		ocpp->message.data.call.payload
-	);
+// 	char action_str[ACTION_LEN];
+// 	strcpy(action_str, k_ACTIONS_STRINGS[req.action]);
 
-	USART_Result res = uprintf(ocpp->uart, 1000, OCPP_BUF_LEN+1, "%s\n", request);
+// 	_ocpp_set_id_msg(ocpp);
 
-	_ocpp_add_expected_msg(ocpp, req.action);
+// 	char request[OCPP_BUF_LEN];
 
-	return (Controller_Protocol_Result)res;
-}
+// 	mjson_snprintf
+// 	(
+// 		request, OCPP_BUF_LEN,
+// 		"[%u,%Q,%Q,%s]",
+// 		CALL,
+// 		ocpp->message.id,
+// 		action_str,
+// 		ocpp->message.data.call.payload
+// 	);
+
+// 	USART_Result res = uprintf(ocpp->uart, 1000, OCPP_BUF_LEN+1, "%s\n", request);
+
+// 	_ocpp_add_expected_msg(ocpp, req.action);
+
+// 	return (Controller_Protocol_Result)res;
+// }
 
 
 
 bool
-_ocpp_parce_msg(Controller_OCPP *ocpp)
+_ocpp_parse_msg(Controller_OCPP *ocpp)
 {
 	if (!_ocpp_determine_message_type(ocpp))	{ return false; }
 	if (!_ocpp_get_message_id(ocpp))			{ return false; }
@@ -177,20 +187,20 @@ _ocpp_parce_msg(Controller_OCPP *ocpp)
 	if (ocpp->message.type == CALL)
 	{
 		if (!_ocpp_get_action(ocpp))			{ return false; }
-		// if (!_ocpp_get_payload(ocpp, CALL))		{ return false; }
+		if (!_ocpp_get_payload(ocpp, CALL))		{ return false; }
 	}
 	else if (ocpp->message.type == CALLRESULT)
 	{
-	// 	if (ocpp_get_payload(ocpp, CALLRESULT) == RES_ERROR) { return RES_ERROR; }
+		if (!_ocpp_get_payload(ocpp, CALLRESULT)) { return false; }
 	// 	// printf("NEW CALL RESULT REQ:\n");
 	// 	// printf("\tID: `%ld`\n", ocpp->pres_msg.ID);
 	// 	// printf("\tPAYLOAD: `%s`\n", ocpp->pres_msg.call_result.payload);
-	// }
-	// else if (ocpp->message.type == CALLERROR)
-	// {
-	// 	if (ocpp_get_call_error_code(ocpp) == RES_ERROR) { return RES_ERROR; }
-	// 	if (ocpp_get_call_error_descr(ocpp) == RES_ERROR) {return RES_ERROR; }
-		// if (ocpp_get_payload(ocpp, CALLERROR) == RES_ERROR) { return RES_ERROR; }
+	}
+	else if (ocpp->message.type == CALLERROR)
+	{
+		if (!_ocpp_get_call_error_code(ocpp)) { return false; }
+		if (!_ocpp_get_call_error_descr(ocpp)) { return false; }
+		if (!_ocpp_get_payload(ocpp, CALLERROR)) { return false; }
 		// printf("NEW CALL ERROR REQ:\n");
 		// printf("\tID: `%ld`\n", ocpp->pres_msg.ID);
 		// printf("\tERROR CODE: `%d`\n", ocpp->pres_msg.call_error.error_code);
@@ -251,7 +261,7 @@ _ocpp_get_action(Controller_OCPP *ocpp)
 }
 
 bool
-ocpp_get_payload(Controller_OCPP *ocpp, OCPP_MessageType type)
+_ocpp_get_payload(Controller_OCPP *ocpp, OCPP_MessageType type)
 {
 	char path[5] = {0};
 	if (type == CALL)
@@ -279,19 +289,33 @@ ocpp_get_payload(Controller_OCPP *ocpp, OCPP_MessageType type)
 	return true;
 }
 
-void
-_ocpp_add_expected_msg(Controller_OCPP *ocpp, OCPP_CallAction action)
+bool
+_ocpp_get_call_error_code(Controller_OCPP *ocpp)
 {
-	if (ocpp->q_ex_msg == MAX_EXPECTED_MSG)
-	{
-		// exit with error code!
-		return;
-	}
+	char buf[ERR_CODE_LEN];
+	int res = mjson_get_string(ocpp->processive_buffer, strlen(ocpp->processive_buffer), POS_CE_ERR_CODE, buf, ERR_CODE_LEN);
+	if (res <= 0)
+		return false;
+	
+	if (strcmp(buf, "GenericError") == 0)
+		ocpp->message.data.call_error.error_code = ERC_GENERIC_ERROR;
+	else
+		return false;
 
-	OCPP_Expected_Message ex_msg = { .call_action = action }; 
-	strcpy(ex_msg.id, ocpp->message.id);
+	return true;
+}
 
-	ocpp->expected_msgs[ocpp->q_ex_msg++] = ex_msg;
+bool
+_ocpp_get_call_error_descr(Controller_OCPP *ocpp)
+{
+	char buf[DSCR_LEN];
+	int res = mjson_get_string(ocpp->processive_buffer, strlen(ocpp->processive_buffer), POS_CE_ERR_DSCR, buf, DSCR_LEN);
+	if (res <= 0)
+		return false;
+
+	strcpy(ocpp->message.data.call_error.error_dscr, buf);
+
+	return true;
 }
 
 void

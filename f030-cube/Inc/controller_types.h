@@ -17,7 +17,7 @@ typedef enum Controller_ResultType_E
 {
 	CTRL_OK                 = 0x0U,
 	CTRL_ERR                = 0x1U,
-	CTRL_QUEUE_ERR			= 0x2U,
+	CTRL_TSET_ERR			= 0x2U,
 	CTRL_OCPP_ERR 			= 0x3U,
 	CTRL_RAPI_ERR 			= 0x4U,
 	CTRL_TASK_ERR			= 0x5U
@@ -25,12 +25,14 @@ typedef enum Controller_ResultType_E
 
 typedef enum Controller_Queue_Result_E
 {
-	CTRL_QUE_OK,
-	CTRL_QUE_ALLOC_ERR,
-	CTRL_QUE_OVERFLOW,
-	CTRL_QUE_EMPTY,
-	CTRL_QUE_NULLPTR
-} Controller_Queue_Result;
+	CTRL_SET_OK,
+	CTRL_SET_ALLOC_ERR,
+	CTRL_SET_OVERFLOW,
+	CTRL_SET_EMPTY,
+	CTRL_SET_NULLPTR,
+	CTRL_SET_IN_ITER,
+	CTRL_SET_NOT_ITER
+} Controller_TaskSet_Result;
 
 typedef enum Controller_Protocol_Result_E
 {
@@ -49,7 +51,7 @@ typedef enum Controller_Protocol_Result_E
 
 typedef union Controller_Errors_U
 {
-	Controller_Queue_Result		queue_err;
+	Controller_TaskSet_Result	tset_err;
 	Controller_Protocol_Result	ocpp_err;
 	Controller_Protocol_Result	rapi_err;
 } Controller_Errors;
@@ -59,51 +61,6 @@ typedef struct Controller_Result_S
 	Controller_ResultType	type;
 	Controller_Errors 		errors;
 } Controller_Result;
-
-
-
-typedef enum Controller_TaskType_E
-{
-	TASK_RAPI_GET_MSG			= 0x0U,
-	TASK_RAPI_PROC_MSG			= 0x1U,
-	TASK_RAPI_TRANSFER_MSG		= 0x2U,
-	TASK_OCPP_GET_MSG			= 0x3U,
-	TASK_OCPP_PROC_MSG			= 0x4U,
-	TASK_OCPP_TRANSFER_MSG		= 0x5U,
-	TASK_OCPP_MAKE_REQ			= 0x6U,
-	TASK_OCPP_SEND_REQ			= 0X7U,
-	NO_TASK						= 0x8U
-} Controller_TaskType;
-
-typedef struct Task_OCPP_MakeReq_S
-{
-	OCPP_CallAction action;
-} Task_OCPP_MakeReq;
-
-typedef struct Task_OCPP_SendReq_S
-{
-	OCPP_CallAction action;
-} Task_OCPP_SendReq;
-
-typedef union Task_Data_U
-{
-	Task_OCPP_MakeReq ocpp_make_req;
-	Task_OCPP_SendReq ocpp_send_req;
-} Task_Data;
-
-typedef struct Controller_Task_S
-{
-	Controller_TaskType type;
-	Task_Data 			data;
-} Controller_Task;
-
-typedef struct Controller_TaskResult_S
-{
-	Controller_ResultType	type;
-	Controller_Errors 		errors;
-	Controller_Task 		task;
-} Controller_TaskResult;
-
 
 
 #define CONTROLLER_OKAY													Controller_Result __res =						\

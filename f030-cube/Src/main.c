@@ -44,12 +44,11 @@ HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart)
 			{
 				controller.ocpp.accumulative_buffer[controller.ocpp.acc_buf_index] = 0;
 				controller.ocpp.msg_received = true;
-				controller_set_simpletask(&controller, TASK_OCPP_TRANSFER_MSG);
 			}
 			else
 			{
 				// EMPTY MSG
-				controller_set_simpletask(&controller, TASK_OCPP_GET_MSG);
+				HAL_UART_Receive_IT(controller.ocpp.uart, (uint8_t *)&controller.ocpp.accumulative_buffer[0], 1);
 			}
 		}
 		else
@@ -57,7 +56,7 @@ HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart)
 			if (controller.ocpp.acc_buf_index == OCPP_BUF_LEN -1)
 			{
 				// SET GLOBAL FAULT OF BUFFER OVERFLOW
-				controller_set_simpletask(&controller, TASK_OCPP_GET_MSG);
+				HAL_UART_Receive_IT(controller.ocpp.uart, (uint8_t *)&controller.ocpp.accumulative_buffer[0], 1);
 			}
 			else
 			{
@@ -75,18 +74,17 @@ HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart)
 			{
 				controller.rapi.accumulative_buffer[controller.rapi.acc_buf_index] = 0;
 				controller.rapi.msg_received = true;
-				controller_set_simpletask(&controller, TASK_RAPI_TRANSFER_MSG);
 			}
 			else
 			{
-				controller_set_simpletask(&controller, TASK_RAPI_GET_MSG);
+				HAL_UART_Receive_IT(controller.rapi.uart, (uint8_t *)&controller.rapi.accumulative_buffer[0], 1);
 			}
 		}
 		else
 		{
 			if (controller.rapi.acc_buf_index == RAPI_BUF_LEN -1)
 			{
-				controller_set_simpletask(&controller, TASK_RAPI_GET_MSG);
+				HAL_UART_Receive_IT(controller.rapi.uart, (uint8_t *)&controller.rapi.accumulative_buffer[0], 1);
 			}
 			else
 			{
@@ -141,6 +139,7 @@ int main(void)
 
 	uprintf(&huart2, 100, 10, "hello\r");
 	uprintf(&huart1, 100, 10, "hello\n");
+
 	// uprintf(&huart1, 100, 100, "[2,\"1\",\"BootNotification\",{\"chargePointVendor\":\"EV Solutions\",\"chargePointModel\":\"PROTOTYPE\"}]\n");
 
 	Controller_Result res = controller_initialize
@@ -155,18 +154,17 @@ int main(void)
 		Error_Handler_with_err("FAILED ON INITIALIZATION");
 	}
 
+	HAL_UART_Receive_IT(&huart1, (uint8_t *)&(controller.ocpp.accumulative_buffer[0]), 1);
+	HAL_UART_Receive_IT(&huart2, (uint8_t *)&(controller.rapi.accumulative_buffer[0]), 1);
 
 	while (1)
 	{
 		Controller_Result res = controller_update(&controller);
 		if (res.type != CTRL_OK)
 		{	
-			if (res.type == CTRL_QUEUE_ERR && res.errors.queue_err == CTRL_QUE_EMPTY)
-			{
-				continue;
-			}
 			uprintf(&huart1, 1000, 100, "ERR: %u\n", res.type);
 			uprintf(&huart1, 1000, 100, "OCPP ERR: %u\n", res.errors.ocpp_err);
+			uprintf(&huart1, 1000, 100, "TSET ERR: %u\n", res.errors.tset_err);
 			Error_Handler_with_err("FAILED IN LOOP");
 		}
 		// YOU SHOULD HANDLE IT!!
