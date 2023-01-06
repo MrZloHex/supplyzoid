@@ -5,7 +5,9 @@
 #include "mjson.h"
 #include "convert.h"
 
+#include "task_sequences/remote_start_sequence/rss_task_1.h"
 #include "ocpp_msg/boot_notification.h"
+// #include "ocpp_msg/authorize.h"
 
 const static char	k_ACT_BOOT_NOTIFICATION[]		 = "BootNotification";
 const static char	k_ACT_START_TRANSACTION[]        = "StartTransaction";
@@ -76,9 +78,9 @@ _controller_ocpp_process_income
 	Controller_TaskWrap *wrap
 )
 {
-// #ifdef DEBUG
+#ifdef DEBUG
 	uprintf(ocpp->uart, 1000, 600, "GOT `%s`\n", ocpp->processive_buffer);
-// #endif
+#endif
 
 	ocpp->msg_processed = true;
 
@@ -98,6 +100,17 @@ _controller_ocpp_process_income
 		return CTRL_PTCL_RESPONSE;
 	}
 
+
+	switch (ocpp->message.data.call.action)
+	{
+		case ACT_REMOTE_START_TRANSACTION:
+			RSS_TASK_WRAP(wrap);
+			break;
+
+		case ACT_REMOTE_STOP_TRANSACTION:
+			break;
+	}
+
 	return CTRL_PTCL_OK;
 }
 
@@ -108,6 +121,10 @@ _controller_ocpp_make_req(Controller_OCPP *ocpp, OCPP_CallAction req)
 	{
 		case ACT_BOOT_NOTIFICATION:
 			ocpp_boot_notification_req(ocpp);
+			break;
+
+		case ACT_AUTHORIZE:
+		 	// ocpp_authorize_req(ocpp);
 			break;
 
 		case ACT_START_TRANSACTION:
@@ -123,9 +140,6 @@ _controller_ocpp_make_req(Controller_OCPP *ocpp, OCPP_CallAction req)
 			break;
 
 		case ACT_HEARTBEAT:
-			break;
-
-		case ACT_AUTHORIZE:
 			break;
 
 		default:;
