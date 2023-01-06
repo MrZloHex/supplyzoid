@@ -38,14 +38,18 @@ controller_update(Controller *controller)
 		{
 			HAL_UART_Receive_IT(controller->ocpp.uart, (uint8_t *)&(controller->ocpp.accumulative_buffer[0]), 1);
 			Controller_Protocol_Result res = _controller_ocpp_process_income(&(controller->ocpp), &wrap);
-			if (res != CTRL_PTCL_OK)
+			if (res == CTRL_PTCL_RESPONSE) { ; }
+			else if (res != CTRL_PTCL_OK)
 			{
 				CONTROLLER_OCPP_ERROR(res);
 			}
-			tres = _controller_taskset_push(&(controller->task_set), wrap);
-			if (tres != CTRL_SET_OK)
+			else
 			{
-				CONTROLLER_ERROR(CTRL_TSET_ERR, tset_err, tres);
+				tres = _controller_taskset_push(&(controller->task_set), wrap);
+				if (tres != CTRL_SET_OK)
+				{
+					CONTROLLER_ERROR(CTRL_TSET_ERR, tset_err, tres);
+				}
 			}
 		}
 	}
@@ -83,7 +87,7 @@ controller_update(Controller *controller)
 
 	Controller_TaskWrap task_wrap;
 
-	for (size_t i = 0; i < controller->task_set.capacity; ++i)
+	for (size_t i = 0; i < controller->task_set.size; ++i)
 	{
 		tres = _controller_taskset_next(&(controller->task_set), &task_wrap);
 		if (tres != CTRL_SET_OK)
@@ -100,7 +104,15 @@ controller_update(Controller *controller)
 
 		if (task_wrap.task.type == TASK_PROCESS)
 		{
-
+			if (task_wrap.task.usart == OCPP_USART)
+			{
+				if (!controller->ocpp.is_response)							 { continue; }
+				if (!_ocpp_get_resp(&(controller->ocpp), task_wrap.task.id)) { continue; }
+			}
+			else
+			{
+				continue;
+			}
 		}
 
 		if (task_wrap.task.func == NULL)
@@ -124,7 +136,6 @@ controller_update(Controller *controller)
 	}
 
 	_controller_taskset_esc_iter(&(controller->task_set));
-
 	// CHECK FOR FINISHED TASKS AND DELETE THEM
 	tres = _controller_taskset_pop(&(controller->task_set));
 	if (tres != CTRL_SET_OK)

@@ -18,9 +18,11 @@ bs_task_1(Controller *ctrl)
         .task =
         {
             .type = WRAP_IN_PROGRESS,
-            .task = 
+            .task =
             {
                 .type = TASK_PROCESS,
+                .usart = OCPP_USART,
+                .id = ctrl->ocpp.id_msg -1,
                 .func = bs_task_2
             }
         }

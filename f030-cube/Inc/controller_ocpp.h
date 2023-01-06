@@ -23,11 +23,10 @@
 
 #define ACTION_LEN   30
 #define PAYLOAD_LEN  256
-#define ID_LEN		 64
 #define DSCR_LEN     255
 #define ERR_CODE_LEN 30
 
-#define MAX_EXPECTED_MSG 16
+#define MAX_RESPONSES 4
 
 #define POS_MSG_TYPE	"$[0]"
 #define POS_MSG_ID		"$[1]"
@@ -47,7 +46,10 @@ typedef enum OCPP_MessageType_E
 	CALLERROR  = 4U
 } OCPP_MessageType;
 
+#ifndef	ID_LEN
+#define ID_LEN		 64
 typedef char OCPP_MessageID[ID_LEN];
+#endif
 
 typedef struct OCPP_Call_S
 {
@@ -103,8 +105,9 @@ typedef struct Controller_OCPP_S
 	OCPP_Message message;
 	size_t id_msg;
 
-	OCPP_Expected_Message expected_msgs[MAX_EXPECTED_MSG];
-	size_t q_ex_msg;
+	bool is_response;
+	OCPP_Message responses[MAX_RESPONSES];
+	size_t q_resps;
 } Controller_OCPP;
 
 void
@@ -156,5 +159,14 @@ _ocpp_get_call_error_descr(Controller_OCPP *ocpp);
 
 void
 _ocpp_set_id_msg(Controller_OCPP *ocpp);
+
+Controller_Protocol_Result
+_ocpp_append_resps(Controller_OCPP *ocpp);
+
+void
+_ocpp_delete_resp(Controller_OCPP *ocpp, size_t i);
+
+bool
+_ocpp_get_resp(Controller_OCPP *ocpp, size_t id);
 
 #endif /* __CONTROLLER_OCPP_H__ */

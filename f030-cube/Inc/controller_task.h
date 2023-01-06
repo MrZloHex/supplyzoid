@@ -8,6 +8,8 @@
 #ifndef __CONTROLLER_TASK_H__
 #define __CONTROLLER_TASK_H__
 
+#include "stdlib.h"
+
 struct Controller_S;
 
 typedef enum Controller_TaskType_E
@@ -20,9 +22,17 @@ typedef struct Task_Result_S Task_Result;
 
 typedef Task_Result (*Ptr_Task)(struct Controller_S *);
 
+typedef enum MsgExpect_USART_E
+{
+	RAPI_USART,
+	OCPP_USART
+} MsgExpect_USART;
+
 typedef struct Controller_Task_S
 {
 	Controller_TaskType	type;
+	size_t				id;
+	MsgExpect_USART 	usart;
 	Ptr_Task			func;
 } Controller_Task;
 

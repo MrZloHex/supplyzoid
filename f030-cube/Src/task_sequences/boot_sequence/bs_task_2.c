@@ -8,7 +8,7 @@ bs_task_2(Controller *ctrl)
     uprintf(ctrl->rapi.uart, 1000, 10, "BS_2\r");
     Task_Result res =
     {
-        .type = TRES_NEXT,
+        .type = TRES_WAIT,
         .task =
         {
             .type = WRAP_FINISHED,
@@ -18,5 +18,8 @@ bs_task_2(Controller *ctrl)
             }
         }
     };
+
+    uprintf(ctrl->rapi.uart, 1000, 266, "`%s`\r", ctrl->ocpp.message.data.call_result.payload);
+    res.type = TRES_NEXT;
     return res;
 }

@@ -130,7 +130,7 @@ int main(void)
 
 	MX_GPIO_Init();
 	MX_I2C1_Init();
-	// MX_IWDG_Init();
+	MX_IWDG_Init();
 	MX_RTC_Init();
 	MX_USART1_UART_Init();
 	MX_USART2_UART_Init();
@@ -139,6 +139,7 @@ int main(void)
 
 	uprintf(&huart2, 100, 10, "hello\r");
 	uprintf(&huart1, 100, 10, "hello\n");
+	HAL_IWDG_Refresh(&hiwdg);
 
 	// uprintf(&huart1, 100, 100, "[2,\"1\",\"BootNotification\",{\"chargePointVendor\":\"EV Solutions\",\"chargePointModel\":\"PROTOTYPE\"}]\n");
 
@@ -159,6 +160,7 @@ int main(void)
 
 	while (1)
 	{
+		HAL_IWDG_Refresh(&hiwdg);
 		Controller_Result res = controller_update(&controller);
 		if (res.type != CTRL_OK)
 		{	

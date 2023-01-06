@@ -44,6 +44,9 @@ _controller_ocpp_initialize
 	ocpp->msg_processed = true;
 
 	ocpp->id_msg = 1;
+
+	ocpp->is_response = false;
+	ocpp->q_resps = 0;
 }
 
 Controller_Protocol_Result
@@ -73,9 +76,9 @@ _controller_ocpp_process_income
 	Controller_TaskWrap *wrap
 )
 {
-#ifdef DEBUG
+// #ifdef DEBUG
 	uprintf(ocpp->uart, 1000, 600, "GOT `%s`\n", ocpp->processive_buffer);
-#endif
+// #endif
 
 	ocpp->msg_processed = true;
 
@@ -84,6 +87,17 @@ _controller_ocpp_process_income
 		return CTRL_PTCL_NON_VALID_MSG;
 	}
 	
+	// IF MSG IS RESPONSE
+	if (ocpp->message.type != CALL)
+	{
+		Controller_Protocol_Result res = _ocpp_append_resps(ocpp);
+		if (res != CTRL_PTCL_OK)
+		{
+			return res;
+		}
+		return CTRL_PTCL_RESPONSE;
+	}
+
 	return CTRL_PTCL_OK;
 }
 
@@ -117,6 +131,8 @@ _controller_ocpp_make_req(Controller_OCPP *ocpp, OCPP_CallAction req)
 		default:;
 			return CTRL_PTCL_NO_SUCH_MSG;
 	}
+
+	return CTRL_PTCL_OK;
 }
 
 Controller_Protocol_Result
@@ -298,4 +314,55 @@ _ocpp_set_id_msg(Controller_OCPP *ocpp)
 	int_to_charset(ocpp->id_msg, id, 1);
 	ocpp->id_msg++;
 	strcpy(ocpp->message.id, id);
+}
+
+Controller_Protocol_Result
+_ocpp_append_resps(Controller_OCPP *ocpp)
+{
+	if (ocpp->q_resps == MAX_RESPONSES)
+	{
+		return CTRL_PTCL_OVER_RESP;
+	}
+
+	ocpp->responses[ocpp->q_resps++] = ocpp->message;
+	if (ocpp->q_resps > 0)
+	{
+		ocpp->is_response = true;
+	}
+
+	return CTRL_PTCL_OK;
+}
+
+void
+_ocpp_delete_resp(Controller_OCPP *ocpp, size_t resp)
+{
+	for (size_t i = resp; i < ocpp->q_resps; ++i)
+	{
+		ocpp->responses[i] = ocpp->responses[i +1];
+	}
+
+	ocpp->q_resps -= 1;
+}
+
+bool
+_ocpp_get_resp(Controller_OCPP *ocpp, size_t id)
+{
+	if (!ocpp->is_response)
+	{
+		return false;
+	}
+
+	for (size_t i = 0; i < ocpp->q_resps; ++i)
+	{
+		uint64_t p_id = 0;
+		charset_to_uint64(&p_id, ocpp->responses[i].id);
+		if (p_id == id)
+		{
+			ocpp->message = ocpp->responses[i];
+			_ocpp_delete_resp(ocpp, i);
+			return true;
+		}
+	}
+
+	return false;
 }
