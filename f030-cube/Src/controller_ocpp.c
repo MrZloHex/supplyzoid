@@ -7,7 +7,7 @@
 
 #include "task_sequences/remote_start_sequence/rss_task_1.h"
 #include "ocpp_msg/boot_notification.h"
-// #include "ocpp_msg/authorize.h"
+#include "ocpp_msg/authorize.h"
 
 const static char	k_ACT_BOOT_NOTIFICATION[]		 = "BootNotification";
 const static char	k_ACT_START_TRANSACTION[]        = "StartTransaction";
@@ -115,7 +115,7 @@ _controller_ocpp_process_income
 }
 
 Controller_Protocol_Result
-_controller_ocpp_make_req(Controller_OCPP *ocpp, OCPP_CallAction req)
+_controller_ocpp_make_req(Controller_OCPP *ocpp, OCPP_CallAction req, void *kwarg)
 {
 	switch (req)
 	{
@@ -124,7 +124,7 @@ _controller_ocpp_make_req(Controller_OCPP *ocpp, OCPP_CallAction req)
 			break;
 
 		case ACT_AUTHORIZE:
-		 	// ocpp_authorize_req(ocpp);
+		 	ocpp_authorize_req(ocpp, (OCPP_IdTag *)kwarg);
 			break;
 
 		case ACT_START_TRANSACTION:
@@ -282,12 +282,23 @@ _ocpp_get_payload(Controller_OCPP *ocpp, OCPP_MessageType type)
 	if (mjson_find(ocpp->processive_buffer, strlen(ocpp->processive_buffer), path, &p, &n) != MJSON_TOK_OBJECT)
 		return false;
 
+	uprintf(ocpp->uart, 1000, 260, "`%s`\n", p);
+
 	if (type == CALL)
+	{
 		strncpy(ocpp->message.data.call.payload, p, n);
+		ocpp->message.data.call.payload[n] = 0;
+	}
 	else if (type == CALLRESULT)
+	{
 		strncpy(ocpp->message.data.call_result.payload, p, n);
+		ocpp->message.data.call_result.payload[n] = 0;
+	}
 	else if (type == CALLERROR)
+	{
 		strncpy(ocpp->message.data.call_error.error_details, p, n);
+		ocpp->message.data.call_error.error_details[n] = 0;
+	}
 
 	return true;
 }

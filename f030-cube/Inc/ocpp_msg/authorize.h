@@ -1,19 +1,19 @@
 #ifndef AUTHORIZE_H_
 #define AUTHORIZE_H_
 
-#include "OCPP.h"
+#include "controller_ocpp.h"
 
 void
 ocpp_authorize_req
 (
-	OCPP *ocpp,
-	OCPP_IdTag id_tag
+	Controller_OCPP *ocpp,
+	OCPP_IdTag *id_tag
 );
 
 void
 ocpp_authorize_conf
 (
-	OCPP *ocpp
+	Controller_OCPP *ocpp
 );
 
 #endif /* AUTHORIZE_H_ */

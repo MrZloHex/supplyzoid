@@ -89,6 +89,9 @@ typedef struct OCPP_Expected_Message_S
 	OCPP_CallAction call_action;
 } OCPP_Expected_Message;
 
+#define OCPP_IdTag_Len 21
+typedef char OCPP_IdTag[OCPP_IdTag_Len];
+
 typedef struct Controller_OCPP_S
 {
 	UART_HandleTypeDef *uart;
@@ -104,6 +107,8 @@ typedef struct Controller_OCPP_S
 
 	OCPP_Message message;
 	size_t id_msg;
+
+	OCPP_IdTag idtag;
 
 	bool is_response;
 	OCPP_Message responses[MAX_RESPONSES];
@@ -130,7 +135,7 @@ _controller_ocpp_process_income
 );
 
 Controller_Protocol_Result
-_controller_ocpp_make_req(Controller_OCPP *ocpp, OCPP_CallAction req);
+_controller_ocpp_make_req(Controller_OCPP *ocpp, OCPP_CallAction req, void *kwarg);
 
 Controller_Protocol_Result
 _controller_ocpp_send_req(Controller_OCPP *ocpp, OCPP_CallAction req);

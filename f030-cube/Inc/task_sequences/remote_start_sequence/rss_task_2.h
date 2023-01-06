@@ -4,6 +4,8 @@
 #include "controller_task.h"
 #include "controller.h"
 
+#define P_ID_TAG_INFO "$.idTagInfo"
+
 Task_Result
 rss_task_2(Controller *ctrl);
 

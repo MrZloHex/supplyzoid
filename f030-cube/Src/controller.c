@@ -95,7 +95,7 @@ controller_update(Controller *controller)
 			_controller_taskset_esc_iter(&(controller->task_set));
 			CONTROLLER_ERROR(CTRL_TSET_ERR, tset_err, tres);
 		}
-		uprintf(controller->ocpp.uart, 1000, 100, "wrap %u, %p\n", task_wrap.type, task_wrap.task.func);
+		// uprintf(controller->ocpp.uart, 1000, 100, "wrap %u, %p\n", task_wrap.type, task_wrap.task.func);
 
 		if (task_wrap.type == WRAP_EMPTY)
 		{

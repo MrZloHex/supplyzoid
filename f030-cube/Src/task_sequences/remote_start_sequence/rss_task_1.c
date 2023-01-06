@@ -2,31 +2,41 @@
 #include "task_sequences/remote_start_sequence/rss_task_2.h"
 
 #include "serial.h"
+#include "mjson.h"
+#include "string.h"
 
 Task_Result
 rss_task_1(Controller *ctrl)
 {
-    uprintf(ctrl->rapi.uart, 1000, 10, "RSS_1\r");
-    uprintf(ctrl->rapi.uart, 1000, 100,  "`%s`\r", ctrl->ocpp.message.data.call.payload);
-
-    // _controller_ocpp_make_req(&(ctrl->ocpp), ACT_AUTHORIZE);
-    // _controller_ocpp_send_req(&(ctrl->ocpp), ACT_AUTHORIZE);
-
     Task_Result res =
     {
-        .type = TRES_NEXT,
+        .type = TRES_WAIT,
         .task =
         {
-            .type = WRAP_IN_PROGRESS,
+            .type = WRAP_FINISHED,
             .task = 
             {
-                .type = TASK_PROCESS,
-                .usart = OCPP_USART,
-                .id = ctrl->ocpp.id_msg /*-1*/,
-                .func = rss_task_2 
+                .func = NULL
             }
         }
     };
+    uprintf(ctrl->rapi.uart, 1000, 10, "RSS_1\r");
+    uprintf(ctrl->rapi.uart, 1000, 100,  "`%s`\r", ctrl->ocpp.message.data.call.payload);
+    OCPP_IdTag id_tag;
+	int res_id = mjson_get_string(ctrl->ocpp.message.data.call.payload, strlen(ctrl->ocpp.message.data.call.payload), P_ID_TAG, id_tag, OCPP_IdTag_Len-1);
+	if (res_id == -1)
+		return res;
+
+    _controller_ocpp_make_req(&(ctrl->ocpp), ACT_AUTHORIZE, &id_tag);
+    _controller_ocpp_send_req(&(ctrl->ocpp), ACT_AUTHORIZE);
+
+    res.type = TRES_NEXT;
+    res.task.type = WRAP_IN_PROGRESS;
+    res.task.task.type = TASK_PROCESS;
+    res.task.task.usart = OCPP_USART;
+    res.task.task.id = ctrl->ocpp.id_msg -1;
+    res.task.task.func = rss_task_2;
+
     return res;
 }
 

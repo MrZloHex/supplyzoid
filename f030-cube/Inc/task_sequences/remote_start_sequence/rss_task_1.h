@@ -8,6 +8,8 @@
                                 __PTR__->task.type = TASK_TRIGGER;  \
                                 __PTR__->task.func = rss_task_1;
 
+#define P_ID_TAG "$.idTag"
+
 Task_Result
 rss_task_1(Controller *ctrl);
 
