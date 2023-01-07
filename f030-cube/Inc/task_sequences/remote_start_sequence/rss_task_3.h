@@ -5,6 +5,6 @@
 #include "controller.h"
 
 Task_Result
-rss_task_3(Controller *ctrl);
+rss_task_3(Controller *ctrl, OCPP_MessageID t_id);
 
 #endif /* ___REMOTE_START_SEQ_TASK_3_H_*/

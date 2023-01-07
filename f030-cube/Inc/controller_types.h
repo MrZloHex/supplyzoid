@@ -8,7 +8,7 @@
 #ifndef __CONTROLLER_TYPES_H__
 #define __CONTROLLER_TYPES_H__
 
-#define DEBUG
+// #define DEBUG
 
 #include "ocpp_types.h"
 #include "stdbool.h"

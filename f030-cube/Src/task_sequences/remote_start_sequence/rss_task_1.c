@@ -6,7 +6,7 @@
 #include "string.h"
 
 Task_Result
-rss_task_1(Controller *ctrl)
+rss_task_1(Controller *ctrl, OCPP_MessageID t_id)
 {
     Task_Result res =
     {
@@ -35,6 +35,7 @@ rss_task_1(Controller *ctrl)
     res.task.type = WRAP_IN_PROGRESS;
     res.task.task.type = TASK_PROCESS;
     res.task.task.usart = OCPP_USART;
+    strcpy(res.task.task.trigger_id, t_id);
     res.task.task.id = ctrl->ocpp.id_msg -1;
     res.task.task.func = rss_task_2;
 

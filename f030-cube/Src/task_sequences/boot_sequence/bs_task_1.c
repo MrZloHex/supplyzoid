@@ -5,7 +5,7 @@
 #include "controller_ocpp.h"
 
 Task_Result
-bs_task_1(Controller *ctrl)
+bs_task_1(Controller *ctrl, OCPP_MessageID t_id)
 {
     uprintf(ctrl->rapi.uart, 1000, 10, "BS_1\r");
 

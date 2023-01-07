@@ -141,6 +141,13 @@ _controller_ocpp_make_msg(Controller_OCPP *ocpp, OCPP_CallAction req, void *kwar
 Controller_Protocol_Result
 _controller_ocpp_send_req(Controller_OCPP *ocpp, OCPP_CallAction req);
 
+Controller_Protocol_Result
+_controller_ocpp_send_resp
+(
+	Controller_OCPP *ocpp,
+	OCPP_MessageType type,
+	OCPP_MessageID id
+);
 
 bool
 _ocpp_parse_msg(Controller_OCPP *ocpp);

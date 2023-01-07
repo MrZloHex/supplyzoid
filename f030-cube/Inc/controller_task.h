@@ -20,7 +20,12 @@ typedef enum Controller_TaskType_E
 
 typedef struct Task_Result_S Task_Result;
 
-typedef Task_Result (*Ptr_Task)(struct Controller_S *);
+#ifndef	ID_LEN
+#define ID_LEN		 64
+typedef char OCPP_MessageID[ID_LEN];
+#endif
+
+typedef Task_Result (*Ptr_Task)(struct Controller_S *, OCPP_MessageID);
 
 typedef enum MsgExpect_USART_E
 {
@@ -32,6 +37,7 @@ typedef struct Controller_Task_S
 {
 	Controller_TaskType	type;
 	size_t				id;
+	OCPP_MessageID		trigger_id;
 	MsgExpect_USART 	usart;
 	Ptr_Task			func;
 } Controller_Task;

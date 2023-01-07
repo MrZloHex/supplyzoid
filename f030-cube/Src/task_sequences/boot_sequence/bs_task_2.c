@@ -7,7 +7,7 @@
 #include "time.h"
 
 Task_Result
-bs_task_2(Controller *ctrl)
+bs_task_2(Controller *ctrl, OCPP_MessageID t_id)
 {
     uprintf(ctrl->rapi.uart, 1000, 10, "BS_2\r");
     Task_Result res =

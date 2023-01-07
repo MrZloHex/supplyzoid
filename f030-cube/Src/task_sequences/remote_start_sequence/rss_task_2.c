@@ -7,7 +7,7 @@
 #include "rapi_msg/get_state.h"
 
 Task_Result
-rss_task_2(Controller *ctrl)
+rss_task_2(Controller *ctrl, OCPP_MessageID t_id)
 {
     uprintf(ctrl->rapi.uart, 1000, 10, "RSS_2\r");
     Task_Result res =
@@ -28,15 +28,11 @@ rss_task_2(Controller *ctrl)
 	
 	char status[16];
 	int res_st = mjson_get_string(ctrl->ocpp.message.data.call_result.payload, pay_len, P_ID_TAG_INFO_STATUS, status, 16);
-	if (res_st == -1)
-		return ;
-
-	if (strcmp(status, "Accepted") != 0)
+	if (res_st == -1 || strcmp(status, "Accepted") != 0)
 	{
         bool r = false;
         _controller_ocpp_make_msg(&(ctrl->ocpp), ACT_REMOTE_START_TRANSACTION, &r);
-        // _controller_ocpp_send
-
+        _controller_ocpp_send_resp(&(ctrl->ocpp), CALLRESULT, t_id);
         return res;
     }
 
@@ -46,6 +42,7 @@ rss_task_2(Controller *ctrl)
     res.type = TRES_NEXT;
     res.task.type = WRAP_IN_PROGRESS;
     res.task.task.type = TASK_PROCESS;
+    strcpy(res.task.task.trigger_id, t_id);
     res.task.task.func = rss_task_3;
     res.task.task.usart = RAPI_USART;
 

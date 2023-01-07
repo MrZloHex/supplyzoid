@@ -12,7 +12,7 @@
 #include "controller_ocpp.h"
 #include "controller_rapi.h"
 
-#define MAX_TASKSET_CAPACITY 64
+#define MAX_TASKSET_CAPACITY 16
 
 #define P_OCPP(controller) &(controller->ocpp) 
 #define P_RAPI(controller) &(controller->rapi) 

@@ -9,6 +9,6 @@
                                 __PTR__->task.func = bs_task_1;
 
 Task_Result
-bs_task_1(Controller *ctrl);
+bs_task_1(Controller *ctrl, OCPP_MessageID t_id);
 
 #endif /* __BOOT_SEQ_TASK_1_H__ */

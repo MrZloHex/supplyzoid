@@ -7,6 +7,6 @@
 #define P_ID_TAG_INFO_STATUS "$.idTagInfo.status"
 
 Task_Result
-rss_task_2(Controller *ctrl);
+rss_task_2(Controller *ctrl, OCPP_MessageID t_id);
 
 #endif /* ___REMOTE_START_SEQ_TASK_2_H_*/

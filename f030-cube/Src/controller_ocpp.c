@@ -107,7 +107,7 @@ _controller_ocpp_process_income
 	switch (ocpp->message.data.call.action)
 	{
 		case ACT_REMOTE_START_TRANSACTION:
-			RSS_TASK_WRAP(wrap);
+			RSS_TASK_WRAP(wrap, ocpp->message.id);
 			break;
 
 		case ACT_REMOTE_STOP_TRANSACTION:
@@ -187,11 +187,12 @@ _controller_ocpp_send_req(Controller_OCPP *ocpp, OCPP_CallAction req)
 	return (Controller_Protocol_Result)res;
 }
 
-void
-ocpp_send_resp
+Controller_Protocol_Result
+_controller_ocpp_send_resp
 (
 	Controller_OCPP *ocpp,
-	OCPP_MessageType type
+	OCPP_MessageType type,
+	OCPP_MessageID id
 )
 {
 	if (type == CALLRESULT)
@@ -202,7 +203,7 @@ ocpp_send_resp
 			req, OCPP_BUF_LEN,
 			"[%u,%Q,%s]",
 			ocpp->message.type,
-			ocpp->message.id,
+			id,
 			ocpp->message.data.call_result.payload
 		);
 

@@ -5,7 +5,7 @@
 #include "rapi_msg/get_energy_usage.h"
 
 Task_Result
-rss_task_5(Controller *ctrl)
+rss_task_5(Controller *ctrl, OCPP_MessageID t_id)
 {
     uprintf(ctrl->rapi.uart, 1000, 10, "RSS_5\r");
     Task_Result res =

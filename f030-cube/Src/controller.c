@@ -30,7 +30,7 @@ controller_update(Controller *controller)
 {
 	Controller_TaskSet_Result tres;
 	Controller_TaskWrap wrap;
-
+	
 	// UPDATE MESSAGES ON OCPP UART
 	if (controller->ocpp.msg_received)
 	{
@@ -124,16 +124,16 @@ controller_update(Controller *controller)
 		}
 
 		// EXECUTE TASK AND SET NEXT TASK
-		Task_Result task_res = task_wrap.task.func(controller);
+		Task_Result task_res = task_wrap.task.func(controller, task_wrap.task.trigger_id);
 		if (task_res.type == TRES_NEXT)
 		{
-			// uprintf(controller->ocpp.uart, 1000, 100, "next %u, %p\n", task_res.task.type, task_res.task.task.func);
 			tres = _controller_taskset_update_task(&(controller->task_set), task_res.task);
 			if (tres != CTRL_SET_OK)
 			{
 				_controller_taskset_esc_iter(&(controller->task_set));
 				CONTROLLER_ERROR(CTRL_TSET_ERR, tset_err, tres);
 			}
+			// __debug_taskset_print(&(controller->task_set));
 		}
 
 		break;

@@ -9,6 +9,6 @@
 #define P_CURRENT_TIME "$.currentTime"
 
 Task_Result
-bs_task_2(Controller *ctrl);
+bs_task_2(Controller *ctrl, OCPP_MessageID t_id);
 
 #endif /* __BOOT_SEQ_TASK_2_H__ */
