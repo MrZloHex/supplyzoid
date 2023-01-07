@@ -109,6 +109,7 @@ typedef struct Controller_OCPP_S
 	size_t id_msg;
 
 	OCPP_IdTag idtag;
+	uint32_t transaction_id;
 
 	bool is_response;
 	OCPP_Message responses[MAX_RESPONSES];
@@ -135,7 +136,7 @@ _controller_ocpp_process_income
 );
 
 Controller_Protocol_Result
-_controller_ocpp_make_req(Controller_OCPP *ocpp, OCPP_CallAction req, void *kwarg);
+_controller_ocpp_make_msg(Controller_OCPP *ocpp, OCPP_CallAction req, void *kwarg);
 
 Controller_Protocol_Result
 _controller_ocpp_send_req(Controller_OCPP *ocpp, OCPP_CallAction req);

@@ -1,11 +1,11 @@
-// #include "ocpp_msg/remote_start_transaction.h"
+#include "ocpp_msg/remote_start_transaction.h"
 // #include "ocpp_msg/start_transaction.h"
 // #include "ocpp_msg/authorize.h"
 
 // #include "rapi_msg/get_state.h"
 // #include "rapi_msg/set_auth_lock.h"
 
-// #include "mjson.h"
+#include "mjson.h"
 
 // void
 // ocpp_remote_start_transaction_req
@@ -65,35 +65,35 @@
 // 	ocpp_send_req(ocpp, ACT_START_TRANSACTION);
 // }
 
-// void
-// ocpp_remote_start_transaction_conf
-// (
-// 	OCPP *ocpp,
-// 	unsigned char status
-// )
-// {
-// 	char payload[PAYLOAD_LEN];
-// 	if (status == RSS_ACCEPTED)
-// 	{
-// 		mjson_snprintf
-// 		(
-// 			payload, PAYLOAD_LEN,
-// 			"{%Q:%Q}",
-// 			"status",
-// 			"Accepted"
-// 		);
-// 	}
-// 	else if (status == RSS_REJECTED)
-// 	{
-// 		mjson_snprintf
-// 		(
-// 			payload, PAYLOAD_LEN,
-// 			"{%Q:%Q}",
-// 			"status",
-// 			"Rejected"
-// 		);
-// 	}
+void
+ocpp_remote_start_transaction_conf
+(
+	Controller_OCPP *ocpp,
+	bool *status
+)
+{
+	char payload[PAYLOAD_LEN];
+	if (status)
+	{
+		mjson_snprintf
+		(
+			payload, PAYLOAD_LEN,
+			"{%Q:%Q}",
+			"status",
+			"Accepted"
+		);
+	}
+	else 
+	{
+		mjson_snprintf
+		(
+			payload, PAYLOAD_LEN,
+			"{%Q:%Q}",
+			"status",
+			"Rejected"
+		);
+	}
 
-// 	ocpp->pres_msg.type = CALLRESULT;
-// 	strcpy(ocpp->pres_msg.call_result.payload, payload);
-// }
+	ocpp->message.type = CALLRESULT;
+	strcpy(ocpp->message.data.call_result.payload, payload);
+}

@@ -146,9 +146,9 @@ void
 __debug_taskset_print(Controller_TaskSet *set)
 {
 	uprintf(&huart1, 1000, 100, "SIZE %u\t CAP %u\n", set->size, set->capacity);
-	uprintf(&huart1, 1000, 100, "TYPE\tPTR\n");
+	uprintf(&huart1, 1000, 100, "TYPE\tPTR\t\tUSART\tTTYPE\n");
 	for (size_t i = 0; i < set->size; ++i)
 	{
-		uprintf(&huart1, 1000, 100, "%u\t%p\n", set->set[i].type, set->set[i].task.func);
+		uprintf(&huart1, 1000, 100, "%u\t%p\t%u\t%u\n", set->set[i].type, set->set[i].task.func, set->set[i].task.usart, set->set[i].task.type);
 	}
 }

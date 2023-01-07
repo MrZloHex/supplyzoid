@@ -14,8 +14,8 @@ struct Controller_S;
 
 typedef enum Controller_TaskType_E
 {
-	TASK_TRIGGER,
-	TASK_PROCESS
+	TASK_TRIGGER = 0x0U,
+	TASK_PROCESS = 0x1U
 } Controller_TaskType;
 
 typedef struct Task_Result_S Task_Result;
@@ -24,8 +24,8 @@ typedef Task_Result (*Ptr_Task)(struct Controller_S *);
 
 typedef enum MsgExpect_USART_E
 {
-	RAPI_USART,
-	OCPP_USART
+	RAPI_USART = 0x0U,
+	OCPP_USART = 0x1U
 } MsgExpect_USART;
 
 typedef struct Controller_Task_S

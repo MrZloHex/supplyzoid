@@ -1,9 +1,10 @@
 #include "rapi_msg/get_energy_usage.h"
 
 #include "mjson.h"
+#include "convert.h"
 
 void
-rapi_get_energy_usage_req(RAPI *rapi)
+_rapi_get_energy_usage_req(Controller_RAPI *rapi)
 {
     // usart_rapi_println_str("Get energy state");
 	char payload[RAPI_BUF_LEN];
@@ -14,15 +15,14 @@ rapi_get_energy_usage_req(RAPI *rapi)
 		"GU"
 	);
 
-	strcpy(rapi->buf_cmd, payload);
-	rapi->buf_index = strlen(rapi->buf_cmd);
-	rapi_append_chksum(rapi);
+	strcpy(rapi->transmitter_buffer, payload);
+	_rapi_append_chksum(rapi);
 }
 
 void
-rapi_get_energy_usage_resp
+_rapi_get_energy_usage_resp
 (
-    RAPI *rapi,
+    Controller_RAPI *rapi,
     uint32_t *ws,
     uint32_t *whacc
 )

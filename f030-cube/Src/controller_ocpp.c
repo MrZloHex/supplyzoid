@@ -6,8 +6,11 @@
 #include "convert.h"
 
 #include "task_sequences/remote_start_sequence/rss_task_1.h"
+
 #include "ocpp_msg/boot_notification.h"
 #include "ocpp_msg/authorize.h"
+#include "ocpp_msg/remote_start_transaction.h"
+#include "ocpp_msg/start_transaction.h"
 
 const static char	k_ACT_BOOT_NOTIFICATION[]		 = "BootNotification";
 const static char	k_ACT_START_TRANSACTION[]        = "StartTransaction";
@@ -115,7 +118,7 @@ _controller_ocpp_process_income
 }
 
 Controller_Protocol_Result
-_controller_ocpp_make_req(Controller_OCPP *ocpp, OCPP_CallAction req, void *kwarg)
+_controller_ocpp_make_msg(Controller_OCPP *ocpp, OCPP_CallAction req, void *kwarg)
 {
 	switch (req)
 	{
@@ -127,7 +130,12 @@ _controller_ocpp_make_req(Controller_OCPP *ocpp, OCPP_CallAction req, void *kwar
 		 	ocpp_authorize_req(ocpp, (OCPP_IdTag *)kwarg);
 			break;
 
+		case ACT_REMOTE_START_TRANSACTION:
+			ocpp_remote_start_transaction_conf(ocpp, (bool *)kwarg);
+			break;
+
 		case ACT_START_TRANSACTION:
+			ocpp_start_transaction_req(ocpp, (uint32_t *)kwarg);
 			break;
 
 		case ACT_STOP_TRANSACTION:
@@ -179,7 +187,39 @@ _controller_ocpp_send_req(Controller_OCPP *ocpp, OCPP_CallAction req)
 	return (Controller_Protocol_Result)res;
 }
 
+void
+ocpp_send_resp
+(
+	Controller_OCPP *ocpp,
+	OCPP_MessageType type
+)
+{
+	if (type == CALLRESULT)
+	{
+		char req[OCPP_BUF_LEN];
+		mjson_snprintf
+		(
+			req, OCPP_BUF_LEN,
+			"[%u,%Q,%s]",
+			ocpp->message.type,
+			ocpp->message.id,
+			ocpp->message.data.call_result.payload
+		);
 
+
+		// SENDING
+		uprintf(ocpp->uart, 1000, OCPP_BUF_LEN, "%s\n", req);
+		// SENDING
+	}
+	else if (type == CALLERROR)
+	{
+
+	}
+	else
+	{
+		return;
+	}
+}
 
 bool
 _ocpp_parse_msg(Controller_OCPP *ocpp)
@@ -281,8 +321,6 @@ _ocpp_get_payload(Controller_OCPP *ocpp, OCPP_MessageType type)
     int n;
 	if (mjson_find(ocpp->processive_buffer, strlen(ocpp->processive_buffer), path, &p, &n) != MJSON_TOK_OBJECT)
 		return false;
-
-	uprintf(ocpp->uart, 1000, 260, "`%s`\n", p);
 
 	if (type == CALL)
 	{

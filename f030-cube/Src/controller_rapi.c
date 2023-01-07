@@ -24,6 +24,7 @@ _controller_rapi_initialize
 
 	rapi->msg_received = false;
 	rapi->msg_processed = true;
+	rapi->pending = false;
 }
 
 Controller_Protocol_Result
@@ -90,7 +91,8 @@ _controller_rapi_process_income
 			break;
 		case 'O':
 		case 'N':
-			break;
+			rapi->pending = false;
+			return CTRL_PTCL_RESPONSE;
 		default:;
 			return CTRL_PTCL_UNKNOWN_MSG;
 	}
@@ -99,6 +101,16 @@ _controller_rapi_process_income
 }
 
 
+Controller_Protocol_Result
+_rapi_send_req(Controller_RAPI *rapi)
+{
+	if (rapi->pending)
+		return CTRL_PTCL_OK;
+
+	USART_Result res = uprintf(rapi->uart, 1000, RAPI_BUF_LEN, "%s", rapi->transmitter_buffer);
+	rapi->pending = true;
+	return (Controller_Protocol_Result)res;
+}
 
 bool
 _rapi_msg_validator(Controller_RAPI *rapi)
@@ -156,4 +168,18 @@ _rapi_msg_validator(Controller_RAPI *rapi)
 
 
 	return ok;
+}
+
+void
+_rapi_append_chksum(Controller_RAPI *rapi)
+{
+	uint8_t chksum = 0;
+	size_t len = strlen(rapi->transmitter_buffer);
+	for (size_t i = 0; i < len-1; ++i)
+		chksum ^= rapi->transmitter_buffer[i];
+
+	uint8_to_hex_str(chksum, rapi->transmitter_buffer + len);
+	len += 2;
+	rapi->transmitter_buffer[len++] = RAPI_EOC;
+	rapi->transmitter_buffer[len] = 0;
 }

@@ -3,9 +3,9 @@
 #include "mjson.h"
 
 void
-rapi_set_auth_lock_req
+_rapi_set_auth_lock_req
 (
-	RAPI *rapi,
+	Controller_RAPI *rapi,
 	uint8_t lock_state
 )
 {
@@ -18,13 +18,12 @@ rapi_set_auth_lock_req
 		lock_state
 	);
 
-	strcpy(rapi->buf_cmd, payload);
-	rapi->buf_index = strlen(rapi->buf_cmd);
-	rapi_append_chksum(rapi);
+	strcpy(rapi->transmitter_buffer, payload);
+	_rapi_append_chksum(rapi);
 }
 
 void
-rapi_set_auth_lock_resp(RAPI *rapi)
+_rapi_set_auth_lock_resp(Controller_RAPI *rapi)
 {
 
 }

@@ -61,15 +61,19 @@ controller_update(Controller *controller)
 		{
 			HAL_UART_Receive_IT(controller->rapi.uart, (uint8_t *)&(controller->rapi.accumulative_buffer[0]), 1);
 			Controller_Protocol_Result res = _controller_rapi_process_income(&(controller->rapi), &wrap);
-			if (res != CTRL_PTCL_OK)
+			if (res == CTRL_PTCL_RESPONSE) { ; }
+			else if (res != CTRL_PTCL_OK)
 			{
 				CONTROLLER_OCPP_ERROR(res);
 			}
-			tres = _controller_taskset_push(&(controller->task_set), wrap);
-			if (tres != CTRL_SET_OK)
+			else
 			{
-				CONTROLLER_ERROR(CTRL_TSET_ERR, tset_err, tres);
-			}
+				tres = _controller_taskset_push(&(controller->task_set), wrap);
+				if (tres != CTRL_SET_OK)
+				{
+					CONTROLLER_ERROR(CTRL_TSET_ERR, tset_err, tres);
+				}
+			}		
 		}
 	}
 
@@ -95,7 +99,6 @@ controller_update(Controller *controller)
 			_controller_taskset_esc_iter(&(controller->task_set));
 			CONTROLLER_ERROR(CTRL_TSET_ERR, tset_err, tres);
 		}
-		// uprintf(controller->ocpp.uart, 1000, 100, "wrap %u, %p\n", task_wrap.type, task_wrap.task.func);
 
 		if (task_wrap.type == WRAP_EMPTY)
 		{
@@ -109,12 +112,12 @@ controller_update(Controller *controller)
 				if (!controller->ocpp.is_response)							 { continue; }
 				if (!_ocpp_get_resp(&(controller->ocpp), task_wrap.task.id)) { continue; }
 			}
-			else
+			else if (task_wrap.task.usart == RAPI_USART)
 			{
-				continue;
+				if (controller->rapi.pending) { continue; }
 			}
 		}
-
+		// __debug_taskset_print(&(controller->task_set));
 		if (task_wrap.task.func == NULL)
 		{
 			CONTROLLER_ERROR(CTRL_TSET_ERR, tset_err, CTRL_SET_NULLPTR);
@@ -124,6 +127,7 @@ controller_update(Controller *controller)
 		Task_Result task_res = task_wrap.task.func(controller);
 		if (task_res.type == TRES_NEXT)
 		{
+			// uprintf(controller->ocpp.uart, 1000, 100, "next %u, %p\n", task_res.task.type, task_res.task.task.func);
 			tres = _controller_taskset_update_task(&(controller->task_set), task_res.task);
 			if (tres != CTRL_SET_OK)
 			{

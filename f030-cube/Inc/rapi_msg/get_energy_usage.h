@@ -1,15 +1,15 @@
 #ifndef RAPI_GET_ENERGY_USAGE_H_
 #define RAPI_GET_ENERGY_USAGE_H_
 
-#include "RAPI.h"
+#include "controller_rapi.h"
 
 void
-rapi_get_energy_usage_req(RAPI *rapi);
+_rapi_get_energy_usage_req(Controller_RAPI *rapi);
 
 void
-rapi_get_energy_usage_resp
+_rapi_get_energy_usage_resp
 (
-    RAPI *rapi,
+    Controller_RAPI *rapi,
     uint32_t *ws,
     uint32_t *whacc
 );

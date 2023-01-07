@@ -1,9 +1,10 @@
 #include "rapi_msg/get_state.h"
 
 #include "mjson.h"
+#include "convert.h"
 
 void
-rapi_get_state_req(RAPI *rapi)
+_rapi_get_state_req(Controller_RAPI *rapi)
 {
 	// usart_rapi_println_str("Get state");
 	char payload[RAPI_BUF_LEN];
@@ -14,15 +15,14 @@ rapi_get_state_req(RAPI *rapi)
 		"GS"
 	);
 
-	strcpy(rapi->buf_cmd, payload);
-	rapi->buf_index = strlen(rapi->buf_cmd);
-	rapi_append_chksum(rapi);
+	strcpy(rapi->transmitter_buffer, payload);
+	_rapi_append_chksum(rapi);
 }
 
 void
-rapi_get_state_resp
+_rapi_get_state_resp
 (
-	RAPI *rapi,
+	Controller_RAPI *rapi,
 	uint8_t *evse_state,
 	uint32_t *elapsed_time,
 	uint8_t *pilot_state,

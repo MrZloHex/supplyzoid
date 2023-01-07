@@ -10,7 +10,7 @@ rss_task_1(Controller *ctrl)
 {
     Task_Result res =
     {
-        .type = TRES_WAIT,
+        .type = TRES_NEXT,
         .task =
         {
             .type = WRAP_FINISHED,
@@ -27,7 +27,8 @@ rss_task_1(Controller *ctrl)
 	if (res_id == -1)
 		return res;
 
-    _controller_ocpp_make_req(&(ctrl->ocpp), ACT_AUTHORIZE, &id_tag);
+    strcpy(ctrl->ocpp.idtag, id_tag);
+    _controller_ocpp_make_msg(&(ctrl->ocpp), ACT_AUTHORIZE, &id_tag);
     _controller_ocpp_send_req(&(ctrl->ocpp), ACT_AUTHORIZE);
 
     res.type = TRES_NEXT;
