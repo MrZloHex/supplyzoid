@@ -1,48 +1,37 @@
 #include "ocpp_msg/stop_transaction.h"
-#include "rapi_msg/get_energy_usage.h"
 
 #include "mjson.h"
 #include "serial.h"
 #include "time.h"
 
-// void
-// ocpp_stop_transaction_req
-// (
-// 	OCPP *ocpp,
-// 	RAPI *rapi
-// )
-// {
-// 	rapi_get_energy_usage_req(rapi);
-// 	rapi_send_req(rapi);
-// 	bool resp = rapi_get_resp(rapi, ocpp);
-// 	if (!resp)
-// 		return;
+void
+ocpp_stop_transaction_req
+(
+	Controller_OCPP *ocpp,
+	uint32_t *wh
+)
+{
+	char time[25] = {0};
+	get_rtc_time(ocpp->rtc, time);
 
-// 	uint32_t ws;
-// 	rapi_get_energy_usage_resp(rapi, &ws, NULL);
-// 	uint32_t wh = ws / 3600;
-
-// 	char time[25] = {0};
-// 	get_rtc_time(ocpp->rtc, time);
-
-// 	char payload[PAYLOAD_LEN];
-// 	mjson_snprintf
-// 	(
-// 		payload, PAYLOAD_LEN,
-// 		"{%Q:%ld,%Q:%Q,%Q:%d}",
-// 		"meterStop",
-// 		wh,
-// 		"timestamp",
-// 		time,
-// 		"transactionId",
-// 		ocpp->_transaction_id
-// 	);
+	char payload[PAYLOAD_LEN];
+	mjson_snprintf
+	(
+		payload, PAYLOAD_LEN,
+		"{%Q:%ld,%Q:%Q,%Q:%d}",
+		"meterStop",
+		*wh,
+		"timestamp",
+		time,
+		"transactionId",
+		ocpp->transaction_id
+	);
 
 	
-// 	ocpp->pres_msg.type = CALL;
-// 	ocpp->pres_msg.call.action = ACT_STOP_TRANSACTION;
-// 	strcpy(ocpp->pres_msg.call.payload, payload);
-// }
+	ocpp->message.type = CALL;
+	ocpp->message.data.call.action = ACT_STOP_TRANSACTION;
+	strcpy(ocpp->message.data.call.payload, payload);
+}
 
 // void
 // ocpp_stop_transaction_conf

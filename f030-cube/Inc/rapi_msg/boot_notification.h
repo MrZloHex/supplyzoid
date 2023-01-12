@@ -3,7 +3,7 @@
 
 #include "controller.h"
 
-Task_Result
+void
 rapi_boot_notification_req(Controller *ctrl);
 
 void

@@ -73,7 +73,7 @@ ocpp_remote_start_transaction_conf
 )
 {
 	char payload[PAYLOAD_LEN];
-	if (status)
+	if (*status)
 	{
 		mjson_snprintf
 		(

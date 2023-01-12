@@ -1,6 +1,7 @@
 #include "rapi_msg/get_auth_lock.h"
 
 #include "mjson.h"
+#include "convert.h"
 
 void
 _rapi_get_auth_lock_req(Controller_RAPI *rapi)

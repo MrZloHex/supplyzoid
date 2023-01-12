@@ -2,7 +2,7 @@
 #include "serial.h"
 
 
-Task_Result
+void
 rapi_boot_notification_req(Controller *ctrl)
 {
 	uprintf(ctrl->rapi.uart, 1000, 100, "BOOT NOTIFICAZTION\r");

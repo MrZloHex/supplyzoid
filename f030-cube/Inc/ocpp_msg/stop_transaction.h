@@ -3,19 +3,19 @@
 
 #define P_ID_INFO_STATUS "$.idTagInfo.status"
 
-#include "OCPP.h"
+#include "controller_ocpp.h"
 
 void
 ocpp_stop_transaction_req
 (
-    OCPP *ocpp,
-    RAPI *rapi
+	Controller_OCPP *ocpp,
+	uint32_t *wh
 );
 
 void
 ocpp_stop_transaction_conf
 (
-    OCPP *ocpp
+    Controller_OCPP *ocpp
 );
 
 #endif /* STOP_TRANSACTION_H_ */

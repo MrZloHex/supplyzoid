@@ -36,7 +36,7 @@ rapi_evse_state_transition_req
     }
 
     ocpp_status_notification_req(ocpp, rapi, state, error);
-    ocpp_send_req(ocpp, ACT_STATUS_NOTIFICATION);
+    // ocpp_send_req(ocpp, ACT_STATUS_NOTIFICATION);
     // usart_rapi_print_str("Evse State Transition\r");
 }
 

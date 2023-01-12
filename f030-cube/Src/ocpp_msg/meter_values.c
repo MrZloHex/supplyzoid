@@ -13,18 +13,18 @@ ocpp_meter_values_req
 	RAPI *rapi
 )
 {
-	rapi_get_energy_usage_req(rapi);
-	rapi_send_req(rapi);
+	// rapi_get_energy_usage_req(rapi);
+	// rapi_send_req(rapi);
 	bool resp = rapi_get_resp(rapi, ocpp);
 	if (!resp)
 		return;
 
-	uint32_t ws;
-	rapi_get_energy_usage_resp(rapi, &ws, NULL);
-	uint32_t wh = ws / 3600;
+	// uint32_t ws;
+	// rapi_get_energy_usage_resp(rapi, &ws, NULL);
+	uint32_t wh = 3600;
 
-	rapi_get_current_voltage_req(rapi);
-	rapi_send_req(rapi);
+	// rapi_get_current_voltage_req(rapi);
+	// rapi_send_req(rapi);
 	resp = rapi_get_resp(rapi, ocpp);
 	if (!resp)
 		return;

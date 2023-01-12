@@ -6,11 +6,14 @@
 #include "convert.h"
 
 #include "task_sequences/remote_start_sequence/rss_task_1.h"
+#include "task_sequences/remote_stop_sequence/rsts_task_1.h"
 
 #include "ocpp_msg/boot_notification.h"
 #include "ocpp_msg/authorize.h"
 #include "ocpp_msg/remote_start_transaction.h"
+#include "ocpp_msg/remote_stop_transaction.h"
 #include "ocpp_msg/start_transaction.h"
+#include "ocpp_msg/stop_transaction.h"
 
 const static char	k_ACT_BOOT_NOTIFICATION[]		 = "BootNotification";
 const static char	k_ACT_START_TRANSACTION[]        = "StartTransaction";
@@ -111,7 +114,10 @@ _controller_ocpp_process_income
 			break;
 
 		case ACT_REMOTE_STOP_TRANSACTION:
+			RSTS_TASK_WRAP(wrap, ocpp->message.id);
 			break;
+
+		default: { return CTRL_PTCL_NO_SUCH_MSG; }
 	}
 
 	return CTRL_PTCL_OK;
@@ -134,11 +140,16 @@ _controller_ocpp_make_msg(Controller_OCPP *ocpp, OCPP_CallAction req, void *kwar
 			ocpp_remote_start_transaction_conf(ocpp, (bool *)kwarg);
 			break;
 
+		case ACT_REMOTE_STOP_TRANSACTION:
+			ocpp_remote_stop_transaction_conf(ocpp, (bool *)kwarg);
+			break;
+
 		case ACT_START_TRANSACTION:
 			ocpp_start_transaction_req(ocpp, (uint32_t *)kwarg);
 			break;
 
 		case ACT_STOP_TRANSACTION:
+			ocpp_start_transaction_req(ocpp, (uint32_t *)kwarg);
 			break;
 
 		case ACT_STATUS_NOTIFICATION:
@@ -218,8 +229,10 @@ _controller_ocpp_send_resp
 	}
 	else
 	{
-		return;
+		return CTRL_PTCL_NON_VALID_MSG;
 	}
+
+	return CTRL_PTCL_OK;
 }
 
 bool
