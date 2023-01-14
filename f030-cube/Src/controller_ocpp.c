@@ -14,6 +14,7 @@
 #include "ocpp_msg/remote_stop_transaction.h"
 #include "ocpp_msg/start_transaction.h"
 #include "ocpp_msg/stop_transaction.h"
+#include "ocpp_msg/status_notification.h"
 
 const static char	k_ACT_BOOT_NOTIFICATION[]		 = "BootNotification";
 const static char	k_ACT_START_TRANSACTION[]        = "StartTransaction";
@@ -124,7 +125,7 @@ _controller_ocpp_process_income
 }
 
 Controller_Protocol_Result
-_controller_ocpp_make_msg(Controller_OCPP *ocpp, OCPP_CallAction req, void *kwarg)
+_controller_ocpp_make_msg(Controller_OCPP *ocpp, OCPP_CallAction req, void *kwarg1, void *kwarg2)
 {
 	switch (req)
 	{
@@ -133,26 +134,27 @@ _controller_ocpp_make_msg(Controller_OCPP *ocpp, OCPP_CallAction req, void *kwar
 			break;
 
 		case ACT_AUTHORIZE:
-		 	ocpp_authorize_req(ocpp, (OCPP_IdTag *)kwarg);
+		 	ocpp_authorize_req(ocpp, (OCPP_IdTag *)kwarg1);
 			break;
 
 		case ACT_REMOTE_START_TRANSACTION:
-			ocpp_remote_start_transaction_conf(ocpp, (bool *)kwarg);
+			ocpp_remote_start_transaction_conf(ocpp, (bool *)kwarg1);
 			break;
 
 		case ACT_REMOTE_STOP_TRANSACTION:
-			ocpp_remote_stop_transaction_conf(ocpp, (bool *)kwarg);
+			ocpp_remote_stop_transaction_conf(ocpp, (bool *)kwarg1);
 			break;
 
 		case ACT_START_TRANSACTION:
-			ocpp_start_transaction_req(ocpp, (uint32_t *)kwarg);
+			ocpp_start_transaction_req(ocpp, (uint32_t *)kwarg1);
 			break;
 
 		case ACT_STOP_TRANSACTION:
-			ocpp_start_transaction_req(ocpp, (uint32_t *)kwarg);
+			ocpp_start_transaction_req(ocpp, (uint32_t *)kwarg1);
 			break;
 
 		case ACT_STATUS_NOTIFICATION:
+			ocpp_status_notification_req(ocpp, (OCPP_ChargePointStatus *)kwarg1, (OCPP_ChargePointErrorCode *)kwarg2);
 			break;
 
 		case ACT_METER_VALUES:

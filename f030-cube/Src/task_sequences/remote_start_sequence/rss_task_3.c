@@ -27,7 +27,7 @@ rss_task_3(Controller *ctrl, OCPP_MessageID t_id)
     _rapi_get_state_resp(&(ctrl->rapi), &evse_state, NULL, &pilot_state, NULL);
     
     bool accept = (evse_state == EVSE_STATE_B && pilot_state == EVSE_STATE_C);
-    _controller_ocpp_make_msg(&(ctrl->ocpp), ACT_REMOTE_START_TRANSACTION, &accept);
+    _controller_ocpp_make_msg(&(ctrl->ocpp), ACT_REMOTE_START_TRANSACTION, &accept, NULL);
     _controller_ocpp_send_resp(&(ctrl->ocpp), CALLRESULT, t_id);
     if (!accept)
         return res;

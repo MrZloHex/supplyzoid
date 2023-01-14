@@ -46,6 +46,39 @@ typedef enum OCPP_MessageType_E
 	CALLERROR  = 4U
 } OCPP_MessageType;
 
+typedef enum OCPPChargePointStatus_E
+{
+    CPS_Available       = 0x1U,
+    CPS_Preparing       = 0x2U,
+    CPS_Charging        = 0x3U,
+    CPS_SuspendedEVSE   = 0x4U,
+    CPS_SuspendedEV     = 0x5U,
+    CPS_Finishing       = 0x6U,
+    CPS_Reserved        = 0x7U,
+    CPS_Unavailable     = 0x8U,
+    CPS_Faulted         = 0x9U,
+} OCPP_ChargePointStatus;
+
+typedef enum OCPPChargePointErrorCode_E
+{
+	CPEC_NoError,
+	CPEC_ConnectorLockFailure,
+	CPEC_EVCommunicationError,
+	CPEC_GroundFailure,
+	CPEC_HighTemperature,
+	CPEC_InternalError,
+	CPEC_LocalListConflict,
+	CPEC_OtherError,
+	CPEC_OverCurrentFailure,
+	CPEC_OverVoltage,
+	CPEC_PowerMeterFailure,
+	CPEC_PowerSwitchFailure,
+	CPEC_ReaderFailure,
+	CPEC_ResetFailure,
+	CPEC_UnderVoltage,
+	CPEC_WeakSignal
+} OCPP_ChargePointErrorCode;
+
 #ifndef	ID_LEN
 #define ID_LEN		 64
 typedef char OCPP_MessageID[ID_LEN];
@@ -136,7 +169,7 @@ _controller_ocpp_process_income
 );
 
 Controller_Protocol_Result
-_controller_ocpp_make_msg(Controller_OCPP *ocpp, OCPP_CallAction req, void *kwarg);
+_controller_ocpp_make_msg(Controller_OCPP *ocpp, OCPP_CallAction req, void *kwarg1, void *kwarg2);
 
 Controller_Protocol_Result
 _controller_ocpp_send_req(Controller_OCPP *ocpp, OCPP_CallAction req);

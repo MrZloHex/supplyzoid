@@ -1,7 +1,7 @@
 #ifndef STATUS_NOTIFICATION_H_
 #define STATUS_NOTIFICATION_H_
 
-#include "OCPP.h"
+#include "controller_ocpp.h"
 
 // ChargePointErrorCode
 #define NO_ERROR 0
@@ -10,16 +10,15 @@
 void
 ocpp_status_notification_req
 (
-    OCPP *ocpp,
-    RAPI *rapi,
-    OCPPChargePointStatus state,
-	OCPPChargePointErrorCode error
+    Controller_OCPP *ocpp,
+    OCPP_ChargePointStatus *state,
+	OCPP_ChargePointErrorCode *error
 );
 
 void
 ocpp_status_notification_conf
 (
-    OCPP *ocpp
+    Controller_OCPP *ocpp
 );
 
 #endif /* STATUS_NOTIFICATION_H_ */

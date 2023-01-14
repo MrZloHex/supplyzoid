@@ -5,6 +5,7 @@
 #include "convert.h"
 
 #include "task_sequences/boot_sequence/bs_task_1.h"
+#include "task_sequences/status_sequence/sn_task_1.h"
 
 void
 _controller_rapi_initialize
@@ -80,6 +81,7 @@ _controller_rapi_process_income
 					// task = rapi_boot_notification_req(rapi);
 					break;
 				case 'T':
+					SN_TASK_WRAP(wrap);
 					// rapi_evse_state_transition_req(rapi, ocpp);
 					break;
 				case 'N':

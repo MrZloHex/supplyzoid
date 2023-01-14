@@ -28,7 +28,7 @@ rss_task_1(Controller *ctrl, OCPP_MessageID t_id)
 		return res;
 
     strcpy(ctrl->ocpp.idtag, id_tag);
-    _controller_ocpp_make_msg(&(ctrl->ocpp), ACT_AUTHORIZE, &id_tag);
+    _controller_ocpp_make_msg(&(ctrl->ocpp), ACT_AUTHORIZE, &id_tag, NULL);
     _controller_ocpp_send_req(&(ctrl->ocpp), ACT_AUTHORIZE);
 
     res.type = TRES_NEXT;

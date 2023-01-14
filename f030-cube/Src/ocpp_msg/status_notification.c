@@ -2,7 +2,7 @@
 
 #include "mjson.h"
 
-char *ChargePointErrorCode[] = {
+const static char *ChargePointErrorCode[] = {
 	"NoError",
 	"ConnectorLockFailure",
 	"EVCommunicationError",
@@ -21,7 +21,8 @@ char *ChargePointErrorCode[] = {
 	"WeakSignal"
 };
 
-char *ChargePointStatus[] = {
+const static char *ChargePointStatus[] = {
+	"",
 	"Available",
 	"Preparing",
 	"Charging",
@@ -36,10 +37,9 @@ char *ChargePointStatus[] = {
 void
 ocpp_status_notification_req
 (
-    OCPP *ocpp,
-    RAPI *rapi,
-	OCPPChargePointStatus status,
-	OCPPChargePointErrorCode error
+    Controller_OCPP *ocpp,
+	OCPP_ChargePointStatus *status,
+	OCPP_ChargePointErrorCode *error
 )
 {
 	char payload[PAYLOAD_LEN];
@@ -48,22 +48,22 @@ ocpp_status_notification_req
 		payload, PAYLOAD_LEN,
 		"{%Q:%d,%Q:%Q,%Q:%Q}",
 		"connectorId",
-		1,
+		0,
 		"errorCode",
-		ChargePointErrorCode[error],
+		ChargePointErrorCode[*error],
 		"status",
-		ChargePointStatus[status]
+		ChargePointStatus[*status]
 	);
 
-	ocpp->pres_msg.type = CALL;
-	ocpp->pres_msg.call.action = ACT_STATUS_NOTIFICATION;
-	strcpy(ocpp->pres_msg.call.payload, payload);
+	ocpp->message.type = CALL;
+	ocpp->message.data.call.action = ACT_STATUS_NOTIFICATION;
+	strcpy(ocpp->message.data.call.payload, payload);
 }
 
 void
 ocpp_status_notification_conf
 (
-    OCPP *ocpp
+    Controller_OCPP *ocpp
 )
 {
     

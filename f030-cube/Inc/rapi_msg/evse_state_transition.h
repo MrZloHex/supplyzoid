@@ -1,16 +1,17 @@
 #ifndef RAPI_EVSE_STATE_TRANSITION_H_
 #define RAPI_EVSE_STATE_TRANSITION_H_
 
-#include "RAPI.h"
+#include "controller_rapi.h"
 
 void
-rapi_evse_state_transition_req
+_rapi_evse_state_transition_req
 (
-    RAPI *rapi,
-    OCPP *ocpp
+    Controller_RAPI *rapi,
+    uint8_t *evse_state,
+    uint8_t *pilot_state
 );
 
 void
-rapi_evse_state_transition_resp(RAPI *rapi);
+_rapi_evse_state_transition_resp(Controller_RAPI *rapi);
 
 #endif /* RAPI_EVSE_STATE_TRANSITION_H_ */

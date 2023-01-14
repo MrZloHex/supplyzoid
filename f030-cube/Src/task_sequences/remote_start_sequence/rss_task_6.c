@@ -7,7 +7,9 @@
 Task_Result
 rss_task_6(Controller *ctrl, OCPP_MessageID t_id)
 {
+#ifdef DEBUG
     uprintf(ctrl->rapi.uart, 1000, 10, "RSS_6\r");
+#endif
     Task_Result res =
     {
         .type = TRES_NEXT,
