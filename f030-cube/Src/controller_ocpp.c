@@ -7,6 +7,7 @@
 
 #include "task_sequences/remote_start_sequence/rss_task_1.h"
 #include "task_sequences/remote_stop_sequence/rsts_task_1.h"
+#include "task_sequences/availability_sequence/ca_task_1.h"
 
 #include "ocpp_msg/boot_notification.h"
 #include "ocpp_msg/authorize.h"
@@ -15,6 +16,7 @@
 #include "ocpp_msg/start_transaction.h"
 #include "ocpp_msg/stop_transaction.h"
 #include "ocpp_msg/status_notification.h"
+#include "ocpp_msg/change_availability.h"
 
 const static char	k_ACT_BOOT_NOTIFICATION[]		 = "BootNotification";
 const static char	k_ACT_START_TRANSACTION[]        = "StartTransaction";
@@ -56,6 +58,8 @@ _controller_ocpp_initialize
 
 	ocpp->is_response = false;
 	ocpp->q_resps = 0;
+
+	ocpp->status = CPS_Unavailable;
 }
 
 Controller_Protocol_Result
@@ -118,6 +122,10 @@ _controller_ocpp_process_income
 			RSTS_TASK_WRAP(wrap, ocpp->message.id);
 			break;
 
+		case ACT_CHANGE_AVAILABILITY:
+			CA_TASK_WRAP(wrap, ocpp->message.id);
+			break;
+
 		default: { return CTRL_PTCL_NO_SUCH_MSG; }
 	}
 
@@ -155,6 +163,10 @@ _controller_ocpp_make_msg(Controller_OCPP *ocpp, OCPP_CallAction req, void *kwar
 
 		case ACT_STATUS_NOTIFICATION:
 			ocpp_status_notification_req(ocpp, (OCPP_ChargePointStatus *)kwarg1, (OCPP_ChargePointErrorCode *)kwarg2);
+			break;
+
+		case ACT_CHANGE_AVAILABILITY:
+			ocpp_change_availabilty_conf(ocpp, (OCPP_AvailabilityStatus *)kwarg1);
 			break;
 
 		case ACT_METER_VALUES:

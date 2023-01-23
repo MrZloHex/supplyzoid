@@ -35,6 +35,8 @@ sn_task_1(Controller *ctrl, OCPP_MessageID t_id)
             error = CPEC_OtherError;
     }
 
+    ctrl->ocpp.status = status;
+
     _controller_ocpp_make_msg(&(ctrl->ocpp), ACT_STATUS_NOTIFICATION, &status, &error);
     _controller_ocpp_send_req(&(ctrl->ocpp), ACT_STATUS_NOTIFICATION);
 

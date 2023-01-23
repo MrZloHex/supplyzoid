@@ -46,6 +46,15 @@ typedef enum OCPP_MessageType_E
 	CALLERROR  = 4U
 } OCPP_MessageType;
 
+typedef enum OCPPAvailabilityStatus_E
+{
+	AS_Accepted	 = 0x0U,
+	AS_Rejected  = 0x1U,
+	AS_Scheduled = 0x2U
+} OCPP_AvailabilityStatus;
+
+#define IS_OCPP_OPERATIVE(__OCPP__)	(__OCPP__->status != CPS_Unavailable && __OCPP__->status != CPS_Faulted)
+
 typedef enum OCPPChargePointStatus_E
 {
     CPS_Available       = 0x1U,
@@ -143,6 +152,9 @@ typedef struct Controller_OCPP_S
 
 	OCPP_IdTag idtag;
 	uint32_t transaction_id;
+
+	OCPP_ChargePointStatus status;
+	bool in_transaction;
 
 	bool is_response;
 	OCPP_Message responses[MAX_RESPONSES];

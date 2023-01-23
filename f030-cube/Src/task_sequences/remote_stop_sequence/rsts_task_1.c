@@ -22,7 +22,9 @@ rsts_task_1(Controller *ctrl, OCPP_MessageID t_id)
             }
         }
     };
+#ifdef DEBUG
     uprintf(ctrl->rapi.uart, 1000, 10, "RSTS_1\r");
+#endif
 	double transaction_id_d;
 	int res_id = mjson_get_number(ctrl->ocpp.message.data.call.payload, strlen(ctrl->ocpp.message.data.call.payload), P_TRANSACTION_ID, &transaction_id_d);
 	if (res_id == 0 || (uint32_t)transaction_id_d != ctrl->ocpp.transaction_id)

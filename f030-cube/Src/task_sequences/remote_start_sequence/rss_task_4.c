@@ -23,7 +23,7 @@ rss_task_4(Controller *ctrl, OCPP_MessageID t_id)
         }
     };
     
-
+    ctrl->ocpp.in_transaction = true;
     _rapi_get_energy_usage_req(&(ctrl->rapi));
     _rapi_send_req(&(ctrl->rapi));
         

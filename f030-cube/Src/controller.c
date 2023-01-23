@@ -134,9 +134,8 @@ controller_update(Controller *controller)
 				CONTROLLER_ERROR(CTRL_TSET_ERR, tset_err, tres);
 			}
 			// __debug_taskset_print(&(controller->task_set));
+			break;
 		}
-
-		break;
 	}
 
 	_controller_taskset_esc_iter(&(controller->task_set));
