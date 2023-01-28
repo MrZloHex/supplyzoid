@@ -4,7 +4,7 @@
 #include "serial.h"
 #include "string.h"
 #include "mjson.h"
-#include "rapi_msg/get_state.h"
+#include "controller_rapi_msg.h"
 
 Task_Result
 rss_task_2(Controller *ctrl, OCPP_MessageID t_id)

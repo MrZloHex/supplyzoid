@@ -4,7 +4,7 @@
 #include "serial.h"
 #include "controller_ocpp.h"
 
-#include "rapi_msg/evse_state_transition.h"
+#include "controller_rapi_msg.h"
 
 Task_Result
 sn_task_1(Controller *ctrl, OCPP_MessageID t_id)

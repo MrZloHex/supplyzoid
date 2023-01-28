@@ -1,4 +1,5 @@
 #include "controller_ocpp.h"
+#include "controller_ocpp_msg.h"
 
 #include "string.h"
 #include "serial.h"
@@ -8,15 +9,9 @@
 #include "task_sequences/remote_start_sequence/rss_task_1.h"
 #include "task_sequences/remote_stop_sequence/rsts_task_1.h"
 #include "task_sequences/availability_sequence/ca_task_1.h"
+#include "task_sequences/reset_sequence/rt_task_1.h"
+#include "task_sequences/send_local_sequence/sll_task_1.h"
 
-#include "ocpp_msg/boot_notification.h"
-#include "ocpp_msg/authorize.h"
-#include "ocpp_msg/remote_start_transaction.h"
-#include "ocpp_msg/remote_stop_transaction.h"
-#include "ocpp_msg/start_transaction.h"
-#include "ocpp_msg/stop_transaction.h"
-#include "ocpp_msg/status_notification.h"
-#include "ocpp_msg/change_availability.h"
 
 const static char	k_ACT_BOOT_NOTIFICATION[]		 = "BootNotification";
 const static char	k_ACT_START_TRANSACTION[]        = "StartTransaction";
@@ -26,11 +21,13 @@ const static char	k_ACT_METER_VALUES[]             = "MeterValues";
 const static char	k_ACT_HEARTBEAT[]                = "HeartBeat";
 const static char	k_ACT_DATA_TRANSFER[]            = "DataTransfer";
 const static char	k_ACT_AUTHORIZE[]                = "Authorize";
-const static char  *k_ACTIONS_STRINGS[8] =
+const static char	k_ACT_SEND_LOCAL_LIST[]			 = "SendLocalList";
+const static char 	k_ACT_GET_LOCAL_LIST_VERSION[]	 = "GetLocalListVersion";
+const static char  *k_ACTIONS_STRINGS[10] =
 {
 	k_ACT_BOOT_NOTIFICATION, k_ACT_START_TRANSACTION, k_ACT_STOP_TRANSACTION,
 	k_ACT_STATUS_NOTIFICATION, k_ACT_METER_VALUES, k_ACT_HEARTBEAT,
-	k_ACT_DATA_TRANSFER, k_ACT_AUTHORIZE
+	k_ACT_DATA_TRANSFER, k_ACT_AUTHORIZE, k_ACT_SEND_LOCAL_LIST, k_ACT_GET_LOCAL_LIST_VERSION
 };
 
 
@@ -126,6 +123,14 @@ _controller_ocpp_process_income
 			CA_TASK_WRAP(wrap, ocpp->message.id);
 			break;
 
+		case ACT_RESET:
+			RT_TASK_WRAP(wrap, ocpp->message.id);
+			break;
+
+		case ACT_SEND_LOCAL_LIST:
+			SLL_TASK_WRAP(wrap, ocpp->message.id);
+			break;
+
 		default: { return CTRL_PTCL_NO_SUCH_MSG; }
 	}
 
@@ -167,6 +172,10 @@ _controller_ocpp_make_msg(Controller_OCPP *ocpp, OCPP_CallAction req, void *kwar
 
 		case ACT_CHANGE_AVAILABILITY:
 			ocpp_change_availabilty_conf(ocpp, (OCPP_AvailabilityStatus *)kwarg1);
+			break;
+
+		case ACT_RESET:
+		 	ocpp_reset_conf(ocpp, (bool *)kwarg1);
 			break;
 
 		case ACT_METER_VALUES:

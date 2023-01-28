@@ -2,7 +2,7 @@
 #include "task_sequences/remote_start_sequence/rss_task_6.h"
 
 #include "serial.h"
-#include "rapi_msg/get_energy_usage.h"
+#include "controller_rapi_msg.h"
 
 Task_Result
 rss_task_5(Controller *ctrl, OCPP_MessageID t_id)

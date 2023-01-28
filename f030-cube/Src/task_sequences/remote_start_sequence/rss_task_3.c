@@ -2,8 +2,7 @@
 #include "task_sequences/remote_start_sequence/rss_task_4.h"
 
 #include "serial.h"
-#include "rapi_msg/get_state.h"
-#include "rapi_msg/set_auth_lock.h"
+#include "controller_rapi_msg.h"
 
 Task_Result
 rss_task_3(Controller *ctrl, OCPP_MessageID t_id)

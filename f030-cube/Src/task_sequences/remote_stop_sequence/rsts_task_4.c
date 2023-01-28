@@ -1,7 +1,7 @@
 #include "task_sequences/remote_stop_sequence/rsts_task_4.h"
 #include "task_sequences/remote_stop_sequence/rsts_task_5.h"
 
-#include "rapi_msg/get_energy_usage.h"
+#include "controller_rapi_msg.h"
 
 #include "serial.h"
 #include "mjson.h"

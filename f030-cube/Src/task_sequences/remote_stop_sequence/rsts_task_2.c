@@ -1,8 +1,7 @@
 #include "task_sequences/remote_stop_sequence/rsts_task_2.h"
 #include "task_sequences/remote_stop_sequence/rsts_task_3.h"
 
-#include "rapi_msg/get_state.h"
-#include "rapi_msg/set_auth_lock.h"
+#include "controller_rapi_msg.h"
 
 #include "serial.h"
 #include "mjson.h"
