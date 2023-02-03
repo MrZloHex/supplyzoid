@@ -284,3 +284,47 @@ ocpp_reset_conf
 	ocpp->message.type = CALLRESULT;
 	strcpy(ocpp->message.data.call_result.payload, payload);
 }
+
+const static char k_US_ACCEPTED[]			= "Accepted";
+const static char k_US_FAILED[]  			= "Rejected";
+const static char k_US_NOT_SUPPORTED[]		= "NotSupported";
+const static char k_US_VERSION_MISMATCH[]	= "VersionMismatch";
+const static char *k_US_STRINGS[4] = { k_US_ACCEPTED, k_US_FAILED, k_US_NOT_SUPPORTED, k_US_VERSION_MISMATCH };
+
+void
+ocpp_send_local_list_conf
+(
+	Controller_OCPP *ocpp,
+	OCPP_UpdateStatus *status
+)
+{
+	char payload[PAYLOAD_LEN];
+	mjson_snprintf
+	(
+		payload, PAYLOAD_LEN,
+		"{%Q:%Q}",
+		"status",
+		k_US_STRINGS[*status]
+	);
+
+	ocpp->message.type = CALL;
+	ocpp->message.data.call.action = ACT_SEND_LOCAL_LIST;
+	strcpy(ocpp->message.data.call.payload, payload);
+}
+
+void
+ocpp_get_local_list_version_conf(Controller_OCPP *ocpp)
+{
+	char payload[PAYLOAD_LEN];
+	mjson_snprintf
+	(
+		payload, PAYLOAD_LEN,
+		"{%Q:%u}",
+		"listVersion",
+		ocpp->list.version
+	);
+
+	ocpp->message.type = CALL;
+	ocpp->message.data.call.action = ACT_GET_LOCAL_LIST_VERSION;
+	strcpy(ocpp->message.data.call.payload, payload);
+}

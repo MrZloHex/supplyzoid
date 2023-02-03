@@ -76,5 +76,15 @@ ocpp_change_availabilty_conf
     OCPP_AvailabilityStatus *status
 );
 
+void
+ocpp_send_local_list_conf
+(
+	Controller_OCPP *ocpp,
+	OCPP_UpdateStatus *status
+);
+
+void
+ocpp_get_local_list_version_conf(Controller_OCPP *ocpp);
+
 
 #endif /* __CONTROLLER_OCPP_MESSAGES_H__ */

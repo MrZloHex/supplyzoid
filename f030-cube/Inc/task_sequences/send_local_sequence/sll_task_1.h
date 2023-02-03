@@ -11,6 +11,9 @@
 
 #define P_LIST_VERSION "$.listVersion"
 #define P_UPDATE_TYPE  "$.updateType"
+#define P_LIST         "$.localAuthorizationList"
+#define P_TOKEN_TAG    "$.idTag"
+#define P_TOKEN_STATUS "$.idTagInfo.status"
 
 Task_Result
 sll_task_1(Controller *ctrl, OCPP_MessageID t_id);

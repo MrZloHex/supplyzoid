@@ -9,6 +9,7 @@
 #define __CONTROLLER_OCPP_H__
 
 #include "controller_types.h"
+#include "controller_ocpp_list.h"
 
 #include "usart.h"
 #include "stdbool.h"
@@ -52,6 +53,15 @@ typedef enum OCPPAvailabilityStatus_E
 	AS_Rejected  = 0x1U,
 	AS_Scheduled = 0x2U
 } OCPP_AvailabilityStatus;
+
+typedef enum OCPPUpdateStatus_E
+{
+    US_Accepted	 = 0x0U,
+    US_Failed	 = 0x1U,
+    US_NotSupported = 0x2U,
+	US_VersionMismatch = 0x3U
+} OCPP_UpdateStatus;
+
 
 #define IS_OCPP_OPERATIVE(__OCPP__)	(__OCPP__->status != CPS_Unavailable && __OCPP__->status != CPS_Faulted)
 
@@ -155,6 +165,8 @@ typedef struct Controller_OCPP_S
 
 	OCPP_ChargePointStatus status;
 	bool in_transaction;
+
+	OCPP_AuthorizationList list;
 
 	bool is_response;
 	OCPP_Message responses[MAX_RESPONSES];

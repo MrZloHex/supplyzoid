@@ -11,6 +11,7 @@
 #include "task_sequences/availability_sequence/ca_task_1.h"
 #include "task_sequences/reset_sequence/rt_task_1.h"
 #include "task_sequences/send_local_sequence/sll_task_1.h"
+#include "task_sequences/get_verlist_sequence/gvl_task_1.h"
 
 
 const static char	k_ACT_BOOT_NOTIFICATION[]		 = "BootNotification";
@@ -21,13 +22,19 @@ const static char	k_ACT_METER_VALUES[]             = "MeterValues";
 const static char	k_ACT_HEARTBEAT[]                = "HeartBeat";
 const static char	k_ACT_DATA_TRANSFER[]            = "DataTransfer";
 const static char	k_ACT_AUTHORIZE[]                = "Authorize";
+const static char 	k_ACT_RESET[]				     = "Reset";
+const static char	k_ACT_REMOTE_START_TRANSACTION[] = "RemoteStartTransaction";
+const static char	k_ACT_REMOTE_STOP_TRANSACTION[]	 = "RemoteStopTransation";
+const static char	k_ACT_CHANGE_AVAILABILITY[]		 = "ChangeAvailability";
 const static char	k_ACT_SEND_LOCAL_LIST[]			 = "SendLocalList";
 const static char 	k_ACT_GET_LOCAL_LIST_VERSION[]	 = "GetLocalListVersion";
-const static char  *k_ACTIONS_STRINGS[10] =
+const static char  *k_ACTIONS_STRINGS[14] =
 {
 	k_ACT_BOOT_NOTIFICATION, k_ACT_START_TRANSACTION, k_ACT_STOP_TRANSACTION,
 	k_ACT_STATUS_NOTIFICATION, k_ACT_METER_VALUES, k_ACT_HEARTBEAT,
-	k_ACT_DATA_TRANSFER, k_ACT_AUTHORIZE, k_ACT_SEND_LOCAL_LIST, k_ACT_GET_LOCAL_LIST_VERSION
+	k_ACT_DATA_TRANSFER, k_ACT_AUTHORIZE, k_ACT_RESET,
+ 	k_ACT_REMOTE_START_TRANSACTION, k_ACT_REMOTE_STOP_TRANSACTION, k_ACT_CHANGE_AVAILABILITY,
+	k_ACT_SEND_LOCAL_LIST, k_ACT_GET_LOCAL_LIST_VERSION
 };
 
 
@@ -57,6 +64,8 @@ _controller_ocpp_initialize
 	ocpp->q_resps = 0;
 
 	ocpp->status = CPS_Unavailable;
+
+	ocpp_authlist_init(&(ocpp->list));
 }
 
 Controller_Protocol_Result
@@ -131,6 +140,10 @@ _controller_ocpp_process_income
 			SLL_TASK_WRAP(wrap, ocpp->message.id);
 			break;
 
+		case ACT_GET_LOCAL_LIST_VERSION:
+			GVL_TASK_WRAP(wrap, ocpp->message.id);
+			break;
+
 		default: { return CTRL_PTCL_NO_SUCH_MSG; }
 	}
 
@@ -177,6 +190,12 @@ _controller_ocpp_make_msg(Controller_OCPP *ocpp, OCPP_CallAction req, void *kwar
 		case ACT_RESET:
 		 	ocpp_reset_conf(ocpp, (bool *)kwarg1);
 			break;
+
+		case ACT_SEND_LOCAL_LIST:
+			ocpp_send_local_list_conf(ocpp, (OCPP_UpdateStatus *)kwarg1);
+
+		case ACT_GET_LOCAL_LIST_VERSION:
+			ocpp_get_local_list_version_conf(ocpp);
 
 		case ACT_METER_VALUES:
 			break;
@@ -325,14 +344,18 @@ _ocpp_get_action(Controller_OCPP *ocpp)
 	if (res <= 0)
 		return false;
 	
-	if (strcmp(buf, "RemoteStartTransaction") == 0)
+	if (strcmp(buf, k_ACT_REMOTE_START_TRANSACTION) == 0)
 		ocpp->message.data.call.action = ACT_REMOTE_START_TRANSACTION;
-	else if (strcmp(buf, "RemoteStopTransaction") == 0)
+	else if (strcmp(buf, k_ACT_REMOTE_STOP_TRANSACTION) == 0)
 		ocpp->message.data.call.action = ACT_REMOTE_STOP_TRANSACTION;
-	else if (strcmp(buf, "ChangeAvailability") == 0)
+	else if (strcmp(buf, k_ACT_CHANGE_AVAILABILITY) == 0)
 		ocpp->message.data.call.action = ACT_CHANGE_AVAILABILITY;
-	else if (strcmp(buf, "Reset") == 0)
+	else if (strcmp(buf, k_ACT_RESET) == 0)
 		ocpp->message.data.call.action = ACT_RESET;
+	else if (strcmp(buf, k_ACT_SEND_LOCAL_LIST) == 0)
+		ocpp->message.data.call.action = ACT_SEND_LOCAL_LIST;
+	else if (strcmp(buf, k_ACT_GET_LOCAL_LIST_VERSION) == 0)
+		ocpp->message.data.call.action = ACT_GET_LOCAL_LIST_VERSION;
 	else
 		return false;
 	
