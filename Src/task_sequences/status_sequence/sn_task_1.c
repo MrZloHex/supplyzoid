@@ -12,9 +12,24 @@ sn_task_1(Controller *ctrl, OCPP_MessageID t_id)
 #ifdef DEBUG
     uprintf(ctrl->rapi.uart, 1000, 10, "SN_1\r");
 #endif
+    Task_Result rres =
+    {
+        .type = TRES_NEXT,
+        .task =
+        {
+            .type = WRAP_FINISHED,
+            .task = 
+            {
+                .func = NULL
+            }
+        }
+    };
 
     uint8_t evse_state, pilot_state;
     _rapi_evse_state_transition_req(&(ctrl->rapi), &evse_state, &pilot_state);
+    if (evse_state ==  EVSE_STATE_UNKNOWN)
+        return rres;
+
     ctrl->e_state = evse_state;
     ctrl->p_state = pilot_state;
 

@@ -55,6 +55,7 @@
 
 #define RAPI_UART huart2
 #define OCPP_UART huart1
+// #define NODEBUG
 
 static Controller controller = {0};
 
@@ -298,7 +299,7 @@ void
 Error_Handler_with_err(const char * err)
 {
   #ifndef NODEBUG
-  uprintf(&huart4, 1000, 256, "ERROR: %s\r", err);
+  uprintf(&RAPI_UART, 1000, 256, "ERROR: %s\r", err);
   #endif
   Error_Handler();
 }
