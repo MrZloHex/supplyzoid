@@ -88,6 +88,7 @@ controller_update(Controller *controller)
 		}
 	}
 
+	#if 1
 	#define METER_VALUES_TIMEOUT 10000
 	static Timer mv_timer;
 	timer_set(&mv_timer, METER_VALUES_TIMEOUT, true);
@@ -101,6 +102,7 @@ controller_update(Controller *controller)
 		MV_TASK_WRAP((&mv_wrap));
 		_controller_taskset_push(&(controller->task_set), mv_wrap);
 	}
+	#endif
 
 	// IF THERE ARE NO FACES (TASKS SORRY) - RETURN
 	if (controller->task_set.size == 0)

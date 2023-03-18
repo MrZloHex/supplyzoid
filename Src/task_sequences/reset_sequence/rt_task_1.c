@@ -32,6 +32,10 @@ rt_task_1(Controller *ctrl, OCPP_MessageID t_id)
     if      (strcmp(status, "Hard") == 0) { type_reset = false; }
     else if (strcmp(status, "Soft") == 0) { type_reset = true;  }
     else    { r = false; }
+
+    #ifdef DEBUG
+    uprintf(ctrl->rapi.uart, 1000, 100, "%u %s\r", r, status);
+    #endif
     
     _controller_ocpp_make_msg(&(ctrl->ocpp), ACT_RESET, &r, NULL);
     _controller_ocpp_send_resp(&(ctrl->ocpp), CALLRESULT, t_id);

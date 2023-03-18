@@ -10,6 +10,9 @@
         "mv_task_1.h": "c",
         "controller_ocpp_msg.h": "c",
         "controller_ocpp_list.h": "c",
-        "serial.h": "c"
+        "serial.h": "c",
+        "sts_task_1.h": "c",
+        "sts_task_3.h": "c",
+        "rss_task_4.h": "c"
     }
 }

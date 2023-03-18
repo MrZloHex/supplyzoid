@@ -1,5 +1,6 @@
 #include "task_sequences/status_sequence/sn_task_1.h"
 #include "task_sequences/status_sequence/sn_task_2.h"
+#include "task_sequences/stop_sequence/sts_task_1.h"
 
 #include "serial.h"
 #include "controller_ocpp.h"
@@ -72,6 +73,12 @@ sn_task_1(Controller *ctrl, OCPP_MessageID t_id)
             }
         }
     };
+
+    if (ctrl->ocpp.in_transaction && pilot_state != EVSE_STATE_C)
+    {
+        res.task.task.func = sts_task_1;
+    }
+
     return res;
 }
 

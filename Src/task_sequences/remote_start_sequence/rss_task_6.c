@@ -23,6 +23,7 @@ rss_task_6(Controller *ctrl, OCPP_MessageID t_id)
         }
     };
 
+    ctrl->ocpp.in_transaction = true;
 	size_t pay_len = strlen(ctrl->ocpp.message.data.call_result.payload);
 
 	double transaction_id;
