@@ -74,7 +74,7 @@ sn_task_1(Controller *ctrl, OCPP_MessageID t_id)
         }
     };
 
-    if (ctrl->ocpp.in_transaction && pilot_state != EVSE_STATE_C)
+    if (ctrl->ocpp.in_transaction && (pilot_state != EVSE_STATE_C && pilot_state != EVSE_STATE_B))
     {
         res.task.task.func = sts_task_1;
     }
