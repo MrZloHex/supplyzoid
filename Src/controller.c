@@ -29,8 +29,7 @@ controller_initialize
 	_controller_ocpp_initialize(&(controller->ocpp), ocpp_uart, ocpp_tim, rtc, i2c, wp_gpio, wp_pin);
 	_controller_rapi_initialize(&(controller->rapi), rapi_uart, rapi_tim);
 
-	lcd_i2c_init(&(controller->lcd), i2c, 0x4E, LCD_20x4, 10);
-
+	_controller_lcd_init(controller, i2c);
 	CONTROLLER_OKAY;
 }
 

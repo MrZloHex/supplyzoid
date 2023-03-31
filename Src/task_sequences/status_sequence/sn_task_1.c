@@ -28,11 +28,8 @@ sn_task_1(Controller *ctrl, OCPP_MessageID t_id)
 
     uint8_t evse_state, pilot_state;
     _rapi_evse_state_transition_req(&(ctrl->rapi), &evse_state, &pilot_state);
-    if (evse_state ==  EVSE_STATE_UNKNOWN)
+    if (evse_state == EVSE_STATE_UNKNOWN)
         return rres;
-
-    ctrl->e_state = evse_state;
-    ctrl->p_state = pilot_state;
 
     OCPP_ChargePointStatus status;
     OCPP_ChargePointErrorCode error = CPEC_NoError;

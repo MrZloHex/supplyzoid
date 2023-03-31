@@ -25,11 +25,7 @@ typedef struct Controller_S
 	Controller_TaskSet task_set;
 	Controller_OCPP ocpp;
 	Controller_RAPI rapi;
-	LCD_I2C		    lcd;
-
-	#warning only for debug purposes 
-	uint32_t p_state;
-	uint32_t e_state;
+	LCD_I2C 	lcd;
 } Controller;
 
 Controller_Result
@@ -43,7 +39,7 @@ controller_initialize
 	RTC_HandleTypeDef *rtc,
 	I2C_HandleTypeDef *i2c,
 	GPIO_TypeDef   	  *wp_gpio,
-	uint16_t 		  wp_pin
+	uint16_t 	   wp_pin
 );
 
 Controller_Result

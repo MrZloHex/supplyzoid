@@ -14,8 +14,8 @@
 #include "task_sequences/get_verlist_sequence/gvl_task_1.h"
 
 
-const static char	k_ACT_BOOT_NOTIFICATION[]		 = "BootNotification";
-const static char	k_ACT_START_TRANSACTION[]        = "StartTransaction";
+const static char	k_ACT_BOOT_NOTIFICATION[]	= "BootNotification";
+const static char	k_ACT_START_TRANSACTION[]	= "StartTransaction";
 const static char	k_ACT_STOP_TRANSACTION[]         = "StopTransaction";
 const static char	k_ACT_STATUS_NOTIFICATION[]      = "StatusNotification";
 const static char	k_ACT_METER_VALUES[]             = "MeterValues";
@@ -67,6 +67,8 @@ _controller_ocpp_initialize
 	ocpp->q_resps = 0;
 
 	ocpp->status = CPS_Unavailable;
+	ocpp->in_transaction = false;
+	ocpp->wh = 0;
 
 	ocpp_authlist_init(&(ocpp->list), i2c, wp_gpio, wp_pin);
 }

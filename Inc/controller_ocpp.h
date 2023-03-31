@@ -165,6 +165,7 @@ typedef struct Controller_OCPP_S
 
 	OCPP_ChargePointStatus status;
 	bool in_transaction;
+	uint32_t wh;
 
 	OCPP_AuthorizationList list;
 

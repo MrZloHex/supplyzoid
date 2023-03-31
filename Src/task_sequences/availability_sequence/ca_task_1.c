@@ -66,9 +66,9 @@ ca_task_1(Controller *ctrl, OCPP_MessageID t_id)
         if (IS_OCPP_OPERATIVE((&(ctrl->ocpp))) != operative)
         {
             if (operative)
-                ctrl->ocpp.status = CPS_Unavailable;
-            else
                 ctrl->ocpp.status = CPS_Available;
+            else
+                ctrl->ocpp.status = CPS_Unavailable;
         }
 
         OCPP_AvailabilityStatus r = AS_Accepted;
