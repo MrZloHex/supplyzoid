@@ -58,6 +58,8 @@ bs_task_2(Controller *ctrl, OCPP_MessageID t_id)
 #endif
 	adjust_rtc_time(ctrl->ocpp.rtc, time);
 
+    ctrl->ocpp._started = true;
+
     res.type = TRES_NEXT;
     res.task.type = WRAP_FINISHED;
     res.task.task.func = NULL;

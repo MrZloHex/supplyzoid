@@ -26,6 +26,8 @@ _controller_rapi_initialize
 	rapi->msg_received = false;
 	rapi->msg_processed = true;
 	rapi->pending = false;
+
+	rapi->_started = false;
 }
 
 Controller_Protocol_Result

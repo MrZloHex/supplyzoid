@@ -11,6 +11,8 @@ bs_task_1(Controller *ctrl, OCPP_MessageID t_id)
     uprintf(ctrl->rapi.uart, 1000, 10, "BS_1\r");
 #endif
 
+    ctrl->rapi._started = true;
+
     _controller_ocpp_make_msg(&(ctrl->ocpp), ACT_BOOT_NOTIFICATION, NULL, NULL);
     _controller_ocpp_send_req(&(ctrl->ocpp), ACT_BOOT_NOTIFICATION);
 

@@ -61,6 +61,8 @@ typedef struct Controller_RAPI_S
 	bool msg_received;
 	bool msg_processed;
 	bool pending;
+
+	bool _started;
 } Controller_RAPI;
 
 void

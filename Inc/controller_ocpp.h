@@ -172,6 +172,9 @@ typedef struct Controller_OCPP_S
 	bool is_response;
 	OCPP_Message responses[MAX_RESPONSES];
 	size_t q_resps;
+
+
+	bool _started;
 } Controller_OCPP;
 
 void

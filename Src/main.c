@@ -53,7 +53,7 @@
 
 /* USER CODE BEGIN PV */
 
-// #define DEBUG_BUILD
+#define DEBUG_BUILD
 
 
 #ifdef DEBUG_BUILD
