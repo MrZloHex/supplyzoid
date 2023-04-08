@@ -33,6 +33,7 @@ sn_task_1(Controller *ctrl, OCPP_MessageID t_id)
 
     OCPP_ChargePointStatus status;
     OCPP_ChargePointErrorCode error = CPEC_NoError;
+    // TODO: MinimumStatusDuration
     if (evse_state > EVSE_STATE_UNKNOWN && evse_state <= EVSE_FAULT_STATE_BEGIN)
     {
         status = (OCPP_ChargePointStatus)evse_state;

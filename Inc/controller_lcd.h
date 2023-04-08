@@ -13,10 +13,10 @@
 const static char *k_ChargePointStatus[] = {
 	"",
 	"Available  ",
-	"Plugged    ",
+	"Connected  ",
 	"Charging   ",
-	"SuspendEVSE",
-	"SuspendEV  ",
+	"Waiting    ",
+	"Waiting    ",
 	"Finishing  ",
 	"Reserved   ",
 	"Unavailable",
