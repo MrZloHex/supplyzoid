@@ -53,17 +53,8 @@
 
 /* USER CODE BEGIN PV */
 
-#define DEBUG_BUILD
-
-
-#ifdef DEBUG_BUILD
-#define RAPI_UART huart2
-#define OCPP_UART huart1
-#else 
 #define RAPI_UART huart4
 #define OCPP_UART huart1
-#define NODEBUG
-#endif
 
 static Controller controller = {0};
 
