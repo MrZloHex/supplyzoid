@@ -37,7 +37,8 @@ rss_task_6(Controller *ctrl, OCPP_MessageID t_id)
 
 	if (strcmp("Accepted", status) == 0)
 	{
-		ctrl->ocpp.transaction_id = (uint32_t)transaction_id;
+		ctrl->memory.transaction_id = (uint32_t)transaction_id;
+		_controller_memory_store(&(ctrl->memory));
 		#ifdef DEBUG
 		uprintf(ctrl->rapi.uart, 1000, 64, "TRANSACTION CONFIRMED\r");
 		#endif

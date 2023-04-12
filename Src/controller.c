@@ -5,6 +5,7 @@
 
 #include "task_sequences/remote_start_sequence/rss_task_1.h"
 #include "task_sequences/meter_values_sequence/mv_task_1.h"
+#include "task_sequences/stop_sequence/sts_task_1.h"
 
 Controller_Result
 controller_initialize
@@ -29,8 +30,20 @@ controller_initialize
 	_controller_ocpp_initialize(&(controller->ocpp), ocpp_uart, ocpp_tim, rtc, i2c, wp_gpio, wp_pin);
 	_controller_rapi_initialize(&(controller->rapi), rapi_uart, rapi_tim);
 
-	_controller_memory_init(&(controller->memory), i2c);
 	_controller_lcd_init(controller, i2c);
+	_controller_memory_init(&(controller->memory), i2c);
+
+	if (controller->memory.in_transaction)
+	{
+		Controller_TaskWrap wr;	
+		STS_TASK_WRAP((&wr));
+		Controller_TaskSet_Result tres = _controller_taskset_push(&(controller->task_set), wr);
+		if (tres != CTRL_SET_OK)
+		{
+			CONTROLLER_ERROR(CTRL_TSET_ERR, tset_err, tres);
+		}
+	}
+
 	CONTROLLER_OKAY;
 }
 

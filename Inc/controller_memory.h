@@ -18,10 +18,12 @@ typedef struct Controller_Memory_S
     bool in_transaction;
     OCPP_ChargePointStatus status;
 	bool available;
+	uint32_t transaction_id;
 
     uint16_t address_intrans;
     uint16_t address_status;
     uint16_t address_available;
+    uint16_t address_transid;
 } Controller_Memory;
 
 void

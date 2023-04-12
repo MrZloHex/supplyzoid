@@ -178,7 +178,7 @@ _controller_ocpp_make_msg(Controller_OCPP *ocpp, OCPP_CallAction req, void *kwar
 			break;
 
 		case ACT_STOP_TRANSACTION:
-			ocpp_stop_transaction_req(ocpp, (uint32_t *)kwarg1);
+			ocpp_stop_transaction_req(ocpp, (uint32_t *)kwarg1, (uint32_t *)kwarg2);
 			break;
 
 		case ACT_STATUS_NOTIFICATION:

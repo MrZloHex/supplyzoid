@@ -42,7 +42,8 @@ void
 ocpp_stop_transaction_req
 (
 	Controller_OCPP *ocpp,
-	uint32_t *wh
+	uint32_t *wh,
+	uint32_t *transaction_id
 );
 
 void

@@ -87,6 +87,26 @@ HAL_StatusTypeDef
 fram_read_byte(FRAM *fram, const size_t address, uint8_t *r);
 
 /**
+ * @brief Read word from FRAM chip
+ * 
+ * @param fram 		Pointer to FRAM struct
+ * @param address	Address of memory
+ * @param r			Word where to store data
+ */
+HAL_StatusTypeDef
+fram_read_word(FRAM *fram, const size_t address, uint16_t *r);
+
+/**
+ * @brief Read dword from FRAM chip
+ * 
+ * @param fram 		Pointer to FRAM struct
+ * @param address	Address of memory
+ * @param r			DWord where to store data
+ */
+HAL_StatusTypeDef
+fram_read_dword(FRAM *fram, const size_t address, uint32_t *r);
+
+/**
  * @brief Write array in FRAM chip
  * 
  * @param fram 		Pointer to FRAM struct
@@ -106,6 +126,26 @@ fram_write_array(FRAM *fram, const size_t address, uint8_t *arr, const size_t si
  */
 HAL_StatusTypeDef
 fram_write_byte(FRAM *fram, const size_t address, uint8_t r);
+
+/**
+ * @brief Write word in FRAM chip
+ * 
+ * @param fram 		Pointer to FRAM struct
+ * @param address	Address of memory
+ * @param r			Word to store
+ */
+HAL_StatusTypeDef
+fram_write_word(FRAM *fram, const size_t address, uint16_t r);
+
+/**
+ * @brief Write dword in FRAM chip
+ * 
+ * @param fram 		Pointer to FRAM struct
+ * @param address	Address of memory
+ * @param r			DWord to store
+ */
+HAL_StatusTypeDef
+fram_write_dword(FRAM *fram, const size_t address, uint32_t r);
 
 /**
  * @brief Protect FRAM from being rewritten 

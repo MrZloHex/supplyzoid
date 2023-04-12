@@ -161,7 +161,6 @@ typedef struct Controller_OCPP_S
 	size_t id_msg;
 
 	OCPP_IdTag idtag;
-	uint32_t transaction_id;
 
 	uint32_t wh;
 
