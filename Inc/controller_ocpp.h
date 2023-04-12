@@ -63,7 +63,7 @@ typedef enum OCPPUpdateStatus_E
 } OCPP_UpdateStatus;
 
 
-#define IS_OCPP_OPERATIVE(__OCPP__)	(__OCPP__->status != CPS_Unavailable && __OCPP__->status != CPS_Faulted)
+#define IS_OCPP_OPERATIVE(__MEM__)	(__MEM__->status != CPS_Unavailable && __MEM__->status != CPS_Faulted)
 
 typedef enum OCPPChargePointStatus_E
 {
@@ -163,8 +163,6 @@ typedef struct Controller_OCPP_S
 	OCPP_IdTag idtag;
 	uint32_t transaction_id;
 
-	OCPP_ChargePointStatus status;
-	bool in_transaction;
 	uint32_t wh;
 
 	OCPP_AuthorizationList list;
@@ -172,7 +170,6 @@ typedef struct Controller_OCPP_S
 	bool is_response;
 	OCPP_Message responses[MAX_RESPONSES];
 	size_t q_resps;
-
 
 	bool _started;
 } Controller_OCPP;

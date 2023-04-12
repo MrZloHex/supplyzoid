@@ -29,6 +29,7 @@ controller_initialize
 	_controller_ocpp_initialize(&(controller->ocpp), ocpp_uart, ocpp_tim, rtc, i2c, wp_gpio, wp_pin);
 	_controller_rapi_initialize(&(controller->rapi), rapi_uart, rapi_tim);
 
+	_controller_memory_init(&(controller->memory), i2c);
 	_controller_lcd_init(controller, i2c);
 	CONTROLLER_OKAY;
 }
@@ -92,7 +93,7 @@ controller_update(Controller *controller)
 	static Timer mv_timer;
 	timer_set(&mv_timer, METER_VALUES_TIMEOUT, true);
 
-	if (controller->ocpp.in_transaction) { timer_start(&mv_timer); }
+	if (controller->memory.in_transaction) { timer_start(&mv_timer); }
 	else 								 { timer_stop (&mv_timer); }
 
 	if (timer_timeout(&mv_timer))

@@ -31,6 +31,9 @@ sn_task_1(Controller *ctrl, OCPP_MessageID t_id)
     if (evse_state == EVSE_STATE_UNKNOWN)
         return rres;
 
+    if (ctrl->memory.available)
+        return rres;
+
     OCPP_ChargePointStatus status;
     OCPP_ChargePointErrorCode error = CPEC_NoError;
     // TODO: MinimumStatusDuration
@@ -51,7 +54,8 @@ sn_task_1(Controller *ctrl, OCPP_MessageID t_id)
             error = CPEC_OtherError;
     }
 
-    ctrl->ocpp.status = status;
+    ctrl->memory.status = status;
+    _controller_memory_store(&(ctrl->memory));
 
     _controller_ocpp_make_msg(&(ctrl->ocpp), ACT_STATUS_NOTIFICATION, &status, &error);
     _controller_ocpp_send_req(&(ctrl->ocpp), ACT_STATUS_NOTIFICATION);
@@ -72,7 +76,7 @@ sn_task_1(Controller *ctrl, OCPP_MessageID t_id)
         }
     };
 
-    if (ctrl->ocpp.in_transaction && (pilot_state != EVSE_STATE_C && pilot_state != EVSE_STATE_B))
+    if (ctrl->memory.in_transaction && (pilot_state != EVSE_STATE_C && pilot_state != EVSE_STATE_B))
     {
         res.task.task.func = sts_task_1;
     }

@@ -50,7 +50,7 @@ ca_task_1(Controller *ctrl, OCPP_MessageID t_id)
 		return res;
     }
 
-    if (ctrl->ocpp.in_transaction)
+    if (ctrl->memory.in_transaction)
     {
         OCPP_AvailabilityStatus r = AS_Scheduled;
         _controller_ocpp_make_msg(&(ctrl->ocpp), ACT_CHANGE_AVAILABILITY, &r, NULL);
@@ -63,14 +63,18 @@ ca_task_1(Controller *ctrl, OCPP_MessageID t_id)
     }
     else
     {
-        if (IS_OCPP_OPERATIVE((&(ctrl->ocpp))) != operative)
+        if (operative)
         {
-            if (operative)
-                ctrl->ocpp.status = CPS_Available;
-            else
-                ctrl->ocpp.status = CPS_Unavailable;
+            ctrl->memory.available = false;
+            ctrl->memory.status = CPS_Available;
+        }
+        else
+        {
+            ctrl->memory.available = true;
+            ctrl->memory.status = CPS_Unavailable;
         }
 
+        _controller_memory_store(&(ctrl->memory));
         OCPP_AvailabilityStatus r = AS_Accepted;
         _controller_ocpp_make_msg(&(ctrl->ocpp), ACT_CHANGE_AVAILABILITY, &r, NULL);
         _controller_ocpp_send_resp(&(ctrl->ocpp), CALLRESULT, t_id);

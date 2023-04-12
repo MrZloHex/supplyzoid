@@ -42,7 +42,7 @@ rt_task_1(Controller *ctrl, OCPP_MessageID t_id)
     if (!r)
         return res;
 
-    if (type_reset && ctrl->ocpp.in_transaction)
+    if (type_reset && ctrl->memory.in_transaction)
     {
         _rapi_set_auth_lock_req(&(ctrl->rapi), 0);
         _rapi_send_req(&(ctrl->rapi));

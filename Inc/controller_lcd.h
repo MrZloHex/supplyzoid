@@ -39,6 +39,7 @@ _controller_lcd_update(Controller *ctrl)
 {
 	static bool online = true;
 	static OCPP_ChargePointStatus port1 = 0;
+	lcd_i2c_pos_printf(&(ctrl->lcd), 0, 1, "%X %X %X", ctrl->memory.status, ctrl->memory.in_transaction, ctrl->memory.available);
 	// static OCPP_ChargePointStatus port2 = CPS_Unavailable;
 
 	if (online != ctrl->ocpp._started)
@@ -47,9 +48,9 @@ _controller_lcd_update(Controller *ctrl)
 		lcd_i2c_pos_printf(&(ctrl->lcd), 0, 0, "Station: %s", k_station_status[online]);
 	}
 
-	if (ctrl->rapi._started && port1 != ctrl->ocpp.status)
+	if (ctrl->rapi._started && port1 != ctrl->memory.status)
 	{
-		port1 = ctrl->ocpp.status;
+		port1 = ctrl->memory.status;
 		lcd_i2c_pos_printf(&(ctrl->lcd), 0, 2, "Port 1: %s", k_ChargePointStatus[port1]);
 	}
 	// lcd_i2c_pos_printf(&(ctrl->lcd), 0, 3, "Port 2: %s", k_ChargePointStatus[port2]);

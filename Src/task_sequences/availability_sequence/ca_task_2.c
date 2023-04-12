@@ -23,7 +23,7 @@ ca_task_2(Controller *ctrl, OCPP_MessageID t_id)
         }
     };
 
-    if (ctrl->ocpp.in_transaction)
+    if (ctrl->memory.in_transaction)
         return res;
 
     OCPP_ChargePointErrorCode error = CPEC_NoError;

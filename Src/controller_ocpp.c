@@ -66,8 +66,6 @@ _controller_ocpp_initialize
 	ocpp->is_response = false;
 	ocpp->q_resps = 0;
 
-	ocpp->status = CPS_Unavailable;
-	ocpp->in_transaction = false;
 	ocpp->wh = 0;
 
 	ocpp_authlist_init(&(ocpp->list), i2c, wp_gpio, wp_pin);

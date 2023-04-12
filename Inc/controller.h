@@ -11,6 +11,7 @@
 #include "controller_taskset.h"
 #include "controller_ocpp.h"
 #include "controller_rapi.h"
+#include "controller_memory.h"
 
 #include "lcd_i2c.h"
 
@@ -26,6 +27,7 @@ typedef struct Controller_S
 	Controller_OCPP ocpp;
 	Controller_RAPI rapi;
 	LCD_I2C 	lcd;
+	Controller_Memory memory;
 } Controller;
 
 Controller_Result
