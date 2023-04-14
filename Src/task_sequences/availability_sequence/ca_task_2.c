@@ -8,7 +8,7 @@ ca_task_2(Controller *ctrl, OCPP_MessageID t_id)
 {
     // there is  a problem with svcheduling and overflowing the task buffer
 #ifdef DEBUG
-    // uprintf(ctrl->rapi.uart, 1000, 10, "CA_2\r");
+    // uprintf(DBUG_UART, 1000, 10, "CA_2\r");
 #endif
     Task_Result res =
     {

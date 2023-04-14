@@ -9,7 +9,7 @@ Task_Result
 mv_task_2(Controller *ctrl, OCPP_MessageID t_id)
 {
 #ifdef DEBUG
-    uprintf(ctrl->rapi.uart, 1000, 10, "MV_2\r");
+    uprintf(DBUG_UART, 1000, 10, "MV_2\r");
 #endif
 
     Task_Result res =

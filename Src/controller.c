@@ -69,6 +69,7 @@ controller_update(Controller *controller)
 			}
 			else
 			{
+	uprintf(DBUG_UART, 1000, 4, "QWE\r");
 				tres = _controller_taskset_push(&(controller->task_set), wrap);
 				if (tres != CTRL_SET_OK)
 				{

@@ -8,7 +8,7 @@ Task_Result
 rss_task_6(Controller *ctrl, OCPP_MessageID t_id)
 {
 #ifdef DEBUG
-    uprintf(ctrl->rapi.uart, 1000, 10, "RSS_6\r");
+    uprintf(DBUG_UART, 1000, 10, "RSS_6\r");
 #endif
     Task_Result res =
     {
@@ -40,13 +40,13 @@ rss_task_6(Controller *ctrl, OCPP_MessageID t_id)
 		ctrl->memory.transaction_id = (uint32_t)transaction_id;
 		_controller_memory_store(&(ctrl->memory));
 		#ifdef DEBUG
-		uprintf(ctrl->rapi.uart, 1000, 64, "TRANSACTION CONFIRMED\r");
+		uprintf(DBUG_UART, 1000, 64, "TRANSACTION CONFIRMED\r");
 		#endif
 	}
 	else if (strcmp("Rejected", status) == 0)
 	{
 		#ifdef DEBUG
-		uprintf(ctrl->rapi.uart, 1000, 64, "TRANSACTION REJECTED\r");
+		uprintf(DBUG_UART, 1000, 64, "TRANSACTION REJECTED\r");
 		#endif
 	}
 

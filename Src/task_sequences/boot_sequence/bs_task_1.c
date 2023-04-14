@@ -8,7 +8,7 @@ Task_Result
 bs_task_1(Controller *ctrl, OCPP_MessageID t_id)
 {
 #ifdef DEBUG
-    uprintf(ctrl->rapi.uart, 1000, 10, "BS_1\r");
+    uprintf(DBUG_UART, 1000, 10, "BS_1\r");
 #endif
 
     ctrl->rapi._started = true;

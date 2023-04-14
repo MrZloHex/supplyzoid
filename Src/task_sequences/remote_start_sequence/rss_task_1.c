@@ -21,8 +21,8 @@ rss_task_1(Controller *ctrl, OCPP_MessageID t_id)
         }
     };
 #ifdef DEBUG
-    uprintf(ctrl->rapi.uart, 1000, 10, "RSS_1\r");
-    uprintf(ctrl->rapi.uart, 1000, 100,  "`%s`\r", ctrl->ocpp.message.data.call.payload);
+    uprintf(DBUG_UART, 1000, 10, "RSS_1\r");
+    uprintf(DBUG_UART, 1000, 100,  "`%s`\r", ctrl->ocpp.message.data.call.payload);
 #endif
     OCPP_IdTag id_tag;
 	int res_id = mjson_get_string(ctrl->ocpp.message.data.call.payload, strlen(ctrl->ocpp.message.data.call.payload), P_ID_TAG, id_tag, OCPP_IdTag_Len-1);

@@ -53,7 +53,7 @@
 
 /* USER CODE BEGIN PV */
 
-#define DEBUG_BUILD
+// #define DEBUG_BUILD
 
 
 #ifdef DEBUG_BUILD
@@ -62,7 +62,6 @@
 #else 
 #define RAPI_UART huart4
 #define OCPP_UART huart1
-#define NODEBUG
 #endif
 
 static Controller controller = {0};
@@ -207,7 +206,7 @@ int main(void)
   /* USER CODE BEGIN 2 */
 
 #ifdef DEBUG
-	uprintf(&RAPI_UART, 100, 20, "hello rapi\r");
+	uprintf(DBUG_UART, 100, 20, "hello rapi\r");
 	// uprintf(&huart1, 100, 20, "hello ocpp\n");
 #endif
 
@@ -241,9 +240,9 @@ int main(void)
 		if (res.type != CTRL_OK)
 		{
       #ifndef NODEBUG
-			uprintf(&RAPI_UART, 1000, 100, "ERR: %u\r", res.type);
-			uprintf(&RAPI_UART, 1000, 100, "OCPP ERR: %u\r", res.errors.ocpp_err);
-			uprintf(&RAPI_UART, 1000, 100, "TSET ERR: %u\r", res.errors.tset_err);
+			uprintf(DBUG_UART, 1000, 100, "ERR: %u\r", res.type);
+			uprintf(DBUG_UART, 1000, 100, "OCPP ERR: %u\r", res.errors.ocpp_err);
+			uprintf(DBUG_UART, 1000, 100, "TSET ERR: %u\r", res.errors.tset_err);
       #endif
 			Error_Handler_with_err("FAILED IN LOOP");
 		}
@@ -307,7 +306,7 @@ void
 Error_Handler_with_err(const char * err)
 {
   #ifndef NODEBUG
-  uprintf(&RAPI_UART, 1000, 256, "ERROR: %s\r", err);
+  uprintf(DBUG_UART, 1000, 256, "ERROR: %s\r", err);
   #endif
   Error_Handler();
 }

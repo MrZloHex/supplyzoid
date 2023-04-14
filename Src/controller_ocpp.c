@@ -100,7 +100,6 @@ _controller_ocpp_process_income
 	Controller_TaskWrap *wrap
 )
 {
-
 	ocpp->msg_processed = true;
 
 	if (!_ocpp_parse_msg(ocpp))
