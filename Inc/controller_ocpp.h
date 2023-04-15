@@ -171,6 +171,8 @@ typedef struct Controller_OCPP_S
 	size_t q_resps;
 
 	bool _started;
+
+	Controller_Protocol_Result it_error;
 } Controller_OCPP;
 
 void

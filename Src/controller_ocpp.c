@@ -71,6 +71,8 @@ _controller_ocpp_initialize
 	ocpp_authlist_init(&(ocpp->list), i2c, wp_gpio, wp_pin);
 
 	ocpp->_started = false;
+
+	ocpp->it_error = CTRL_PTCL_OK;
 }
 
 Controller_Protocol_Result

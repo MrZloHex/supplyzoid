@@ -50,7 +50,8 @@ typedef enum Controller_Protocol_Result_E
 	CTRL_PTCL_NO_SUCH_MSG	= 0xAU,
 	CTRL_PTCL_NULL_PTR		= 0xBU,
 	CTRL_PTCL_OVER_RESP		= 0xCU,
-	CTRL_PTCL_RESPONSE		= 0xDU
+	CTRL_PTCL_RESPONSE		= 0xDU,
+	CTRL_PTCL_PENDING       = 0xEU
 } Controller_Protocol_Result;
 
 typedef union Controller_Errors_U

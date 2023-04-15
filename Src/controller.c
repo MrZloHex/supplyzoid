@@ -56,11 +56,20 @@ controller_update(Controller *controller)
 	Controller_TaskWrap wrap;
 	
 	// UPDATE MESSAGES ON OCPP UART
+	if (controller->ocpp.it_error != CTRL_PTCL_OK)
+	{
+		CONTROLLER_OCPP_ERROR(controller->ocpp.it_error);
+	}
+
 	if (controller->ocpp.msg_received)
 	{
 		if (_controller_ocpp_transfer(&(controller->ocpp)) == CTRL_PTCL_OK)
 		{
-			HAL_UART_Receive_IT(controller->ocpp.uart, (uint8_t *)&(controller->ocpp.accumulative_buffer[0]), 1);
+			HAL_StatusTypeDef ures = HAL_UART_Receive_IT(controller->ocpp.uart, (uint8_t *)&(controller->ocpp.accumulative_buffer[0]), 1);
+			if (ures != HAL_OK)
+			{
+				CONTROLLER_OCPP_ERROR((Controller_Protocol_Result)ures);
+			}
 			Controller_Protocol_Result res = _controller_ocpp_process_income(&(controller->ocpp), &wrap);
 			if (res == CTRL_PTCL_RESPONSE) { ; }
 			else if (res != CTRL_PTCL_OK)
@@ -79,13 +88,22 @@ controller_update(Controller *controller)
 	}
 
 	// UPDATE MESSAGES ON RAPI UART
+	if (controller->rapi.it_error != CTRL_PTCL_OK)
+	{
+		CONTROLLER_RAPI_ERROR(controller->rapi.it_error)
+	}
+
 	if (controller->rapi.msg_received)
 	{
-	uprintf(DBUG_UART, 1000, 100, "GOT `%s`\n", controller->rapi.accumulative_buffer);
 		if (_controller_rapi_transfer(&(controller->rapi)) == CTRL_PTCL_OK)
 		{
-			HAL_UART_Receive_IT(controller->rapi.uart, (uint8_t *)&(controller->rapi.accumulative_buffer[0]), 1);
+			HAL_StatusTypeDef ures = HAL_UART_Receive_IT(controller->rapi.uart, (uint8_t *)&(controller->rapi.accumulative_buffer[0]), 1);
+			if (ures != HAL_OK)
+			{
+				CONTROLLER_RAPI_ERROR((Controller_Protocol_Result)ures)
+			}
 			Controller_Protocol_Result res = _controller_rapi_process_income(&(controller->rapi), &wrap);
+			// if (res == CTRL_PTCL_RESPONSE || res == CTRL_PTCL_NON_VALID_MSG) { ; }
 			if (res == CTRL_PTCL_RESPONSE) { ; }
 			else if (res != CTRL_PTCL_OK)
 			{
