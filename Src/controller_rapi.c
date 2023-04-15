@@ -42,7 +42,11 @@ _controller_rapi_transfer(Controller_RAPI *rapi)
 		return CTRL_PTCL_PRC_BUF_FULL;
 	}
 
-	strcpy(rapi->processive_buffer, rapi->accumulative_buffer);
+	if (rapi->accumulative_buffer[1] == RAPI_SOC)
+		strcpy(rapi->processive_buffer, &(rapi->accumulative_buffer[1]));
+	else
+		strcpy(rapi->processive_buffer, rapi->accumulative_buffer);
+
 	rapi->acc_buf_index = 0;
 	rapi->msg_received = false;
 	rapi->msg_processed = false;
@@ -57,15 +61,15 @@ _controller_rapi_process_income
 	Controller_TaskWrap *wrap
 )
 {
-#ifdef DEBUG
-	uprintf(rapi->uart, 1000, 100, "GOT `%s`\r", rapi->processive_buffer);
-#endif
+// #ifdef DEBUG
+// #endif
 	rapi->msg_processed = true;
 
 	if (!_rapi_msg_validator(rapi))
 	{
 		return CTRL_PTCL_NON_VALID_MSG;
 	}
+    rapi->_started = true;
 
 	if (wrap == NULL)
 	{

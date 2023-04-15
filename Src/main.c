@@ -236,16 +236,19 @@ int main(void)
   {
     /* USER CODE END WHILE */
     HAL_IWDG_Refresh(&hiwdg);
-		Controller_Result res = controller_update(&controller);
+		res = controller_update(&controller);
 		if (res.type != CTRL_OK)
 		{
-      #ifndef NODEBUG
-			uprintf(DBUG_UART, 1000, 100, "ERR: %u\r", res.type);
-			uprintf(DBUG_UART, 1000, 100, "OCPP ERR: %u\r", res.errors.ocpp_err);
-			uprintf(DBUG_UART, 1000, 100, "TSET ERR: %u\r", res.errors.tset_err);
-      #endif
+      // #ifndef NODEBUG
+			uprintf(DBUG_UART, 1000, 100, "ERR: %u\n", res.type);
+			uprintf(DBUG_UART, 1000, 100, "OCPP ERR: %u\n", res.errors.ocpp_err);
+			uprintf(DBUG_UART, 1000, 100, "TSET ERR: %u\n", res.errors.tset_err);
+      // #endif
 			Error_Handler_with_err("FAILED IN LOOP");
 		}
+
+    res.type = 0;
+    res.errors.ocpp_err = 0;
 		// YOU SHOULD HANDLE IT!!
 
     /* USER CODE BEGIN 3 */
@@ -306,7 +309,7 @@ void
 Error_Handler_with_err(const char * err)
 {
   #ifndef NODEBUG
-  uprintf(DBUG_UART, 1000, 256, "ERROR: %s\r", err);
+  uprintf(DBUG_UART, 1000, 256, "ERROR: %s\n", err);
   #endif
   Error_Handler();
 }

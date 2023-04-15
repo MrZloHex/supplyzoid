@@ -69,7 +69,6 @@ controller_update(Controller *controller)
 			}
 			else
 			{
-	uprintf(DBUG_UART, 1000, 4, "QWE\r");
 				tres = _controller_taskset_push(&(controller->task_set), wrap);
 				if (tres != CTRL_SET_OK)
 				{
@@ -82,6 +81,7 @@ controller_update(Controller *controller)
 	// UPDATE MESSAGES ON RAPI UART
 	if (controller->rapi.msg_received)
 	{
+	uprintf(DBUG_UART, 1000, 100, "GOT `%s`\n", controller->rapi.accumulative_buffer);
 		if (_controller_rapi_transfer(&(controller->rapi)) == CTRL_PTCL_OK)
 		{
 			HAL_UART_Receive_IT(controller->rapi.uart, (uint8_t *)&(controller->rapi.accumulative_buffer[0]), 1);
@@ -89,7 +89,7 @@ controller_update(Controller *controller)
 			if (res == CTRL_PTCL_RESPONSE) { ; }
 			else if (res != CTRL_PTCL_OK)
 			{
-				CONTROLLER_OCPP_ERROR(res);
+				CONTROLLER_RAPI_ERROR(res);
 			}
 			else
 			{
