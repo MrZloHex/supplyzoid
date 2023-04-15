@@ -44,7 +44,6 @@ _controller_rapi_transfer(Controller_RAPI *rapi)
 		return CTRL_PTCL_PRC_BUF_FULL;
 	}
 
-	uprintf(DBUG_UART, 1000, 100, "GOT `%s`\n", rapi->accumulative_buffer);
 	strcpy(rapi->processive_buffer, rapi->accumulative_buffer);
 
 	rapi->acc_buf_index = 0;
@@ -117,7 +116,6 @@ _rapi_send_req(Controller_RAPI *rapi)
 		return CTRL_PTCL_PENDING;
 
 	USART_Result res = uprintf(rapi->uart, 100, RAPI_BUF_LEN, "%s", rapi->transmitter_buffer);
-	// HAL_StatusTypeDef res = HAL_UART_Transmit_IT(rapi->uart, rapi->transmitter_buffer, strlen(rapi->transmitter_buffer));
 	rapi->pending = true;
 	return (Controller_Protocol_Result)res;
 }

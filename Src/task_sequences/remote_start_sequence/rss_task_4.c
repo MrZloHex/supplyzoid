@@ -35,7 +35,5 @@ rss_task_4(Controller *ctrl, OCPP_MessageID t_id)
         res.task.task.func = rss_task_4;
     }
 
-    uprintf(DBUG_UART, 100, 4, "\t%u\n", res);
-        
     return res;
 }
