@@ -63,6 +63,9 @@ typedef struct Controller_RAPI_S
 	bool pending;
 
 	bool _started;
+
+
+	Controller_Protocol_Result it_error;
 } Controller_RAPI;
 
 void

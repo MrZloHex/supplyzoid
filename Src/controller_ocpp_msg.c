@@ -77,7 +77,8 @@ void
 ocpp_stop_transaction_req
 (
 	Controller_OCPP *ocpp,
-	uint32_t *wh
+	uint32_t *wh,
+	uint32_t *transaction_id
 )
 {
 	char time[25] = {0};
@@ -93,7 +94,7 @@ ocpp_stop_transaction_req
 		"timestamp",
 		time,
 		"transactionId",
-		ocpp->transaction_id
+		*transaction_id
 	);
 
 	

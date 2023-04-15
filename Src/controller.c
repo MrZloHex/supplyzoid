@@ -5,6 +5,7 @@
 
 #include "task_sequences/remote_start_sequence/rss_task_1.h"
 #include "task_sequences/meter_values_sequence/mv_task_1.h"
+#include "task_sequences/stop_sequence/sts_task_1.h"
 
 Controller_Result
 controller_initialize
@@ -30,6 +31,19 @@ controller_initialize
 	_controller_rapi_initialize(&(controller->rapi), rapi_uart, rapi_tim);
 
 	_controller_lcd_init(controller, i2c);
+	_controller_memory_init(&(controller->memory), i2c);
+
+	if (controller->memory.in_transaction)
+	{
+		Controller_TaskWrap wr;	
+		STS_TASK_WRAP((&wr));
+		Controller_TaskSet_Result tres = _controller_taskset_push(&(controller->task_set), wr);
+		if (tres != CTRL_SET_OK)
+		{
+			CONTROLLER_ERROR(CTRL_TSET_ERR, tset_err, tres);
+		}
+	}
+
 	CONTROLLER_OKAY;
 }
 
@@ -42,11 +56,20 @@ controller_update(Controller *controller)
 	Controller_TaskWrap wrap;
 	
 	// UPDATE MESSAGES ON OCPP UART
+	if (controller->ocpp.it_error != CTRL_PTCL_OK)
+	{
+		CONTROLLER_OCPP_ERROR(controller->ocpp.it_error);
+	}
+
 	if (controller->ocpp.msg_received)
 	{
 		if (_controller_ocpp_transfer(&(controller->ocpp)) == CTRL_PTCL_OK)
 		{
-			HAL_UART_Receive_IT(controller->ocpp.uart, (uint8_t *)&(controller->ocpp.accumulative_buffer[0]), 1);
+			HAL_StatusTypeDef ures = HAL_UART_Receive_IT(controller->ocpp.uart, (uint8_t *)&(controller->ocpp.accumulative_buffer[0]), 1);
+			if (ures != HAL_OK)
+			{
+				CONTROLLER_OCPP_ERROR((Controller_Protocol_Result)ures);
+			}
 			Controller_Protocol_Result res = _controller_ocpp_process_income(&(controller->ocpp), &wrap);
 			if (res == CTRL_PTCL_RESPONSE) { ; }
 			else if (res != CTRL_PTCL_OK)
@@ -65,16 +88,26 @@ controller_update(Controller *controller)
 	}
 
 	// UPDATE MESSAGES ON RAPI UART
+	if (controller->rapi.it_error != CTRL_PTCL_OK)
+	{
+		CONTROLLER_RAPI_ERROR(controller->rapi.it_error)
+	}
+
 	if (controller->rapi.msg_received)
 	{
 		if (_controller_rapi_transfer(&(controller->rapi)) == CTRL_PTCL_OK)
 		{
-			HAL_UART_Receive_IT(controller->rapi.uart, (uint8_t *)&(controller->rapi.accumulative_buffer[0]), 1);
+			HAL_StatusTypeDef ures = HAL_UART_Receive_IT(controller->rapi.uart, (uint8_t *)&(controller->rapi.accumulative_buffer[0]), 1);
+			if (ures != HAL_OK)
+			{
+				CONTROLLER_RAPI_ERROR((Controller_Protocol_Result)ures)
+			}
 			Controller_Protocol_Result res = _controller_rapi_process_income(&(controller->rapi), &wrap);
+			// if (res == CTRL_PTCL_RESPONSE || res == CTRL_PTCL_NON_VALID_MSG) { ; }
 			if (res == CTRL_PTCL_RESPONSE) { ; }
 			else if (res != CTRL_PTCL_OK)
 			{
-				CONTROLLER_OCPP_ERROR(res);
+				CONTROLLER_RAPI_ERROR(res);
 			}
 			else
 			{
@@ -92,7 +125,7 @@ controller_update(Controller *controller)
 	static Timer mv_timer;
 	timer_set(&mv_timer, METER_VALUES_TIMEOUT, true);
 
-	if (controller->ocpp.in_transaction) { timer_start(&mv_timer); }
+	if (controller->memory.in_transaction) { timer_start(&mv_timer); }
 	else 								 { timer_stop (&mv_timer); }
 
 	if (timer_timeout(&mv_timer))

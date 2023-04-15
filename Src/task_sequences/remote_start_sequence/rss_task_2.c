@@ -10,7 +10,7 @@ Task_Result
 rss_task_2(Controller *ctrl, OCPP_MessageID t_id)
 {
 #ifdef DEBUG
-    uprintf(ctrl->rapi.uart, 1000, 10, "RSS_2\r");
+    uprintf(DBUG_UART, 1000, 10, "RSS_2\r");
 #endif
     Task_Result res =
     {
@@ -30,7 +30,7 @@ rss_task_2(Controller *ctrl, OCPP_MessageID t_id)
 	
 	char status[16];
 	int res_st = mjson_get_string(ctrl->ocpp.message.data.call_result.payload, pay_len, P_ID_TAG_INFO_STATUS, status, 16);
-	if (res_st == -1 || strcmp(status, "Accepted") != 0)
+	if (res_st == -1 || strcmp(status, "Accepted") != 0 || ctrl->memory.available) 
 	{
         bool r = false;
         _controller_ocpp_make_msg(&(ctrl->ocpp), ACT_REMOTE_START_TRANSACTION, &r, NULL);

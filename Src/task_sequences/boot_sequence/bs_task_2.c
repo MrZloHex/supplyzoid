@@ -10,7 +10,7 @@ Task_Result
 bs_task_2(Controller *ctrl, OCPP_MessageID t_id)
 {
 #ifdef DEBUG
-    uprintf(ctrl->rapi.uart, 1000, 10, "BS_2\r");
+    uprintf(DBUG_UART, 1000, 10, "BS_2\r");
 #endif
     Task_Result res =
     {
@@ -54,7 +54,7 @@ bs_task_2(Controller *ctrl, OCPP_MessageID t_id)
 		return res;
 
 #ifdef DEBUG
-	uprintf(ctrl->rapi.uart, 1000, 10,"BOOTED\r");
+	uprintf(DBUG_UART, 1000, 10,"BOOTED\r");
 #endif
 	adjust_rtc_time(ctrl->ocpp.rtc, time);
 

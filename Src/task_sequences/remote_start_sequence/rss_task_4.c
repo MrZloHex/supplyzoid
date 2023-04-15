@@ -8,7 +8,7 @@ Task_Result
 rss_task_4(Controller *ctrl, OCPP_MessageID t_id)
 {
 #ifdef DEBUG
-    uprintf(ctrl->rapi.uart, 1000, 10, "RSS_4\r");
+    uprintf(DBUG_UART, 1000, 10, "RSS_4\r");
 #endif
     Task_Result res =
     {
@@ -25,9 +25,15 @@ rss_task_4(Controller *ctrl, OCPP_MessageID t_id)
         }
     };
     
-    ctrl->ocpp.in_transaction = true;
+    ctrl->memory.in_transaction = true;
+    _controller_memory_store(&(ctrl->memory));
     _rapi_get_energy_usage_req(&(ctrl->rapi));
-    _rapi_send_req(&(ctrl->rapi));
-        
+    Controller_Protocol_Result ress = _rapi_send_req(&(ctrl->rapi));
+    if (ress != CTRL_PTCL_OK)
+    {
+        res.type = TRES_WAIT;
+        res.task.task.func = rss_task_4;
+    }
+
     return res;
 }

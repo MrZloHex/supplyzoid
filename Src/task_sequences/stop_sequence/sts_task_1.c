@@ -23,7 +23,7 @@ sts_task_1(Controller *ctrl, OCPP_MessageID t_id)
         }
     };
 #ifdef DEBUG
-    uprintf(ctrl->rapi.uart, 1000, 10, "STS_1\r");
+    uprintf(DBUG_UART, 1000, 10, "STS_1\r");
 #endif
 
     _rapi_set_auth_lock_req(&(ctrl->rapi), AUTH_LOCKED);

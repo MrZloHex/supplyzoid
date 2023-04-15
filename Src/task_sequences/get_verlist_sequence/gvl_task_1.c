@@ -21,7 +21,7 @@ gvl_task_1(Controller *ctrl, OCPP_MessageID t_id)
         }
     };
 #ifdef DEBUG
-    uprintf(ctrl->rapi.uart, 1000, 10, "GVL_1\r");
+    uprintf(DBUG_UART, 1000, 10, "GVL_1\r");
 #endif
 
 

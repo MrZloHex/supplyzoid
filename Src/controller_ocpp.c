@@ -66,13 +66,13 @@ _controller_ocpp_initialize
 	ocpp->is_response = false;
 	ocpp->q_resps = 0;
 
-	ocpp->status = CPS_Unavailable;
-	ocpp->in_transaction = false;
 	ocpp->wh = 0;
 
 	ocpp_authlist_init(&(ocpp->list), i2c, wp_gpio, wp_pin);
 
 	ocpp->_started = false;
+
+	ocpp->it_error = CTRL_PTCL_OK;
 }
 
 Controller_Protocol_Result
@@ -102,7 +102,6 @@ _controller_ocpp_process_income
 	Controller_TaskWrap *wrap
 )
 {
-
 	ocpp->msg_processed = true;
 
 	if (!_ocpp_parse_msg(ocpp))
@@ -180,7 +179,7 @@ _controller_ocpp_make_msg(Controller_OCPP *ocpp, OCPP_CallAction req, void *kwar
 			break;
 
 		case ACT_STOP_TRANSACTION:
-			ocpp_stop_transaction_req(ocpp, (uint32_t *)kwarg1);
+			ocpp_stop_transaction_req(ocpp, (uint32_t *)kwarg1, (uint32_t *)kwarg2);
 			break;
 
 		case ACT_STATUS_NOTIFICATION:

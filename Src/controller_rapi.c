@@ -28,6 +28,8 @@ _controller_rapi_initialize
 	rapi->pending = false;
 
 	rapi->_started = false;
+
+	rapi->it_error = CTRL_PTCL_OK;
 }
 
 Controller_Protocol_Result
@@ -43,9 +45,11 @@ _controller_rapi_transfer(Controller_RAPI *rapi)
 	}
 
 	strcpy(rapi->processive_buffer, rapi->accumulative_buffer);
+
 	rapi->acc_buf_index = 0;
 	rapi->msg_received = false;
 	rapi->msg_processed = false;
+	rapi->pending = false;
 
 	return CTRL_PTCL_OK;
 }
@@ -57,15 +61,15 @@ _controller_rapi_process_income
 	Controller_TaskWrap *wrap
 )
 {
-#ifdef DEBUG
-	uprintf(rapi->uart, 1000, 100, "GOT `%s`\r", rapi->processive_buffer);
-#endif
+// #ifdef DEBUG
+// #endif
 	rapi->msg_processed = true;
 
 	if (!_rapi_msg_validator(rapi))
 	{
 		return CTRL_PTCL_NON_VALID_MSG;
 	}
+    rapi->_started = true;
 
 	if (wrap == NULL)
 	{
@@ -109,9 +113,9 @@ Controller_Protocol_Result
 _rapi_send_req(Controller_RAPI *rapi)
 {
 	if (rapi->pending)
-		return CTRL_PTCL_OK;
+		return CTRL_PTCL_PENDING;
 
-	USART_Result res = uprintf(rapi->uart, 1000, RAPI_BUF_LEN, "%s", rapi->transmitter_buffer);
+	USART_Result res = uprintf(rapi->uart, 100, RAPI_BUF_LEN, "%s", rapi->transmitter_buffer);
 	rapi->pending = true;
 	return (Controller_Protocol_Result)res;
 }

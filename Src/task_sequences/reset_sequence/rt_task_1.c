@@ -22,7 +22,7 @@ rt_task_1(Controller *ctrl, OCPP_MessageID t_id)
         }
     };
 #ifdef DEBUG
-    uprintf(ctrl->rapi.uart, 1000, 10, "RT_1\r");
+    uprintf(DBUG_UART, 1000, 10, "RT_1\r");
 #endif
 	char status[8];
 	int res_st = mjson_get_string(ctrl->ocpp.message.data.call_result.payload, strlen(ctrl->ocpp.message.data.call_result.payload), P_RESET_TYPE, status, 8);
@@ -34,7 +34,7 @@ rt_task_1(Controller *ctrl, OCPP_MessageID t_id)
     else    { r = false; }
 
     #ifdef DEBUG
-    uprintf(ctrl->rapi.uart, 1000, 100, "%u %s\r", r, status);
+    uprintf(DBUG_UART, 1000, 100, "%u %s\r", r, status);
     #endif
     
     _controller_ocpp_make_msg(&(ctrl->ocpp), ACT_RESET, &r, NULL);
@@ -42,7 +42,7 @@ rt_task_1(Controller *ctrl, OCPP_MessageID t_id)
     if (!r)
         return res;
 
-    if (type_reset && ctrl->ocpp.in_transaction)
+    if (type_reset && ctrl->memory.in_transaction)
     {
         _rapi_set_auth_lock_req(&(ctrl->rapi), 0);
         _rapi_send_req(&(ctrl->rapi));
