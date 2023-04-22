@@ -6,6 +6,8 @@
 #include "task_sequences/remote_start_sequence/rss_task_1.h"
 #include "task_sequences/meter_values_sequence/mv_task_1.h"
 #include "task_sequences/stop_sequence/sts_task_1.h"
+#include "task_sequences/boot_sequence/bs_task_1.h"
+#include "task_sequences/get_state_sequence/gs_task_1.h"
 
 Controller_Result
 controller_initialize
@@ -33,14 +35,31 @@ controller_initialize
 	_controller_lcd_init(controller, i2c);
 	_controller_memory_init(&(controller->memory), i2c);
 
+	// BASE TASKS
+
+	Controller_TaskWrap wr;
+	BS_TASK_WRAP((&wr));
+	res = _controller_taskset_push(&(controller->task_set), wr);
+	if (res != CTRL_SET_OK)
+	{
+		CONTROLLER_ERROR(CTRL_TSET_ERR, tset_err, res);
+	}
+
+	GS_TASK_WRAP((&wr));
+	res = _controller_taskset_push(&(controller->task_set), wr);
+	if (res != CTRL_SET_OK)
+	{
+		CONTROLLER_ERROR(CTRL_TSET_ERR, tset_err, res);
+	}
+
+
 	if (controller->memory.in_transaction)
 	{
-		Controller_TaskWrap wr;	
 		STS_TASK_WRAP((&wr));
-		Controller_TaskSet_Result tres = _controller_taskset_push(&(controller->task_set), wr);
-		if (tres != CTRL_SET_OK)
+		res = _controller_taskset_push(&(controller->task_set), wr);
+		if (res != CTRL_SET_OK)
 		{
-			CONTROLLER_ERROR(CTRL_TSET_ERR, tset_err, tres);
+			CONTROLLER_ERROR(CTRL_TSET_ERR, tset_err, res);
 		}
 	}
 
@@ -135,6 +154,23 @@ controller_update(Controller *controller)
 		_controller_taskset_push(&(controller->task_set), mv_wrap);
 	}
 	#endif
+
+	#if 1
+	#define HEARTBEAT_STATUS_TIMEOUT 30000
+	static Timer sn_timer;
+	timer_set(&sn_timer, HEARTBEAT_STATUS_TIMEOUT, true);
+	timer_start(&sn_timer);
+
+	if (timer_timeout(&sn_timer))
+	{
+		Controller_TaskWrap sn_wrap;
+		GS_TASK_WRAP((&sn_wrap));
+		_controller_taskset_push(&(controller->task_set), sn_wrap);
+	}
+	#endif
+
+
+
 
 	// IF THERE ARE NO FACES (TASKS SORRY) - RETURN
 	if (controller->task_set.size == 0)

@@ -181,7 +181,7 @@ ocpp_meter_values_req
 		payload, PAYLOAD_LEN,
 		"{%Q:%d,%Q:[{%Q:%Q,%Q:[{%Q:%ld,%Q:%Q}]}]}",
 		"connectorId",
-		0,
+		1,
 		"meterValue",
 		"timestamp",
 		time,
