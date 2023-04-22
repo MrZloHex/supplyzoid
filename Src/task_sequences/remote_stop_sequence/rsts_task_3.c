@@ -30,6 +30,7 @@ rsts_task_3(Controller *ctrl, OCPP_MessageID t_id)
     
 
     ctrl->memory.in_transaction = false;
+    ctrl->memory.status = CPS_SuspendedEVSE;
     _controller_memory_store(&(ctrl->memory));
     _rapi_get_energy_usage_req(&(ctrl->rapi));
     _rapi_send_req(&(ctrl->rapi));
