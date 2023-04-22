@@ -8,7 +8,7 @@
 #ifndef __CONTROLLER_TYPES_H__
 #define __CONTROLLER_TYPES_H__
 
-#define DEBUG
+//#define DEBUG
 #define DBUG_UART &huart2
 
 #include "ocpp_types.h"
