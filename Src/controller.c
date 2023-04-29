@@ -151,7 +151,11 @@ controller_update(Controller *controller)
 	{
 		Controller_TaskWrap mv_wrap;
 		MV_TASK_WRAP((&mv_wrap));
-		_controller_taskset_push(&(controller->task_set), mv_wrap);
+		tres = _controller_taskset_push(&(controller->task_set), mv_wrap);
+		if (tres != CTRL_SET_OK)
+		{
+			CONTROLLER_ERROR(CTRL_TSET_ERR, tset_err, tres);
+		}
 	}
 	#endif
 
@@ -165,7 +169,11 @@ controller_update(Controller *controller)
 	{
 		Controller_TaskWrap sn_wrap;
 		GS_TASK_WRAP((&sn_wrap));
-		_controller_taskset_push(&(controller->task_set), sn_wrap);
+		tres = _controller_taskset_push(&(controller->task_set), sn_wrap);
+		if (tres != CTRL_SET_OK)
+		{
+			CONTROLLER_ERROR(CTRL_TSET_ERR, tset_err, tres);
+		}
 	}
 	#endif
 
