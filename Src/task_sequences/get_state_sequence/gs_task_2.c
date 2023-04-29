@@ -27,6 +27,8 @@ gs_task_2(Controller *ctrl, OCPP_MessageID _id)
 
     uint8_t evse_state, pilot_state;
     _rapi_get_state_resp(&(ctrl->rapi), &evse_state, NULL, &pilot_state, NULL);
+    ctrl->e_s = evse_state;
+    ctrl->p_s = pilot_state;
     if (ctrl->memory.available)
         return rres;
 
