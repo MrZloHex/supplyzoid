@@ -14,9 +14,6 @@ gs_task_1(Controller *ctrl, OCPP_MessageID _id)
         uprintf(DBUG_UART, 100, 10, "GS_1\r");
     #endif
 
-    _rapi_get_state_req(&(ctrl->rapi));
-    _rapi_send_req(&(ctrl->rapi));
-
     Task_Result res =
     {
         .type = TRES_NEXT,
@@ -33,6 +30,14 @@ gs_task_1(Controller *ctrl, OCPP_MessageID _id)
             }
         }
     };
+
+    _rapi_get_state_req(&(ctrl->rapi));
+    if (_rapi_send_req(&(ctrl->rapi)) == CTRL_PTCL_PENDING)
+    {
+        res.type = TRES_WAIT;
+        res.task.task.func = gs_task_1;
+    }
+
 
     return res;
 }

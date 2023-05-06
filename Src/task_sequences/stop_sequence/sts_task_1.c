@@ -1,5 +1,6 @@
 #include "task_sequences/stop_sequence/sts_task_1.h"
 #include "task_sequences/stop_sequence/sts_task_2.h"
+#include "task_sequences/stop_sequence/sts_task_to.h"
 
 #include "controller_rapi_msg.h"
 
@@ -15,10 +16,14 @@ sts_task_1(Controller *ctrl, OCPP_MessageID t_id)
         .type = TRES_NEXT,
         .task =
         {
-            .type = WRAP_FINISHED,
+            .type = WRAP_IN_PROGRESS,
             .task = 
             {
-                .func = NULL
+                .type = TASK_PROCESS,
+                .func = sts_task_2,
+                .usart = RAPI_USART,
+                .func_timeout = sts_task_to,
+                .genesis_time = HAL_GetTick()
             }
         }
     };
@@ -27,14 +32,12 @@ sts_task_1(Controller *ctrl, OCPP_MessageID t_id)
 #endif
 
     _rapi_set_auth_lock_req(&(ctrl->rapi), AUTH_LOCKED);
-    _rapi_send_req(&(ctrl->rapi));
+    if (_rapi_send_req(&(ctrl->rapi)) == CTRL_PTCL_PENDING)
+    {
+        res.type = TRES_WAIT;
+        res.task.task.func = sts_task_1;
+    }
         
-    res.type = TRES_NEXT;
-    res.task.type = WRAP_IN_PROGRESS;
-    res.task.task.type = TASK_PROCESS;
-    res.task.task.func = sts_task_2;
-    res.task.task.usart = RAPI_USART;
-    res.task.task.genesis_time = HAL_GetTick();
 
     return res;
 }

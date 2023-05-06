@@ -108,6 +108,10 @@ _controller_ocpp_process_income
 	{
 		return CTRL_PTCL_NON_VALID_MSG;
 	}
+
+#ifdef DEBUG
+	uprintf(DBUG_UART, 100, OCPP_BUF_LEN+3, "`%s`\r", ocpp->processive_buffer);
+#endif
 	
 	// IF MSG IS RESPONSE
 	if (ocpp->message.type != CALL)

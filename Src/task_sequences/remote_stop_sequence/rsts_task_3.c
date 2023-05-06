@@ -24,7 +24,9 @@ rsts_task_3(Controller *ctrl, OCPP_MessageID t_id)
             {
                 .type = TASK_PROCESS,
                 .usart = RAPI_USART,
-                .func = rsts_task_4
+                .func = rsts_task_4,
+                .func_timeout = rsts_task_to,
+                .genesis_time = HAL_GetTick()
             }
         }
     };
@@ -34,11 +36,12 @@ rsts_task_3(Controller *ctrl, OCPP_MessageID t_id)
     ctrl->memory.status = CPS_SuspendedEVSE;
     _controller_memory_store(&(ctrl->memory));
     _rapi_get_energy_usage_req(&(ctrl->rapi));
-    _rapi_send_req(&(ctrl->rapi));
+    if (_rapi_send_req(&(ctrl->rapi)) == CTRL_PTCL_PENDING)
+    {
+        res.type = TRES_WAIT;
+        res.task.task.func = rsts_task_3;
+    }
 
-    res.task.task.func_timeout = rsts_task_to;
-    res.task.task.genesis_time = HAL_GetTick();
-        
     return res;
 }
 

@@ -21,7 +21,9 @@ rss_task_4(Controller *ctrl, OCPP_MessageID t_id)
             {
                 .type = TASK_PROCESS,
                 .usart = RAPI_USART,
-                .func = rss_task_5
+                .func = rss_task_5,
+                .func_timeout = rss_task_to,
+                .genesis_time = HAL_GetTick()
             }
         }
     };
@@ -29,14 +31,11 @@ rss_task_4(Controller *ctrl, OCPP_MessageID t_id)
     ctrl->memory.in_transaction = true;
     _controller_memory_store(&(ctrl->memory));
     _rapi_get_energy_usage_req(&(ctrl->rapi));
-    Controller_Protocol_Result ress = _rapi_send_req(&(ctrl->rapi));
-    if (ress != CTRL_PTCL_OK)
+    if (_rapi_send_req(&(ctrl->rapi)) == CTRL_PTCL_PENDING)
     {
         res.type = TRES_WAIT;
         res.task.task.func = rss_task_4;
     }
-    res.task.task.func_timeout = rss_task_to;
-    res.task.task.genesis_time = HAL_GetTick();
 
     return res;
 }

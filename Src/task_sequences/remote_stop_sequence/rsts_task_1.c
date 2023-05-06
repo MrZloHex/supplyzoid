@@ -37,9 +37,6 @@ rsts_task_1(Controller *ctrl, OCPP_MessageID t_id)
 		return res;
     }
 
-    _rapi_get_state_req(&(ctrl->rapi));
-    _rapi_send_req(&(ctrl->rapi));
-
     res.type = TRES_NEXT;
     res.task.type = WRAP_IN_PROGRESS;
     res.task.task.type = TASK_PROCESS;
@@ -48,6 +45,13 @@ rsts_task_1(Controller *ctrl, OCPP_MessageID t_id)
     res.task.task.usart = RAPI_USART;
     res.task.task.func_timeout = rsts_task_to;
     res.task.task.genesis_time = HAL_GetTick();
+
+    _rapi_get_state_req(&(ctrl->rapi));
+    if (_rapi_send_req(&(ctrl->rapi)) == CTRL_PTCL_PENDING)
+    {
+        res.type = TRES_WAIT;
+        res.task.task.func = rsts_task_1;
+    }
 
     return res;
 }

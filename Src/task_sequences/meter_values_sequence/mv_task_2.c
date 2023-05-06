@@ -1,5 +1,6 @@
 #include "task_sequences/meter_values_sequence/mv_task_2.h"
 #include "task_sequences/meter_values_sequence/mv_task_3.h"
+#include "task_sequences/meter_values_sequence/mv_task_to.h"
 
 #include "serial.h"
 #include "controller_ocpp_msg.h"
@@ -23,6 +24,7 @@ mv_task_2(Controller *ctrl, OCPP_MessageID t_id)
                 .type = TASK_PROCESS,
                 .usart = OCPP_USART,
                 .func = mv_task_3,
+                .func_timeout = mv_task_to,
                 .genesis_time = HAL_GetTick()
             }
         }
