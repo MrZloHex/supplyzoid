@@ -93,6 +93,7 @@ controller_update(Controller *controller)
 			if (res == CTRL_PTCL_RESPONSE) { ; }
 			else if (res != CTRL_PTCL_OK)
 			{
+				uprintf(DBUG_UART, 100, 100, "\rHERE\r");
 				CONTROLLER_OCPP_ERROR(res);
 			}
 			else
@@ -220,6 +221,7 @@ controller_update(Controller *controller)
 		// __debug_taskset_print(&(controller->task_set));
 		if (task_wrap.task.func == NULL)
 		{
+			uprintf(DBUG_UART, 100, 100, "PTR FUNC NULL: `%p`\r", task_wrap.task.func);
 			CONTROLLER_ERROR(CTRL_TSET_ERR, tset_err, CTRL_SET_NULLPTR);
 		}
 

@@ -1,5 +1,6 @@
 #include "task_sequences/status_sequence/sn_task_1.h"
 #include "task_sequences/status_sequence/sn_task_2.h"
+#include "task_sequences/status_sequence/sn_task_to.h"
 #include "task_sequences/stop_sequence/sts_task_1.h"
 
 #include "serial.h"
@@ -73,7 +74,9 @@ sn_task_1(Controller *ctrl, OCPP_MessageID t_id)
                 .type = TASK_PROCESS,
                 .usart = OCPP_USART,
                 .id = ctrl->ocpp.id_msg -1,
-                .func = sn_task_2
+                .func = sn_task_2,
+                .func_timeout = sn_task_to,
+                .genesis_time = HAL_GetTick()
             }
         }
     };

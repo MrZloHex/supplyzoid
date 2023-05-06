@@ -308,7 +308,7 @@ void
 Error_Handler_with_err(const char * err)
 {
   #ifndef NODEBUG
-  uprintf(DBUG_UART, 1000, 256, "ERROR: %s\n", err);
+  uprintf(DBUG_UART, 1000, 256, "ERROR: %s\r", err);
   #endif
   Error_Handler();
 }

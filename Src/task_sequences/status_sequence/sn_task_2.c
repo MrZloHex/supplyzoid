@@ -23,6 +23,8 @@ sn_task_2(Controller *ctrl, OCPP_MessageID t_id)
         }
     };
 
+    ctrl->ocpp._started = true;
+
     return res;
 }
 

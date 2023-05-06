@@ -149,6 +149,6 @@ __debug_taskset_print(Controller_TaskSet *set)
 	uprintf(DBUG_UART, 1000, 100, "TYPE\tPTR\t\tUSART\tTTYPE\tTRIGGER ID\r");
 	for (size_t i = 0; i < set->size; ++i)
 	{
-		uprintf(DBUG_UART, 1000, 100, "%u\t%p\t%u\t%u\t`%s`\r", set->set[i].type, set->set[i].task.func, set->set[i].task.usart, set->set[i].task.type, set->set[i].task.trigger_id);
+		uprintf(DBUG_UART, 1000, 100, "%u\t%p\t\t%u\t%u\t`%s`\r", set->set[i].type, set->set[i].task.func, set->set[i].task.usart, set->set[i].task.type, set->set[i].task.trigger_id);
 	}
 }
