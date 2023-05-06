@@ -209,11 +209,11 @@ int main(void)
   /* USER CODE BEGIN 2 */
 
 #ifdef DEBUG
-	uprintf(DBUG_UART, 100, 20, "hello rapi\r");
+  uprintf(DBUG_UART, 100, 20, "hello rapi\r");
 	// uprintf(&huart1, 100, 20, "hello ocpp\n");
 #endif
 
-	HAL_IWDG_Refresh(&hiwdg);
+  HAL_IWDG_Refresh(&hiwdg);
 
   Controller_Result res = controller_initialize
   (
@@ -221,15 +221,15 @@ int main(void)
   	&OCPP_UART, &RAPI_UART,
   	&htim6, &htim7,
   	&hrtc, &hi2c2,
-    GPIOB, GPIO_PIN_1
+	GPIOB, GPIO_PIN_1
   );
-	if (res.type != CTRL_OK)
+  if (res.type != CTRL_OK)
   {
-    Error_Handler_with_err("FAILED ON INITIALIZATION");
-	}
+	Error_Handler_with_err("FAILED ON INITIALIZATION");
+  }
 
   controller.ocpp.it_error = (Controller_Protocol_Result)HAL_UART_Receive_IT(&OCPP_UART, (uint8_t *)&(controller.ocpp.accumulative_buffer[0]), 1);
-	controller.rapi.it_error = (Controller_Protocol_Result)HAL_UART_Receive_IT(&RAPI_UART, (uint8_t *)&(controller.rapi.accumulative_buffer[0]), 1);
+  controller.rapi.it_error = (Controller_Protocol_Result)HAL_UART_Receive_IT(&RAPI_UART, (uint8_t *)&(controller.rapi.accumulative_buffer[0]), 1);
 
   /* USER CODE END 2 */
 
@@ -238,22 +238,18 @@ int main(void)
   while (1)
   {
     /* USER CODE END WHILE */
-    HAL_IWDG_Refresh(&hiwdg);
-		res = controller_update(&controller);
-		if (res.type != CTRL_OK)
-		{
-      // #ifndef NODEBUG
-			uprintf(DBUG_UART, 1000, 100, "ERR: %u\n", res.type);
-			uprintf(DBUG_UART, 1000, 100, "PTCL ERR: %u\n", res.errors.ocpp_err);
-			uprintf(DBUG_UART, 1000, 100, "TSET ERR: %u\n", res.errors.tset_err);
-      // #endif
-			Error_Handler_with_err("FAILED IN LOOP");
-		}
-
-    res.type = 0;
-    res.errors.ocpp_err = 0;
+	HAL_IWDG_Refresh(&hiwdg);
+	res = controller_update(&controller);
+	if (res.type != CTRL_OK)
+	{
+		uprintf(DBUG_UART, 1000, 100, "ERR: %u\n", res.type);
+		uprintf(DBUG_UART, 1000, 100, "PTCL ERR: %u\n", res.errors.ocpp_err);
+		uprintf(DBUG_UART, 1000, 100, "TSET ERR: %u\n", res.errors.tset_err);
+		Error_Handler_with_err("FAILED IN LOOP");
+	}
+	res.type = 0;
+	res.errors.ocpp_err = 0;
 		// YOU SHOULD HANDLE IT!!
-
     /* USER CODE BEGIN 3 */
   }
   /* USER CODE END 3 */

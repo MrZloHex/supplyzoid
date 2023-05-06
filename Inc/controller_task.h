@@ -9,6 +9,7 @@
 #define __CONTROLLER_TASK_H__
 
 #include "stdlib.h"
+#include "stdint.h"
 
 struct Controller_S;
 
@@ -36,22 +37,24 @@ typedef enum MsgExpect_USART_E
 typedef struct Controller_Task_S
 {
 	Controller_TaskType	type;
-	size_t				id;
+	size_t			id;
 	OCPP_MessageID		trigger_id;
 	MsgExpect_USART 	usart;
-	Ptr_Task			func;
+	Ptr_Task		func;
+	uint32_t 		genesis_time;
 } Controller_Task;
 
 typedef enum Controller_WrapType_E
 {
 	WRAP_EMPTY,
 	WRAP_IN_PROGRESS,
-	WRAP_FINISHED
+	WRAP_FINISHED,
+	WRAP_TIMEOUT
 } Controller_WrapType;
 
 typedef struct Controller_TaskWrap_S
 {
-	Controller_WrapType type;
+	Controller_WrapType 	type;
 	Controller_Task		task;
 } Controller_TaskWrap;
 

@@ -7,7 +7,8 @@
 #define SLL_TASK_WRAP(__PTR__, __TRIGGER_ID__)  __PTR__->type = WRAP_IN_PROGRESS;                   \
                                                 __PTR__->task.type = TASK_TRIGGER;                  \
                                                 __PTR__->task.func = sll_task_1;                    \
-                                                strcpy(__PTR__->task.trigger_id, __TRIGGER_ID__)
+                                                strcpy(__PTR__->task.trigger_id, __TRIGGER_ID__);   \
+                                                __PTR__->task.genesis_time = HAL_GetTick()
 
 #define P_LIST_VERSION "$.listVersion"
 #define P_UPDATE_TYPE  "$.updateType"

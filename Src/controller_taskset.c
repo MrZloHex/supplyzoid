@@ -63,7 +63,7 @@ _controller_taskset_pop(Controller_TaskSet *set)
 
 	for (size_t i = 0; i < set->capacity; ++i)
 	{
-		if (set->set[i].type == WRAP_FINISHED)
+		if (set->set[i].type == WRAP_FINISHED || set->set[i].type == WRAP_TIMEOUT)
 		{
 			set->set[i].type = WRAP_EMPTY;
 			set->size -= 1;
