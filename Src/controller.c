@@ -197,12 +197,12 @@ controller_update(Controller *controller)
 
 		if (task_wrap.type == WRAP_EMPTY) { continue; }
 
-		#define TASK_TIMEOUT 10000
-		if (task_wrap.task.genesis_time + TASK_TIMEOUT <= HAL_GetTick())
+		#define K_TASK_TIMEOUT 10000
+		if (task_wrap.task.genesis_time + K_TASK_TIMEOUT <= HAL_GetTick())
 		{
-			uprintf(DBUG_UART, 10, 20, "TIMEOUT TASK\r");
 			task_wrap.type = WRAP_TIMEOUT;
-			continue;
+			task_wrap.task.func = task_wrap.task.func_timeout;
+			task_wrap.task.type = TASK_TIMEOUT;
 		}
 
 		if (task_wrap.task.type == TASK_PROCESS)

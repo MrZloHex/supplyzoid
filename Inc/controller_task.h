@@ -16,7 +16,8 @@ struct Controller_S;
 typedef enum Controller_TaskType_E
 {
 	TASK_TRIGGER = 0x0U,
-	TASK_PROCESS = 0x1U
+	TASK_PROCESS = 0x1U,
+	TASK_TIMEOUT = 0x2U
 } Controller_TaskType;
 
 typedef struct Task_Result_S Task_Result;
@@ -41,6 +42,7 @@ typedef struct Controller_Task_S
 	OCPP_MessageID		trigger_id;
 	MsgExpect_USART 	usart;
 	Ptr_Task		func;
+	Ptr_Task		func_timeout;
 	uint32_t 		genesis_time;
 } Controller_Task;
 

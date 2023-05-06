@@ -145,10 +145,10 @@ _controller_taskset_esc_iter(Controller_TaskSet *set)
 void
 __debug_taskset_print(Controller_TaskSet *set)
 {
-	uprintf(&huart1, 1000, 100, "SIZE %u\t CAP %u\n", set->size, set->capacity);
-	uprintf(&huart1, 1000, 100, "TYPE\tPTR\t\tUSART\tTTYPE\tTRIGGER ID\n");
+	uprintf(DBUG_UART, 1000, 100, "SIZE %u\t CAP %u\r", set->size, set->capacity);
+	uprintf(DBUG_UART, 1000, 100, "TYPE\tPTR\t\tUSART\tTTYPE\tTRIGGER ID\r");
 	for (size_t i = 0; i < set->size; ++i)
 	{
-		uprintf(&huart1, 1000, 100, "%u\t%p\t%u\t%u\t`%s`\n", set->set[i].type, set->set[i].task.func, set->set[i].task.usart, set->set[i].task.type, set->set[i].task.trigger_id);
+		uprintf(DBUG_UART, 1000, 100, "%u\t%p\t%u\t%u\t`%s`\r", set->set[i].type, set->set[i].task.func, set->set[i].task.usart, set->set[i].task.type, set->set[i].task.trigger_id);
 	}
 }

@@ -15,6 +15,7 @@
         "sts_task_3.h": "c",
         "rss_task_4.h": "c",
         "bs_task_1.h": "c",
-        "rss_task_1.h": "c"
+        "rss_task_1.h": "c",
+        "bs_task_to.h": "c"
     }
 }

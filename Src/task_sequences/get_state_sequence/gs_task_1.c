@@ -1,5 +1,6 @@
 #include "task_sequences/get_state_sequence/gs_task_1.h"
 #include "task_sequences/get_state_sequence/gs_task_2.h"
+#include "task_sequences/get_state_sequence/gs_task_to_1.h"
 
 #include "serial.h"
 #include "controller_ocpp.h"
@@ -26,7 +27,9 @@ gs_task_1(Controller *ctrl, OCPP_MessageID _id)
             {
                 .type = TASK_PROCESS,
                 .usart = RAPI_USART,
-                .func = gs_task_2
+                .func = gs_task_2,
+                .func_timeout = gs_task_to_1,
+                .genesis_time = HAL_GetTick()
             }
         }
     };

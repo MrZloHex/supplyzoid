@@ -1,5 +1,6 @@
 #include "task_sequences/get_state_sequence/gs_task_2.h"
 #include "task_sequences/get_state_sequence/gs_task_3.h"
+#include "task_sequences/get_state_sequence/gs_task_to_2.h"
 
 #include "serial.h"
 #include "controller_ocpp.h"
@@ -69,7 +70,9 @@ gs_task_2(Controller *ctrl, OCPP_MessageID _id)
                 .type = TASK_PROCESS,
                 .usart = OCPP_USART,
                 .id = ctrl->ocpp.id_msg -1,
-                .func = gs_task_3 
+                .func = gs_task_3,
+                .func_timeout = gs_task_to_2,
+                .genesis_time = HAL_GetTick()
             }
         }
     };

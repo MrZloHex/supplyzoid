@@ -1,5 +1,6 @@
 #include "task_sequences/boot_sequence/bs_task_1.h"
 #include "task_sequences/boot_sequence/bs_task_2.h"
+#include "task_sequences/boot_sequence/bs_task_to.h"
 
 #include "serial.h"
 #include "controller_ocpp.h"
@@ -26,7 +27,8 @@ bs_task_1(Controller *ctrl, OCPP_MessageID t_id)
                 .usart = OCPP_USART,
                 .id = ctrl->ocpp.id_msg -1,
                 .func = bs_task_2,
-		.genesis_time = HAL_GetTick()
+                .func_timeout = bs_task_to,
+		        .genesis_time = HAL_GetTick()
             }
         }
     };
