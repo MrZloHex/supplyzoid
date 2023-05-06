@@ -23,7 +23,8 @@ sts_task_2(Controller *ctrl, OCPP_MessageID t_id)
             {
                 .type = TASK_PROCESS,
                 .usart = RAPI_USART,
-                .func = sts_task_3
+                .func = sts_task_3,
+                .genesis_time = HAL_GetTick()
             }
         }
     };

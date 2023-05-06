@@ -23,7 +23,8 @@ sts_task_3(Controller *ctrl, OCPP_MessageID t_id)
             {
                 .type = TASK_PROCESS,
                 .usart = OCPP_USART,
-                .func = sts_task_4
+                .func = sts_task_4,
+                .genesis_time = HAL_GetTick()
             }
         }
     };

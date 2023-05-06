@@ -34,6 +34,7 @@ sts_task_1(Controller *ctrl, OCPP_MessageID t_id)
     res.task.task.type = TASK_PROCESS;
     res.task.task.func = sts_task_2;
     res.task.task.usart = RAPI_USART;
+    res.task.task.genesis_time = HAL_GetTick();
 
     return res;
 }

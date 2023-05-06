@@ -22,7 +22,8 @@ mv_task_2(Controller *ctrl, OCPP_MessageID t_id)
             {
                 .type = TASK_PROCESS,
                 .usart = OCPP_USART,
-                .func = mv_task_3
+                .func = mv_task_3,
+                .genesis_time = HAL_GetTick()
             }
         }
     };

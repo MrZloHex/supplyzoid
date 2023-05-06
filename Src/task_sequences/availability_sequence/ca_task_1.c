@@ -59,6 +59,7 @@ ca_task_1(Controller *ctrl, OCPP_MessageID t_id)
         res.task.task.func = ca_task_2;
         res.task.task.trigger_id[0] = operative;
         res.task.task.type = TASK_TRIGGER;
+        res.task.task.genesis_time = HAL_GetTick();
 		return res;
     }
     else
