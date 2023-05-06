@@ -30,7 +30,7 @@ rsts_task_2(Controller *ctrl, OCPP_MessageID t_id)
 	uint8_t evse_state;
 	_rapi_get_state_resp(&(ctrl->rapi), &evse_state, NULL, NULL, NULL);
 
-    bool accept = (evse_state == EVSE_STATE_C);
+    bool accept = true;
     _controller_ocpp_make_msg(&(ctrl->ocpp), ACT_REMOTE_STOP_TRANSACTION, &accept, NULL);
     _controller_ocpp_send_resp(&(ctrl->ocpp), CALLRESULT, t_id);
     if (!accept)
