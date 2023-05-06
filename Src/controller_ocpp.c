@@ -62,7 +62,6 @@ _controller_ocpp_initialize
 	ocpp->msg_processed = true;
 
 	ocpp->id_msg = 1;
-	ocpp->last_valid_id = ocpp->id_msg;
 	ocpp->is_response = false;
 	ocpp->q_resps = 0;
 
@@ -117,7 +116,7 @@ _controller_ocpp_process_income
 	if (ocpp->message.type != CALL)
 	{
 		// IF OLD RESPONSE
-		if (_ocpp_get_id_resp(ocpp) <= ocpp->last_valid_id)
+		if (_ocpp_get_id_resp(ocpp) < ocpp->id_msg -4)
 		{
 			return CTRL_PTCL_RESPONSE;
 		}

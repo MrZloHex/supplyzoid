@@ -49,7 +49,7 @@ _controller_taskset_push(Controller_TaskSet *set, Controller_TaskWrap task)
 }
 
 Controller_TaskSet_Result
-_controller_taskset_pop(Controller_TaskSet *set, size_t *last_id)
+_controller_taskset_pop(Controller_TaskSet *set)
 {
 	if (set->iterated)
 	{
@@ -65,7 +65,6 @@ _controller_taskset_pop(Controller_TaskSet *set, size_t *last_id)
 	{
 		if (set->set[i].type == WRAP_FINISHED || set->set[i].type == WRAP_TIMEOUT)
 		{
-			*last_id = set->set[i].task.id;
 			set->set[i].type = WRAP_EMPTY;
 			set->size -= 1;
 		}
@@ -147,9 +146,9 @@ void
 __debug_taskset_print(Controller_TaskSet *set)
 {
 	uprintf(DBUG_UART, 1000, 100, "SIZE %u\t CAP %u\r", set->size, set->capacity);
-	uprintf(DBUG_UART, 1000, 100, "TYPE\tPTR\t\tUSART\tTTYPE\tTRIGGER ID\r");
+	uprintf(DBUG_UART, 1000, 100, "TYPE\tPTR\t\tUSART\tTTYPE\tTRIGGER ID\tID\r");
 	for (size_t i = 0; i < set->size; ++i)
 	{
-		uprintf(DBUG_UART, 1000, 100, "%u\t%p\t\t%u\t%u\t`%s`\r", set->set[i].type, set->set[i].task.func, set->set[i].task.usart, set->set[i].task.type, set->set[i].task.trigger_id);
+		uprintf(DBUG_UART, 1000, 100, "%u\t%p\t\t%u\t%u\t`%s`\t%u\r", set->set[i].type, set->set[i].task.func, set->set[i].task.usart, set->set[i].task.type, set->set[i].task.trigger_id, set->set[i].task.id);
 	}
 }

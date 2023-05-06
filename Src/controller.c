@@ -221,7 +221,6 @@ controller_update(Controller *controller)
 		// __debug_taskset_print(&(controller->task_set));
 		if (task_wrap.task.func == NULL)
 		{
-			uprintf(DBUG_UART, 100, 100, "PTR FUNC NULL: `%p`\r", task_wrap.task.func);
 			CONTROLLER_ERROR(CTRL_TSET_ERR, tset_err, CTRL_SET_NULLPTR);
 		}
 
@@ -242,7 +241,7 @@ controller_update(Controller *controller)
 
 	_controller_taskset_esc_iter(&(controller->task_set));
 	// CHECK FOR FINISHED TASKS AND DELETE THEM
-	tres = _controller_taskset_pop(&(controller->task_set), &(controller->ocpp.last_valid_id));
+	tres = _controller_taskset_pop(&(controller->task_set));
 	if (tres != CTRL_SET_OK)
 	{
 		CONTROLLER_ERROR(CTRL_TSET_ERR, tset_err, tres);
