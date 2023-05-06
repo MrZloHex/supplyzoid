@@ -1,5 +1,6 @@
 #include "task_sequences/remote_start_sequence/rss_task_2.h"
 #include "task_sequences/remote_start_sequence/rss_task_3.h"
+#include "task_sequences/remote_start_sequence/rss_task_to.h"
 
 #include "serial.h"
 #include "string.h"
@@ -47,6 +48,8 @@ rss_task_2(Controller *ctrl, OCPP_MessageID t_id)
     strcpy(res.task.task.trigger_id, t_id);
     res.task.task.func = rss_task_3;
     res.task.task.usart = RAPI_USART;
+    res.task.task.func_timeout = rss_task_to;
+    res.task.task.genesis_time = HAL_GetTick();
 
     return res;
 }

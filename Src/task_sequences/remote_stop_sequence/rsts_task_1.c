@@ -1,5 +1,6 @@
 #include "task_sequences/remote_stop_sequence/rsts_task_1.h"
 #include "task_sequences/remote_stop_sequence/rsts_task_2.h"
+#include "task_sequences/remote_stop_sequence/rsts_task_to.h"
 
 #include "controller_rapi_msg.h"
 
@@ -45,6 +46,8 @@ rsts_task_1(Controller *ctrl, OCPP_MessageID t_id)
     strcpy(res.task.task.trigger_id, t_id);
     res.task.task.func = rsts_task_2;
     res.task.task.usart = RAPI_USART;
+    res.task.task.func_timeout = rsts_task_to;
+    res.task.task.genesis_time = HAL_GetTick();
 
     return res;
 }

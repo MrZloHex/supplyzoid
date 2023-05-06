@@ -1,5 +1,6 @@
 #include "task_sequences/remote_stop_sequence/rsts_task_4.h"
 #include "task_sequences/remote_stop_sequence/rsts_task_5.h"
+#include "task_sequences/remote_stop_sequence/rsts_task_to.h"
 
 #include "controller_rapi_msg.h"
 
@@ -36,6 +37,8 @@ rsts_task_4(Controller *ctrl, OCPP_MessageID t_id)
     _controller_ocpp_send_req(&(ctrl->ocpp), ACT_STOP_TRANSACTION);
 
     res.task.task.id = ctrl->ocpp.id_msg -1;
+    res.task.task.func_timeout = rsts_task_to;
+    res.task.task.genesis_time = HAL_GetTick();
         
     return res;
 }

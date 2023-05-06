@@ -50,6 +50,5 @@ rss_task_6(Controller *ctrl, OCPP_MessageID t_id)
 		#endif
 	}
 
-
     return res;
 }
