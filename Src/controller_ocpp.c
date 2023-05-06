@@ -62,7 +62,7 @@ _controller_ocpp_initialize
 	ocpp->msg_processed = true;
 
 	ocpp->id_msg = 1;
-
+	ocpp->last_valid_id = ocpp->id_msg;
 	ocpp->is_response = false;
 	ocpp->q_resps = 0;
 
@@ -116,6 +116,12 @@ _controller_ocpp_process_income
 	// IF MSG IS RESPONSE
 	if (ocpp->message.type != CALL)
 	{
+		// IF OLD RESPONSE
+		if (_ocpp_get_id_resp(ocpp) <= ocpp->last_valid_id)
+		{
+			return CTRL_PTCL_RESPONSE;
+		}
+		
 		Controller_Protocol_Result res = _ocpp_append_resps(ocpp);
 		if (res != CTRL_PTCL_OK)
 		{
@@ -447,6 +453,14 @@ _ocpp_set_id_msg(Controller_OCPP *ocpp)
 	int_to_charset(ocpp->id_msg, id, 1);
 	ocpp->id_msg++;
 	strcpy(ocpp->message.id, id);
+}
+
+size_t
+_ocpp_get_id_resp(Controller_OCPP *ocpp)
+{
+	uint32_t id = 0;
+	charset_to_uint32(&id, ocpp->message.id);
+	return (size_t)id;
 }
 
 Controller_Protocol_Result

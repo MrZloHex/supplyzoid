@@ -49,7 +49,7 @@ _controller_taskset_push(Controller_TaskSet *set, Controller_TaskWrap task)
 }
 
 Controller_TaskSet_Result
-_controller_taskset_pop(Controller_TaskSet *set)
+_controller_taskset_pop(Controller_TaskSet *set, size_t *last_id)
 {
 	if (set->iterated)
 	{
@@ -65,6 +65,7 @@ _controller_taskset_pop(Controller_TaskSet *set)
 	{
 		if (set->set[i].type == WRAP_FINISHED || set->set[i].type == WRAP_TIMEOUT)
 		{
+			*last_id = set->set[i].task.id;
 			set->set[i].type = WRAP_EMPTY;
 			set->size -= 1;
 		}

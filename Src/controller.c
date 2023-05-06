@@ -242,7 +242,7 @@ controller_update(Controller *controller)
 
 	_controller_taskset_esc_iter(&(controller->task_set));
 	// CHECK FOR FINISHED TASKS AND DELETE THEM
-	tres = _controller_taskset_pop(&(controller->task_set));
+	tres = _controller_taskset_pop(&(controller->task_set), &(controller->ocpp.last_valid_id));
 	if (tres != CTRL_SET_OK)
 	{
 		CONTROLLER_ERROR(CTRL_TSET_ERR, tset_err, tres);

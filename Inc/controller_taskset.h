@@ -31,7 +31,7 @@ Controller_TaskSet_Result
 _controller_taskset_push(Controller_TaskSet *set, Controller_TaskWrap task);
 
 Controller_TaskSet_Result
-_controller_taskset_pop(Controller_TaskSet *set);
+_controller_taskset_pop(Controller_TaskSet *set, size_t *last_id);
 
 Controller_TaskSet_Result
 _controller_taskset_iterate(Controller_TaskSet *set);
