@@ -160,7 +160,9 @@ controller_update(Controller *controller)
 	#define HEARTBEAT_STATUS_TIMEOUT 30000
 	static Timer sn_timer;
 	timer_set(&sn_timer, HEARTBEAT_STATUS_TIMEOUT, true);
-	timer_start(&sn_timer);
+	if (!controller->memory.in_transaction) { timer_start(&sn_timer); }
+	else 								 { timer_stop (&sn_timer); }
+	// timer_start(&sn_timer);
 
 	if (timer_timeout(&sn_timer))
 	{

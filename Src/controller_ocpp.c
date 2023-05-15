@@ -108,10 +108,6 @@ _controller_ocpp_process_income
 		return CTRL_PTCL_NON_VALID_MSG;
 	}
 
-#ifdef DEBUG
-	uprintf(DBUG_UART, 100, OCPP_BUF_LEN+3, "`%s`\r", ocpp->processive_buffer);
-#endif
-	
 	// IF MSG IS RESPONSE
 	if (ocpp->message.type != CALL)
 	{
@@ -122,10 +118,10 @@ _controller_ocpp_process_income
 		}
 		
 		Controller_Protocol_Result res = _ocpp_append_resps(ocpp);
-		if (res != CTRL_PTCL_OK)
-		{
-			return res;
-		}
+		#ifdef DEBUG
+			if (res == CTRL_PTCL_OVER_RESP)
+			uprintf(DBUG_UART, 100, 100, "RESPONSE PULL OVERWRITE\r");
+		#endif
 		return CTRL_PTCL_RESPONSE;
 	}
 
@@ -465,9 +461,11 @@ _ocpp_get_id_resp(Controller_OCPP *ocpp)
 Controller_Protocol_Result
 _ocpp_append_resps(Controller_OCPP *ocpp)
 {
+	Controller_Protocol_Result res = CTRL_PTCL_OK;
 	if (ocpp->q_resps == MAX_RESPONSES)
 	{
-		return CTRL_PTCL_OVER_RESP;
+		res = CTRL_PTCL_OVER_RESP;
+		ocpp->q_resps = 0;
 	}
 
 	ocpp->responses[ocpp->q_resps++] = ocpp->message;
@@ -476,7 +474,7 @@ _ocpp_append_resps(Controller_OCPP *ocpp)
 		ocpp->is_response = true;
 	}
 
-	return CTRL_PTCL_OK;
+	return res;
 }
 
 void
