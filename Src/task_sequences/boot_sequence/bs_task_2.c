@@ -41,12 +41,10 @@ bs_task_2(Controller *ctrl, OCPP_MessageID t_id)
 
 	if (strcmp(status, "Accepted") == 0)
 	{}
-		// ocpp->_booted = true;
 	else if (strcmp(status, "Pending") == 0 || strcmp(status, "Rejected") == 0)
 	{
         return res;
     }
-		// ocpp->_booted = false;
 
 	char time[25];
 	int res_time = mjson_get_string(ctrl->ocpp.message.data.call_result.payload, pay_len, P_CURRENT_TIME, time, 25);
@@ -55,6 +53,7 @@ bs_task_2(Controller *ctrl, OCPP_MessageID t_id)
 
 #ifdef DEBUG
 	uprintf(DBUG_UART, 1000, 10,"BOOTED\r");
+    uprintf(DBUG_UART, 100, 100, "TIME: %s\r", time);
 #endif
 	adjust_rtc_time(ctrl->ocpp.rtc, time);
 

@@ -111,12 +111,6 @@ _controller_ocpp_process_income
 	// IF MSG IS RESPONSE
 	if (ocpp->message.type != CALL)
 	{
-		// IF OLD RESPONSE
-		if (_ocpp_get_id_resp(ocpp) < ocpp->id_msg -4)
-		{
-			return CTRL_PTCL_RESPONSE;
-		}
-		
 		Controller_Protocol_Result res = _ocpp_append_resps(ocpp);
 		#ifdef DEBUG
 			if (res == CTRL_PTCL_OVER_RESP)
@@ -246,7 +240,7 @@ _controller_ocpp_send_req(Controller_OCPP *ocpp, OCPP_CallAction req)
 		ocpp->message.data.call.payload
 	);
 
-	USART_Result res = uprintf(ocpp->uart, 1000, OCPP_BUF_LEN+1, "%s\n", request);
+	USART_Result res = uprintf(ocpp->uart, 100, OCPP_BUF_LEN+1, "%s\n", request);
 
 	return (Controller_Protocol_Result)res;
 }
@@ -273,7 +267,7 @@ _controller_ocpp_send_resp
 
 
 		// SENDING
-		uprintf(ocpp->uart, 1000, OCPP_BUF_LEN, "%s\n", req);
+		uprintf(ocpp->uart, 100, OCPP_BUF_LEN, "%s\n", req);
 		// SENDING
 	}
 	else if (type == CALLERROR)

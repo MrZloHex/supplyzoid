@@ -77,7 +77,6 @@ controller_update(Controller *controller)
 	// UPDATE MESSAGES ON OCPP UART
 	if (controller->ocpp.it_error != CTRL_PTCL_OK)
 	{
-      uprintf(DBUG_UART, 10, 10, "HH\r");
 		CONTROLLER_OCPP_ERROR(controller->ocpp.it_error);
 	}
 
@@ -94,7 +93,6 @@ controller_update(Controller *controller)
 			if (res == CTRL_PTCL_RESPONSE) { ; }
 			else if (res != CTRL_PTCL_OK)
 			{
-				uprintf(DBUG_UART, 100, 100, "\rHERE\r");
 				CONTROLLER_OCPP_ERROR(res);
 			}
 			else
@@ -157,13 +155,13 @@ controller_update(Controller *controller)
 	}
 	#endif
 
-	#if 0
+	#if 1
 	#define HEARTBEAT_STATUS_TIMEOUT 30000
 	static Timer sn_timer;
 	timer_set(&sn_timer, HEARTBEAT_STATUS_TIMEOUT, true);
-	if (!controller->memory.in_transaction) { timer_start(&sn_timer); }
-	else 								 { timer_stop (&sn_timer); }
-	// timer_start(&sn_timer);
+	// if (!controller->memory.in_transaction) { timer_start(&sn_timer); }
+	// else 								 { timer_stop (&sn_timer); }
+	timer_start(&sn_timer);
 
 	if (timer_timeout(&sn_timer))
 	{
@@ -213,7 +211,7 @@ controller_update(Controller *controller)
 		{
 			if (task_wrap.task.usart == OCPP_USART)
 			{
-				if (!controller->ocpp.is_response)				{ continue; }
+				if (!controller->ocpp.is_response)								{ continue; }
 				if (!_ocpp_get_resp(&(controller->ocpp), task_wrap.task.id))	{ continue; }
 			}
 			else if (task_wrap.task.usart == RAPI_USART)

@@ -225,11 +225,11 @@ int main(void)
   	&OCPP_UART, &RAPI_UART,
   	&htim6, &htim7,
   	&hrtc, &hi2c2,
-	GPIOB, GPIO_PIN_1
+	  GPIOB, GPIO_PIN_1
   );
   if (res.type != CTRL_OK)
   {
-	Error_Handler_with_err("FAILED ON INITIALIZATION");
+	  Error_Handler_with_err("FAILED ON INITIALIZATION");
   }
 
   controller.ocpp.it_error = (Controller_Protocol_Result)HAL_UART_Receive_IT(&OCPP_UART, (uint8_t *)&(controller.ocpp.accumulative_buffer[0]), 1);
