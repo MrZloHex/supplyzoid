@@ -77,6 +77,7 @@ controller_update(Controller *controller)
 	// UPDATE MESSAGES ON OCPP UART
 	if (controller->ocpp.it_error != CTRL_PTCL_OK)
 	{
+      uprintf(DBUG_UART, 10, 10, "HH\r");
 		CONTROLLER_OCPP_ERROR(controller->ocpp.it_error);
 	}
 
@@ -140,7 +141,7 @@ controller_update(Controller *controller)
 		}
 	}
 
-	#if 1
+	#if 0
 	#define METER_VALUES_TIMEOUT 10000
 	static Timer mv_timer;
 	timer_set(&mv_timer, METER_VALUES_TIMEOUT, true);
@@ -156,7 +157,7 @@ controller_update(Controller *controller)
 	}
 	#endif
 
-	#if 1
+	#if 0
 	#define HEARTBEAT_STATUS_TIMEOUT 30000
 	static Timer sn_timer;
 	timer_set(&sn_timer, HEARTBEAT_STATUS_TIMEOUT, true);

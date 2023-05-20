@@ -53,7 +53,7 @@
 
 /* USER CODE BEGIN PV */
 
-// #define DEBUG_BUILD
+#define DEBUG_BUILD
 
 
 #ifdef DEBUG_BUILD
@@ -153,7 +153,8 @@ HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
 		{
 			__HAL_TIM_SET_COUNTER(controller.ocpp.tim, 0);
 			controller.ocpp.acc_buf_index = 0;
-			controller.ocpp.it_error = (Controller_Protocol_Result)HAL_UART_Receive_IT(controller.ocpp.uart, (uint8_t *)&controller.ocpp.accumulative_buffer[0], 1);
+      controller.ocpp.it_error = (Controller_Protocol_Result)HAL_UART_AbortReceive_IT(controller.ocpp.uart);
+			controller.ocpp.it_error |= (Controller_Protocol_Result)HAL_UART_Receive_IT(controller.ocpp.uart, (uint8_t *)&controller.ocpp.accumulative_buffer[0], 1);
 		}
 	}
 	else if (htim->Instance == controller.rapi.tim->Instance)
@@ -162,7 +163,8 @@ HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
 		{
 			__HAL_TIM_SET_COUNTER(controller.rapi.tim, 0);
 			controller.rapi.acc_buf_index = 0;
-			controller.rapi.it_error = (Controller_Protocol_Result)HAL_UART_Receive_IT(controller.rapi.uart, (uint8_t *)&controller.rapi.accumulative_buffer[0], 1);
+      controller.rapi.it_error = (Controller_Protocol_Result)HAL_UART_AbortReceive_IT(controller.rapi.uart);
+			controller.rapi.it_error |= (Controller_Protocol_Result)HAL_UART_Receive_IT(controller.rapi.uart, (uint8_t *)&controller.rapi.accumulative_buffer[0], 1);
 		}
 	}
 }
@@ -214,6 +216,8 @@ int main(void)
 #endif
 
   HAL_IWDG_Refresh(&hiwdg);
+  HAL_TIM_Base_Start_IT(&htim6);
+  HAL_TIM_Base_Start_IT(&htim7);
 
   Controller_Result res = controller_initialize
   (
