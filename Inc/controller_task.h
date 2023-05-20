@@ -44,6 +44,7 @@ typedef struct Controller_Task_S
 	Ptr_Task		func;
 	Ptr_Task		func_timeout;
 	uint32_t 		genesis_time;
+	
 } Controller_Task;
 
 typedef enum Controller_WrapType_E
@@ -57,7 +58,7 @@ typedef enum Controller_WrapType_E
 typedef struct Controller_TaskWrap_S
 {
 	Controller_WrapType 	type;
-	Controller_Task		task;
+	Controller_Task			task;
 } Controller_TaskWrap;
 
 struct Task_Result_S

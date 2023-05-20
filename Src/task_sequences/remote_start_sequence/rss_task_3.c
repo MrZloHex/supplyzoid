@@ -48,7 +48,8 @@ rss_task_3(Controller *ctrl, OCPP_MessageID t_id)
         res.type = TRES_WAIT;
         res.task.task.func = rss_task_3;
     }
-        
+
+    ctrl->seq_timer_var = 0;
 
     return res;
 }

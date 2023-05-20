@@ -31,6 +31,8 @@ typedef struct Controller_S
 
 	uint8_t p_s;
 	uint8_t e_s;
+
+	uint32_t seq_timer_var;
 } Controller;
 
 Controller_Result

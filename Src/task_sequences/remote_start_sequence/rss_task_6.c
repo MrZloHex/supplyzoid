@@ -1,8 +1,11 @@
 #include "task_sequences/remote_start_sequence/rss_task_6.h"
+#include "task_sequences/remote_start_sequence/rss_task_7.h"
+#include "task_sequences/remote_start_sequence/rss_task_to.h"
 
 #include "serial.h"
 #include "string.h"
 #include "mjson.h"
+#include "controller_rapi_msg.h"
 
 Task_Result
 rss_task_6(Controller *ctrl, OCPP_MessageID t_id)
@@ -15,40 +18,26 @@ rss_task_6(Controller *ctrl, OCPP_MessageID t_id)
         .type = TRES_NEXT,
         .task =
         {
-            .type = WRAP_FINISHED,
+            .type = WRAP_IN_PROGRESS,
             .task = 
             {
-                .func = NULL
+                .type = TASK_PROCESS,
+                .usart = OCPP_USART,
+                .func = rss_task_7
             }
         }
     };
+    
+    uint32_t ws;
+	_rapi_get_energy_usage_resp(&(ctrl->rapi), &ws, NULL);
+	uint32_t wh = ws / 3600;
 
-	size_t pay_len = strlen(ctrl->ocpp.message.data.call_result.payload);
+    _controller_ocpp_make_msg(&(ctrl->ocpp), ACT_START_TRANSACTION, &wh, NULL);
+    _controller_ocpp_send_req(&(ctrl->ocpp), ACT_START_TRANSACTION);
 
-	double transaction_id;
-	int res_int = mjson_get_number(ctrl->ocpp.message.data.call_result.payload, pay_len, P_TRANSACTION_ID, &transaction_id);
-	if (res_int == 0)
-		return res;
-
-	char status[10];
-	int res_st = mjson_get_string(ctrl->ocpp.message.data.call_result.payload, pay_len, P_ID_INFO_STATUS, status, 10);
-	if (res_st < 1)
-		return res;
-
-	if (strcmp("Accepted", status) == 0)
-	{
-		ctrl->memory.transaction_id = (uint32_t)transaction_id;
-		_controller_memory_store(&(ctrl->memory));
-		#ifdef DEBUG
-		uprintf(DBUG_UART, 1000, 64, "TRANSACTION CONFIRMED\r");
-		#endif
-	}
-	else if (strcmp("Rejected", status) == 0)
-	{
-		#ifdef DEBUG
-		uprintf(DBUG_UART, 1000, 64, "TRANSACTION REJECTED\r");
-		#endif
-	}
-
+    res.task.task.id = ctrl->ocpp.id_msg -1;
+    res.task.task.func_timeout = rss_task_to;
+    res.task.task.genesis_time = HAL_GetTick();
+        
     return res;
 }
