@@ -145,7 +145,8 @@ HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
 		{
 			__HAL_TIM_SET_COUNTER(controller.ocpp.tim, 0);
 			controller.ocpp.acc_buf_index = 0;
-			controller.ocpp.it_error = (Controller_Protocol_Result)HAL_UART_Receive_IT(controller.ocpp.uart, (uint8_t *)&controller.ocpp.accumulative_buffer[0], 1);
+      controller.ocpp.it_error = (Controller_Protocol_Result)HAL_UART_AbortReceive_IT(controller.ocpp.uart);
+			controller.ocpp.it_error |= (Controller_Protocol_Result)HAL_UART_Receive_IT(controller.ocpp.uart, (uint8_t *)&controller.ocpp.accumulative_buffer[0], 1);
 		}
 	}
 	else if (htim->Instance == controller.rapi.tim->Instance)
@@ -154,7 +155,8 @@ HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
 		{
 			__HAL_TIM_SET_COUNTER(controller.rapi.tim, 0);
 			controller.rapi.acc_buf_index = 0;
-			controller.rapi.it_error = (Controller_Protocol_Result)HAL_UART_Receive_IT(controller.rapi.uart, (uint8_t *)&controller.rapi.accumulative_buffer[0], 1);
+      controller.rapi.it_error = (Controller_Protocol_Result)HAL_UART_AbortReceive_IT(controller.rapi.uart);
+			controller.rapi.it_error |= (Controller_Protocol_Result)HAL_UART_Receive_IT(controller.rapi.uart, (uint8_t *)&controller.rapi.accumulative_buffer[0], 1);
 		}
 	}
 }
@@ -201,11 +203,13 @@ int main(void)
   /* USER CODE BEGIN 2 */
 
 #ifdef DEBUG
-	uprintf(DBUG_UART, 100, 20, "hello rapi\r");
+  uprintf(DBUG_UART, 100, 20, "hello rapi\r");
 	// uprintf(&huart1, 100, 20, "hello ocpp\n");
 #endif
 
-	HAL_IWDG_Refresh(&hiwdg);
+  HAL_IWDG_Refresh(&hiwdg);
+  HAL_TIM_Base_Start_IT(&htim6);
+  HAL_TIM_Base_Start_IT(&htim7);
 
   Controller_Result res = controller_initialize
   (
@@ -213,15 +217,15 @@ int main(void)
   	&OCPP_UART, &RAPI_UART,
   	&htim6, &htim7,
   	&hrtc, &hi2c2,
-    GPIOB, GPIO_PIN_1
+	  GPIOB, GPIO_PIN_1
   );
-	if (res.type != CTRL_OK)
+  if (res.type != CTRL_OK)
   {
-    Error_Handler_with_err("FAILED ON INITIALIZATION");
-	}
+	  Error_Handler_with_err("FAILED ON INITIALIZATION");
+  }
 
   controller.ocpp.it_error = (Controller_Protocol_Result)HAL_UART_Receive_IT(&OCPP_UART, (uint8_t *)&(controller.ocpp.accumulative_buffer[0]), 1);
-	controller.rapi.it_error = (Controller_Protocol_Result)HAL_UART_Receive_IT(&RAPI_UART, (uint8_t *)&(controller.rapi.accumulative_buffer[0]), 1);
+  controller.rapi.it_error = (Controller_Protocol_Result)HAL_UART_Receive_IT(&RAPI_UART, (uint8_t *)&(controller.rapi.accumulative_buffer[0]), 1);
 
   /* USER CODE END 2 */
 
@@ -230,22 +234,18 @@ int main(void)
   while (1)
   {
     /* USER CODE END WHILE */
-    HAL_IWDG_Refresh(&hiwdg);
-		res = controller_update(&controller);
-		if (res.type != CTRL_OK)
-		{
-      // #ifndef NODEBUG
-			uprintf(DBUG_UART, 1000, 100, "ERR: %u\n", res.type);
-			uprintf(DBUG_UART, 1000, 100, "PTCL ERR: %u\n", res.errors.ocpp_err);
-			uprintf(DBUG_UART, 1000, 100, "TSET ERR: %u\n", res.errors.tset_err);
-      // #endif
-			Error_Handler_with_err("FAILED IN LOOP");
-		}
-
-    res.type = 0;
-    res.errors.ocpp_err = 0;
+	HAL_IWDG_Refresh(&hiwdg);
+	res = controller_update(&controller);
+	if (res.type != CTRL_OK)
+	{
+		uprintf(DBUG_UART, 1000, 100, "ERR: %u\r", res.type);
+		uprintf(DBUG_UART, 1000, 100, "PTCL ERR: %u\r", res.errors.ocpp_err);
+		uprintf(DBUG_UART, 1000, 100, "TSET ERR: %u\r", res.errors.tset_err);
+		Error_Handler_with_err("FAILED IN LOOP");
+	}
+	res.type = 0;
+	res.errors.ocpp_err = 0;
 		// YOU SHOULD HANDLE IT!!
-
     /* USER CODE BEGIN 3 */
   }
   /* USER CODE END 3 */
@@ -304,7 +304,7 @@ void
 Error_Handler_with_err(const char * err)
 {
   #ifndef NODEBUG
-  uprintf(DBUG_UART, 1000, 256, "ERROR: %s\n", err);
+  uprintf(DBUG_UART, 1000, 256, "ERROR: %s\r", err);
   #endif
   Error_Handler();
 }

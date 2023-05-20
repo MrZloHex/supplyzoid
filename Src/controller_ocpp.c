@@ -62,7 +62,6 @@ _controller_ocpp_initialize
 	ocpp->msg_processed = true;
 
 	ocpp->id_msg = 1;
-
 	ocpp->is_response = false;
 	ocpp->q_resps = 0;
 
@@ -108,15 +107,15 @@ _controller_ocpp_process_income
 	{
 		return CTRL_PTCL_NON_VALID_MSG;
 	}
-	
+
 	// IF MSG IS RESPONSE
 	if (ocpp->message.type != CALL)
 	{
 		Controller_Protocol_Result res = _ocpp_append_resps(ocpp);
-		if (res != CTRL_PTCL_OK)
-		{
-			return res;
-		}
+		#ifdef DEBUG
+			if (res == CTRL_PTCL_OVER_RESP)
+			uprintf(DBUG_UART, 100, 100, "RESPONSE PULL OVERWRITE\r");
+		#endif
 		return CTRL_PTCL_RESPONSE;
 	}
 
@@ -241,7 +240,7 @@ _controller_ocpp_send_req(Controller_OCPP *ocpp, OCPP_CallAction req)
 		ocpp->message.data.call.payload
 	);
 
-	USART_Result res = uprintf(ocpp->uart, 1000, OCPP_BUF_LEN+1, "%s\n", request);
+	USART_Result res = uprintf(ocpp->uart, 100, OCPP_BUF_LEN+1, "%s\n", request);
 
 	return (Controller_Protocol_Result)res;
 }
@@ -268,7 +267,7 @@ _controller_ocpp_send_resp
 
 
 		// SENDING
-		uprintf(ocpp->uart, 1000, OCPP_BUF_LEN, "%s\n", req);
+		uprintf(ocpp->uart, 100, OCPP_BUF_LEN, "%s\n", req);
 		// SENDING
 	}
 	else if (type == CALLERROR)
@@ -445,12 +444,22 @@ _ocpp_set_id_msg(Controller_OCPP *ocpp)
 	strcpy(ocpp->message.id, id);
 }
 
+size_t
+_ocpp_get_id_resp(Controller_OCPP *ocpp)
+{
+	uint32_t id = 0;
+	charset_to_uint32(&id, ocpp->message.id);
+	return (size_t)id;
+}
+
 Controller_Protocol_Result
 _ocpp_append_resps(Controller_OCPP *ocpp)
 {
+	Controller_Protocol_Result res = CTRL_PTCL_OK;
 	if (ocpp->q_resps == MAX_RESPONSES)
 	{
-		return CTRL_PTCL_OVER_RESP;
+		res = CTRL_PTCL_OVER_RESP;
+		ocpp->q_resps = 0;
 	}
 
 	ocpp->responses[ocpp->q_resps++] = ocpp->message;
@@ -459,7 +468,7 @@ _ocpp_append_resps(Controller_OCPP *ocpp)
 		ocpp->is_response = true;
 	}
 
-	return CTRL_PTCL_OK;
+	return res;
 }
 
 void

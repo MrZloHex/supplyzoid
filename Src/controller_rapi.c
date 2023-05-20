@@ -61,9 +61,9 @@ _controller_rapi_process_income
 	Controller_TaskWrap *wrap
 )
 {
-#ifdef DEBUG
-uprintf(DBUG_UART, 100, RAPI_BUF_LEN, "%s\r", rapi->processive_buffer);
-#endif
+// #ifdef DEBUG
+// uprintf(DBUG_UART, 100, RAPI_BUF_LEN, "%s\r", rapi->processive_buffer);
+// #endif
 	rapi->msg_processed = true;
 
 	if (!_rapi_msg_validator(rapi))

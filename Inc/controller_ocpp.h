@@ -27,7 +27,7 @@
 #define DSCR_LEN     255
 #define ERR_CODE_LEN 30
 
-#define MAX_RESPONSES 4
+#define MAX_RESPONSES 8
 
 #define POS_MSG_TYPE	"$[0]"
 #define POS_MSG_ID		"$[1]"
@@ -234,6 +234,9 @@ _ocpp_get_call_error_descr(Controller_OCPP *ocpp);
 
 void
 _ocpp_set_id_msg(Controller_OCPP *ocpp);
+
+size_t
+_ocpp_get_id_resp(Controller_OCPP *ocpp);
 
 Controller_Protocol_Result
 _ocpp_append_resps(Controller_OCPP *ocpp);

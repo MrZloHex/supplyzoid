@@ -1,5 +1,6 @@
 #include "task_sequences/remote_start_sequence/rss_task_4.h"
 #include "task_sequences/remote_start_sequence/rss_task_5.h"
+#include "task_sequences/remote_start_sequence/rss_task_to.h"
 
 #include "serial.h"
 #include "controller_rapi_msg.h"
@@ -20,19 +21,23 @@ rss_task_4(Controller *ctrl, OCPP_MessageID t_id)
             {
                 .type = TASK_PROCESS,
                 .usart = RAPI_USART,
-                .func = rss_task_5
+                .func = rss_task_5,
+                .func_timeout = rss_task_to,
+                .genesis_time = HAL_GetTick()
             }
         }
     };
     
-    ctrl->memory.in_transaction = true;
-    _controller_memory_store(&(ctrl->memory));
-    _rapi_get_energy_usage_req(&(ctrl->rapi));
-    Controller_Protocol_Result ress = _rapi_send_req(&(ctrl->rapi));
-    if (ress != CTRL_PTCL_OK)
+    _rapi_get_state_req(&(ctrl->rapi)); 
+    if (_rapi_send_req(&(ctrl->rapi)) == CTRL_PTCL_PENDING)
     {
         res.type = TRES_WAIT;
         res.task.task.func = rss_task_4;
+    }
+
+    if (ctrl->seq_timer_var == 0)
+    {
+        ctrl->seq_timer_var = HAL_GetTick();
     }
 
     return res;

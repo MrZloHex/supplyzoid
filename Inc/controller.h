@@ -28,6 +28,11 @@ typedef struct Controller_S
 	Controller_RAPI rapi;
 	LCD_I2C 	lcd;
 	Controller_Memory memory;
+
+	uint8_t p_s;
+	uint8_t e_s;
+
+	uint32_t seq_timer_var;
 } Controller;
 
 Controller_Result

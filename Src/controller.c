@@ -20,7 +20,7 @@ controller_initialize
 	RTC_HandleTypeDef *rtc,
 	I2C_HandleTypeDef *i2c,
 	GPIO_TypeDef   	  *wp_gpio,
-	uint16_t 		  wp_pin
+	uint16_t 	  wp_pin
 )
 {
 	Controller_TaskSet_Result res = _controller_taskset_initialize(&(controller->task_set), MAX_TASKSET_CAPACITY);
@@ -139,7 +139,7 @@ controller_update(Controller *controller)
 		}
 	}
 
-	#if 1
+	#if 0
 	#define METER_VALUES_TIMEOUT 10000
 	static Timer mv_timer;
 	timer_set(&mv_timer, METER_VALUES_TIMEOUT, true);
@@ -163,6 +163,8 @@ controller_update(Controller *controller)
 	#define HEARTBEAT_STATUS_TIMEOUT 30000
 	static Timer sn_timer;
 	timer_set(&sn_timer, HEARTBEAT_STATUS_TIMEOUT, true);
+	// if (!controller->memory.in_transaction) { timer_start(&sn_timer); }
+	// else 								 { timer_stop (&sn_timer); }
 	timer_start(&sn_timer);
 
 	if (timer_timeout(&sn_timer))
@@ -203,17 +205,22 @@ controller_update(Controller *controller)
 			CONTROLLER_ERROR(CTRL_TSET_ERR, tset_err, tres);
 		}
 
-		if (task_wrap.type == WRAP_EMPTY)
+		if (task_wrap.type == WRAP_EMPTY) { continue; }
+
+		#define K_TASK_TIMEOUT 10000
+		if (task_wrap.task.genesis_time + K_TASK_TIMEOUT <= HAL_GetTick())
 		{
-			continue;
+			task_wrap.type = WRAP_TIMEOUT;
+			task_wrap.task.func = task_wrap.task.func_timeout;
+			task_wrap.task.type = TASK_TIMEOUT;
 		}
 
 		if (task_wrap.task.type == TASK_PROCESS)
 		{
 			if (task_wrap.task.usart == OCPP_USART)
 			{
-				if (!controller->ocpp.is_response)							 { continue; }
-				if (!_ocpp_get_resp(&(controller->ocpp), task_wrap.task.id)) { continue; }
+				if (!controller->ocpp.is_response)								{ continue; }
+				if (!_ocpp_get_resp(&(controller->ocpp), task_wrap.task.id))	{ continue; }
 			}
 			else if (task_wrap.task.usart == RAPI_USART)
 			{

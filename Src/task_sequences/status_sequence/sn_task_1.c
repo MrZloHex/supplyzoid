@@ -1,5 +1,6 @@
 #include "task_sequences/status_sequence/sn_task_1.h"
 #include "task_sequences/status_sequence/sn_task_2.h"
+#include "task_sequences/status_sequence/sn_task_to.h"
 #include "task_sequences/stop_sequence/sts_task_1.h"
 
 #include "serial.h"
@@ -28,6 +29,8 @@ sn_task_1(Controller *ctrl, OCPP_MessageID t_id)
 
     uint8_t evse_state, pilot_state;
     _rapi_evse_state_transition_req(&(ctrl->rapi), &evse_state, &pilot_state);
+    ctrl->e_s = evse_state;
+    ctrl->p_s = pilot_state;
     if (evse_state == EVSE_STATE_UNKNOWN)
         return rres;
 
@@ -71,7 +74,9 @@ sn_task_1(Controller *ctrl, OCPP_MessageID t_id)
                 .type = TASK_PROCESS,
                 .usart = OCPP_USART,
                 .id = ctrl->ocpp.id_msg -1,
-                .func = sn_task_2
+                .func = sn_task_2,
+                .func_timeout = sn_task_to,
+                .genesis_time = HAL_GetTick()
             }
         }
     };
