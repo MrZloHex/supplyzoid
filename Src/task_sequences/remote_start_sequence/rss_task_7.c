@@ -1,4 +1,5 @@
 #include "task_sequences/remote_start_sequence/rss_task_7.h"
+#include "task_sequences/stop_sequence/sts_task_1.h"
 
 #include "serial.h"
 #include "string.h"
@@ -29,25 +30,31 @@ rss_task_7(Controller *ctrl, OCPP_MessageID t_id)
 	int res_int = mjson_get_number(ctrl->ocpp.message.data.call_result.payload, pay_len, P_TRANSACTION_ID, &transaction_id);
 	if (res_int == 0)
 		return res;
+	
 
-	char status[10];
-	int res_st = mjson_get_string(ctrl->ocpp.message.data.call_result.payload, pay_len, P_ID_INFO_STATUS, status, 10);
-	if (res_st < 1)
+	char status[16];
+	int res_st = mjson_get_string(ctrl->ocpp.message.data.call_result.payload, pay_len, P_ID_INFO_STATUS, status, 16);
+	if (res_st == -1)
 		return res;
+
+	ctrl->memory.transaction_id = (uint32_t)transaction_id;
 
 	if (strcmp("Accepted", status) == 0)
 	{
-		ctrl->memory.transaction_id = (uint32_t)transaction_id;
 		_controller_memory_store(&(ctrl->memory));
 		#ifdef DEBUG
 		uprintf(DBUG_UART, 1000, 64, "TRANSACTION CONFIRMED\r");
 		#endif
 	}
-	else if (strcmp("Rejected", status) == 0)
+	else
 	{
 		#ifdef DEBUG
-		uprintf(DBUG_UART, 1000, 64, "TRANSACTION REJECTED\r");
+		uprintf(DBUG_UART, 1000, 64, "TRANSACTION REJECT\r");
 		#endif
+		res.task.type = WRAP_IN_PROGRESS;
+		res.task.task.func = sts_task_1;
+		res.task.task.genesis_time = HAL_GetTick();
+		res.task.task.type = TASK_TRIGGER;
 	}
 
     return res;
