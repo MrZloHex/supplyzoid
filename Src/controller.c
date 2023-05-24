@@ -144,8 +144,10 @@ controller_update(Controller *controller)
 	static Timer mv_timer;
 	timer_set(&mv_timer, METER_VALUES_TIMEOUT, true);
 
-	if (controller->memory.in_transaction && controller->memory.status == CPS_Charging) { timer_start(&mv_timer); }
-	else 								 { timer_stop (&mv_timer); }
+	if (controller->memory.in_transaction && controller->memory.status == CPS_Charging)
+	{ timer_start(&mv_timer); }
+	else
+	{ timer_stop (&mv_timer); }
 
 	if (timer_timeout(&mv_timer))
 	{
@@ -178,9 +180,9 @@ controller_update(Controller *controller)
 	timer_set(&charged_timer, CHARGED_TIMEOUT, false);
 
 	if (controller->memory.in_transaction && controller->memory.status == CPS_Preparing)
-	{
-		timer_start(&charged_timer);
-	}
+	{ timer_start(&charged_timer); }
+	else
+	{ timer_stop(&charged_timer); }
 
 	if (timer_timeout(&charged_timer))
 	{
