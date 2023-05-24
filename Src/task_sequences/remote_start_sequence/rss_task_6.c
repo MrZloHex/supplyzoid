@@ -1,6 +1,6 @@
 #include "task_sequences/remote_start_sequence/rss_task_6.h"
 #include "task_sequences/remote_start_sequence/rss_task_7.h"
-#include "task_sequences/remote_start_sequence/rss_task_to.h"
+#include "task_sequences/remote_start_sequence/rss_task_to_1.h"
 
 #include "serial.h"
 #include "string.h"
@@ -36,7 +36,7 @@ rss_task_6(Controller *ctrl, OCPP_MessageID t_id)
     _controller_ocpp_send_req(&(ctrl->ocpp), ACT_START_TRANSACTION);
 
     res.task.task.id = ctrl->ocpp.id_msg -1;
-    res.task.task.func_timeout = rss_task_to;
+    res.task.task.func_timeout = rss_task_to_1;
     res.task.task.genesis_time = HAL_GetTick();
         
     return res;
