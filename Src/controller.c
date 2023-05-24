@@ -139,7 +139,7 @@ controller_update(Controller *controller)
 		}
 	}
 
-	#if 0
+	#if 1
 	#define METER_VALUES_TIMEOUT 10000
 	static Timer mv_timer;
 	timer_set(&mv_timer, METER_VALUES_TIMEOUT, true);
