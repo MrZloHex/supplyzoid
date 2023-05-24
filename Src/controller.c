@@ -90,7 +90,7 @@ controller_update(Controller *controller)
 				CONTROLLER_OCPP_ERROR((Controller_Protocol_Result)ures);
 			}
 			Controller_Protocol_Result res = _controller_ocpp_process_income(&(controller->ocpp), &wrap);
-			if (res == CTRL_PTCL_RESPONSE) { ; }
+			if (res == CTRL_PTCL_RESPONSE || res == CTRL_PTCL_NON_VALID_MSG || res == CTRL_PTCL_NO_SUCH_MSG) { ; }
 			else if (res != CTRL_PTCL_OK)
 			{
 				CONTROLLER_OCPP_ERROR(res);
