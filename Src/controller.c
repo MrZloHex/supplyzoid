@@ -144,7 +144,7 @@ controller_update(Controller *controller)
 	static Timer mv_timer;
 	timer_set(&mv_timer, METER_VALUES_TIMEOUT, true);
 
-	if (controller->memory.in_transaction) { timer_start(&mv_timer); }
+	if (controller->memory.in_transaction && controller->memory.status == CPS_Charging) { timer_start(&mv_timer); }
 	else 								 { timer_stop (&mv_timer); }
 
 	if (timer_timeout(&mv_timer))
@@ -172,6 +172,24 @@ controller_update(Controller *controller)
 	#endif
 
 
+	#if 1
+	#define CHARGED_TIMEOUT 60000
+	static Timer charged_timer;
+	timer_set(&charged_timer, CHARGED_TIMEOUT, false);
+
+	if (controller->memory.in_transaction && controller->memory.status == CPS_Preparing)
+	{
+		timer_start(&charged_timer);
+	}
+
+	if (timer_timeout(&charged_timer))
+	{
+		Controller_TaskWrap sts_wrap;
+		STS_TASK_WRAP((&sts_wrap));
+		_controller_taskset_push(&(controller->task_set), sts_wrap);
+	}
+
+	#endif
 
 
 	// IF THERE ARE NO FACES (TASKS SORRY) - RETURN
