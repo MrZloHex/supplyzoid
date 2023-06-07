@@ -203,7 +203,7 @@ int main(void)
   /* USER CODE BEGIN 2 */
 
 #ifdef DEBUG
-  uprintf(DBUG_UART, 100, 20, "hello rapi\r");
+  uprintf(DBUG_UART, 100, 20, "DEBUG START\r");
 	// uprintf(&huart1, 100, 20, "hello ocpp\n");
 #endif
 

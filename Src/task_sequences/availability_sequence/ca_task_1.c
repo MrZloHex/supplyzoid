@@ -1,5 +1,6 @@
 #include "task_sequences/availability_sequence/ca_task_1.h"
 #include "task_sequences/availability_sequence/ca_task_2.h"
+#include "task_sequences/availability_sequence/ca_task_3.h"
 
 #include "serial.h"
 #include "controller_ocpp.h"
@@ -56,7 +57,7 @@ ca_task_1(Controller *ctrl, OCPP_MessageID t_id)
         _controller_ocpp_make_msg(&(ctrl->ocpp), ACT_CHANGE_AVAILABILITY, &r, NULL);
         _controller_ocpp_send_resp(&(ctrl->ocpp), CALLRESULT, t_id);
         res.task.type = WRAP_IN_PROGRESS;
-        res.task.task.func = ca_task_2;
+        res.task.task.func = ca_task_3;
         res.task.task.trigger_id[0] = operative;
         res.task.task.type = TASK_TRIGGER;
         res.task.task.genesis_time = HAL_GetTick();
@@ -79,8 +80,15 @@ ca_task_1(Controller *ctrl, OCPP_MessageID t_id)
         OCPP_AvailabilityStatus r = AS_Accepted;
         _controller_ocpp_make_msg(&(ctrl->ocpp), ACT_CHANGE_AVAILABILITY, &r, NULL);
         _controller_ocpp_send_resp(&(ctrl->ocpp), CALLRESULT, t_id);
-		return res;
     }
+
+    res.task.type = WRAP_IN_PROGRESS;
+    res.task.task.func = ca_task_2;
+    res.task.task.trigger_id[0] = operative;
+    res.task.task.type = TASK_TRIGGER;
+    res.task.task.genesis_time = HAL_GetTick();
+		
+    return res;
 }
 
 
