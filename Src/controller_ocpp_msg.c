@@ -25,6 +25,24 @@ ocpp_authorize_req
 }
 
 void
+ocpp_heartbeat_req
+(
+	Controller_OCPP *ocpp
+)
+{
+	char payload[PAYLOAD_LEN];
+	mjson_snprintf
+	(
+		payload, PAYLOAD_LEN,
+		"{}"
+	);
+
+	ocpp->message.type = CALL;
+	ocpp->message.data.call.action = ACT_HEARTBEAT;
+	strcpy(ocpp->message.data.call.payload, payload);
+}
+
+void
 ocpp_boot_notification_req(Controller_OCPP *ocpp)
 {
 	char payload[PAYLOAD_LEN];

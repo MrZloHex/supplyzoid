@@ -21,6 +21,12 @@ ocpp_authorize_req
 );
 
 void
+ocpp_heartbeat_req
+(
+	Controller_OCPP *ocpp
+);
+
+void
 ocpp_boot_notification_req(Controller_OCPP *ocpp);
 
 void

@@ -8,6 +8,7 @@
 #include "task_sequences/stop_sequence/sts_task_1.h"
 #include "task_sequences/boot_sequence/bs_task_1.h"
 #include "task_sequences/get_state_sequence/gs_task_1.h"
+#include "task_sequences/heartbeat_sequence/hb_task_1.h"
 
 Controller_Result
 controller_initialize
@@ -162,9 +163,9 @@ controller_update(Controller *controller)
 	#endif
 
 	#if 1
-	#define HEARTBEAT_STATUS_TIMEOUT 30000
+	#define STATUS_NOTIFICATION_TIMEOUT 30000
 	static Timer sn_timer;
-	timer_set(&sn_timer, HEARTBEAT_STATUS_TIMEOUT, true);
+	timer_set(&sn_timer, STATUS_NOTIFICATION_TIMEOUT, true);
 	// if (!controller->memory.in_transaction) { timer_start(&sn_timer); }
 	// else 								 { timer_stop (&sn_timer); }
 	timer_start(&sn_timer);
@@ -199,6 +200,24 @@ controller_update(Controller *controller)
 		_controller_taskset_push(&(controller->task_set), sts_wrap);
 	}
 
+	#endif
+
+	#if 1
+	#define HEARTBEAT_TIMEOUT 60000
+	static Timer hb_timer;
+	timer_set(&hb_timer, HEARTBEAT_TIMEOUT, true);
+	timer_start(&hb_timer);
+
+	if (timer_timeout(&hb_timer))
+	{
+		Controller_TaskWrap hb_wrap;
+		HB_TASK_WRAP((&hb_wrap));
+		tres = _controller_taskset_push(&(controller->task_set), hb_wrap);
+		if (tres != CTRL_SET_OK)
+		{
+			CONTROLLER_ERROR(CTRL_TSET_ERR, tset_err, tres);
+		}
+	}
 	#endif
 
 

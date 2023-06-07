@@ -19,7 +19,7 @@ const static char	k_ACT_START_TRANSACTION[]	= "StartTransaction";
 const static char	k_ACT_STOP_TRANSACTION[]         = "StopTransaction";
 const static char	k_ACT_STATUS_NOTIFICATION[]      = "StatusNotification";
 const static char	k_ACT_METER_VALUES[]             = "MeterValues";
-const static char	k_ACT_HEARTBEAT[]                = "HeartBeat";
+const static char	k_ACT_HEARTBEAT[]                = "Heartbeat";
 const static char	k_ACT_DATA_TRANSFER[]            = "DataTransfer";
 const static char	k_ACT_AUTHORIZE[]                = "Authorize";
 const static char 	k_ACT_RESET[]				     = "Reset";
@@ -208,6 +208,7 @@ _controller_ocpp_make_msg(Controller_OCPP *ocpp, OCPP_CallAction req, void *kwar
 			break;
 
 		case ACT_HEARTBEAT:
+			ocpp_heartbeat_req(ocpp);
 			break;
 
 		default:;
