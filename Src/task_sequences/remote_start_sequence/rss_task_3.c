@@ -42,14 +42,13 @@ rss_task_3(Controller *ctrl, OCPP_MessageID t_id)
     res.task.task.func_timeout = rss_task_to;
     res.task.task.genesis_time = HAL_GetTick();
 
-    _rapi_set_auth_lock_req(&(ctrl->rapi), AUTH_UNLOCKED);
+    
+    _rapi_get_energy_usage_req(&(ctrl->rapi));
     if (_rapi_send_req(&(ctrl->rapi)) == CTRL_PTCL_PENDING)
     {
         res.type = TRES_WAIT;
         res.task.task.func = rss_task_3;
     }
-
-    ctrl->seq_timer_var = 0;
 
     return res;
 }

@@ -39,7 +39,7 @@ _controller_lcd_update(Controller *ctrl)
 {
 	static bool online = true;
 	static OCPP_ChargePointStatus port1 = 0;
-	lcd_i2c_pos_printf(&(ctrl->lcd), 0, 3, "%u %u %u", ctrl->e_s, ctrl->p_s, ctrl->memory.transaction_id);
+	lcd_i2c_pos_printf(&(ctrl->lcd), 0, 3, "%u %u %u %u", ctrl->e_s, ctrl->p_s, ctrl->memory.transaction_id, ctrl->memory.in_transaction);
 	// static OCPP_ChargePointStatus port2 = CPS_Unavailable;
 
 	if (online != ctrl->ocpp._started)
