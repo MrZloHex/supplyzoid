@@ -56,11 +56,11 @@ ca_task_1(Controller *ctrl, OCPP_MessageID t_id)
         OCPP_AvailabilityStatus r = AS_Scheduled;
         _controller_ocpp_make_msg(&(ctrl->ocpp), ACT_CHANGE_AVAILABILITY, &r, NULL);
         _controller_ocpp_send_resp(&(ctrl->ocpp), CALLRESULT, t_id);
-        res.task.type = WRAP_IN_PROGRESS;
-        res.task.task.func = ca_task_3;
-        res.task.task.trigger_id[0] = operative;
-        res.task.task.type = TASK_TRIGGER;
-        res.task.task.genesis_time = HAL_GetTick();
+        // res.task.type = WRAP_IN_PROGRESS;
+        // res.task.task.func = ca_task_3;
+        // res.task.task.trigger_id[0] = operative;
+        // res.task.task.type = TASK_TRIGGER;
+        // res.task.task.genesis_time = HAL_GetTick();
 		return res;
     }
     else
