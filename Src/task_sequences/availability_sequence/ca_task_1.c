@@ -31,7 +31,7 @@ ca_task_1(Controller *ctrl, OCPP_MessageID t_id)
     char    status[12];
 	int res_id = mjson_get_number(ctrl->ocpp.message.data.call.payload, strlen(ctrl->ocpp.message.data.call.payload), P_CONTROLLER_ID, &connector_id);
 	int res_st = mjson_get_string(ctrl->ocpp.message.data.call.payload, strlen(ctrl->ocpp.message.data.call.payload), P_TYPE, status, 12);
-	if (res_id == 0 || res_st == -1 || (uint32_t)connector_id != 0)
+	if (res_id == 0 || res_st == -1 || (uint32_t)connector_id > 1)
     {
         OCPP_AvailabilityStatus r = AS_Rejected;
         _controller_ocpp_make_msg(&(ctrl->ocpp), ACT_CHANGE_AVAILABILITY, &r, NULL);
