@@ -32,7 +32,7 @@ rsts_task_1(Controller *ctrl, OCPP_MessageID t_id)
 	if (res_id == 0 || (uint32_t)transaction_id_d != ctrl->memory.transaction_id)
     {
         bool r = false;
-        _controller_ocpp_make_msg(&(ctrl->ocpp), ACT_REMOTE_STOP_TRANSACTION, &r, NULL);
+        _controller_ocpp_make_msg(&(ctrl->ocpp), ACT_REMOTE_STOP_TRANSACTION, &r, NULL, NULL);
         _controller_ocpp_send_resp(&(ctrl->ocpp), CALLRESULT, t_id);
 		return res;
     }

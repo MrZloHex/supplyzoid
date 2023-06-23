@@ -25,7 +25,7 @@ gvl_task_1(Controller *ctrl, OCPP_MessageID t_id)
 #endif
 
 
-    _controller_ocpp_make_msg(&(ctrl->ocpp), ACT_GET_LOCAL_LIST_VERSION, NULL, NULL);
+    _controller_ocpp_make_msg(&(ctrl->ocpp), ACT_GET_LOCAL_LIST_VERSION, NULL, NULL, NULL);
     _controller_ocpp_send_resp(&(ctrl->ocpp), CALLRESULT, t_id);
 
 

@@ -56,7 +56,9 @@ void
 ocpp_meter_values_req
 (
 	Controller_OCPP *ocpp,
-	uint32_t *wh
+	uint32_t *wh,
+	uint32_t *amps,
+	uint32_t *volts
 );
 
 

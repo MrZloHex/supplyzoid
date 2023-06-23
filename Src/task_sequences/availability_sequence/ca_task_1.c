@@ -35,7 +35,7 @@ ca_task_1(Controller *ctrl, OCPP_MessageID t_id)
 	if (res_id == 0 || res_st == -1 || (uint32_t)connector_id > 1)
     {
         OCPP_AvailabilityStatus r = AS_Rejected;
-        _controller_ocpp_make_msg(&(ctrl->ocpp), ACT_CHANGE_AVAILABILITY, &r, NULL);
+        _controller_ocpp_make_msg(&(ctrl->ocpp), ACT_CHANGE_AVAILABILITY, &r, NULL, NULL);
         _controller_ocpp_send_resp(&(ctrl->ocpp), CALLRESULT, t_id);
 		return res;
     }
@@ -46,7 +46,7 @@ ca_task_1(Controller *ctrl, OCPP_MessageID t_id)
     else
     {
         OCPP_AvailabilityStatus r = AS_Rejected;
-        _controller_ocpp_make_msg(&(ctrl->ocpp), ACT_CHANGE_AVAILABILITY, &r, NULL);
+        _controller_ocpp_make_msg(&(ctrl->ocpp), ACT_CHANGE_AVAILABILITY, &r, NULL, NULL);
         _controller_ocpp_send_resp(&(ctrl->ocpp), CALLRESULT, t_id);
 		return res;
     }
@@ -54,7 +54,7 @@ ca_task_1(Controller *ctrl, OCPP_MessageID t_id)
     if (ctrl->memory.in_transaction)
     {
         OCPP_AvailabilityStatus r = AS_Scheduled;
-        _controller_ocpp_make_msg(&(ctrl->ocpp), ACT_CHANGE_AVAILABILITY, &r, NULL);
+        _controller_ocpp_make_msg(&(ctrl->ocpp), ACT_CHANGE_AVAILABILITY, &r, NULL, NULL);
         _controller_ocpp_send_resp(&(ctrl->ocpp), CALLRESULT, t_id);
         // res.task.type = WRAP_IN_PROGRESS;
         // res.task.task.func = ca_task_3;
@@ -78,7 +78,7 @@ ca_task_1(Controller *ctrl, OCPP_MessageID t_id)
 
         _controller_memory_store(&(ctrl->memory));
         OCPP_AvailabilityStatus r = AS_Accepted;
-        _controller_ocpp_make_msg(&(ctrl->ocpp), ACT_CHANGE_AVAILABILITY, &r, NULL);
+        _controller_ocpp_make_msg(&(ctrl->ocpp), ACT_CHANGE_AVAILABILITY, &r, NULL, NULL);
         _controller_ocpp_send_resp(&(ctrl->ocpp), CALLRESULT, t_id);
     }
 

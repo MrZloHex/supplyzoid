@@ -34,7 +34,7 @@ rss_task_2(Controller *ctrl, OCPP_MessageID t_id)
 	if (res_st == -1 || strcmp(status, "Accepted") != 0 || ctrl->memory.available || ctrl->memory.in_transaction) 
 	{
         bool r = false;
-        _controller_ocpp_make_msg(&(ctrl->ocpp), ACT_REMOTE_START_TRANSACTION, &r, NULL);
+        _controller_ocpp_make_msg(&(ctrl->ocpp), ACT_REMOTE_START_TRANSACTION, &r, NULL, NULL);
         _controller_ocpp_send_resp(&(ctrl->ocpp), CALLRESULT, t_id);
         return res;
     }

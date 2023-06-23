@@ -32,7 +32,7 @@ sll_task_1(Controller *ctrl, OCPP_MessageID t_id)
     if (strcmp(type, "Differential") == 0)
     {
         OCPP_UpdateStatus s = US_NotSupported;
-        _controller_ocpp_make_msg(&(ctrl->ocpp), ACT_SEND_LOCAL_LIST, &s, NULL);
+        _controller_ocpp_make_msg(&(ctrl->ocpp), ACT_SEND_LOCAL_LIST, &s, NULL, NULL);
         _controller_ocpp_send_resp(&(ctrl->ocpp), CALLRESULT, t_id);
         return res;
     }
@@ -79,7 +79,7 @@ sll_task_1(Controller *ctrl, OCPP_MessageID t_id)
 
 
     OCPP_UpdateStatus s = US_Accepted;
-    _controller_ocpp_make_msg(&(ctrl->ocpp), ACT_SEND_LOCAL_LIST, &s, NULL);
+    _controller_ocpp_make_msg(&(ctrl->ocpp), ACT_SEND_LOCAL_LIST, &s, NULL, NULL);
     _controller_ocpp_send_resp(&(ctrl->ocpp), CALLRESULT, t_id);
 
     return res;

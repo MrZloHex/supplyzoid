@@ -198,7 +198,7 @@ _controller_ocpp_process_income
 );
 
 Controller_Protocol_Result
-_controller_ocpp_make_msg(Controller_OCPP *ocpp, OCPP_CallAction req, void *kwarg1, void *kwarg2);
+_controller_ocpp_make_msg(Controller_OCPP *ocpp, OCPP_CallAction req, void *kwarg1, void *kwarg2, void *kwarg3);
 
 Controller_Protocol_Result
 _controller_ocpp_send_req(Controller_OCPP *ocpp, OCPP_CallAction req);

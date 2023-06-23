@@ -53,4 +53,15 @@ _rapi_get_state_resp
 );
 
 
+void
+_rapi_get_charging_current_voltage_req(Controller_RAPI *rapi);
+
+void
+_rapi_get_charging_current_voltage_resp
+(
+	Controller_RAPI *rapi,
+	uint32_t *volts,
+	uint32_t *amps
+);
+
 #endif /* __CONTROLLER_RAPI_MESSAGES_H__ */

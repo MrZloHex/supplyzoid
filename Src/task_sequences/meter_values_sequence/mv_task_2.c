@@ -3,7 +3,6 @@
 #include "task_sequences/meter_values_sequence/mv_task_to.h"
 
 #include "serial.h"
-#include "controller_ocpp_msg.h"
 #include "controller_rapi_msg.h"
 
 Task_Result
@@ -22,7 +21,7 @@ mv_task_2(Controller *ctrl, OCPP_MessageID t_id)
             .task = 
             {
                 .type = TASK_PROCESS,
-                .usart = OCPP_USART,
+                .usart = RAPI_USART,
                 .func = mv_task_3,
                 .func_timeout = mv_task_to,
                 .genesis_time = HAL_GetTick()
@@ -35,11 +34,15 @@ mv_task_2(Controller *ctrl, OCPP_MessageID t_id)
 	uint32_t wh = ws / 3600;
 	ctrl->ocpp.wh = wh;
 
-    _controller_ocpp_make_msg(&(ctrl->ocpp), ACT_METER_VALUES, &wh, NULL);
-    _controller_ocpp_send_req(&(ctrl->ocpp), ACT_METER_VALUES);
+    _rapi_get_charging_current_voltage_req(&(ctrl->rapi));
+    if (_rapi_send_req(&(ctrl->rapi)) == CTRL_PTCL_PENDING)
+    {
+        res.type = TRES_WAIT;
+        res.task.task.func = mv_task_2;
+    }
 
-    res.task.task.id = ctrl->ocpp.id_msg -1;
     return res;
 }
+
 
 

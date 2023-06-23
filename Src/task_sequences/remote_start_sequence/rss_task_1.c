@@ -7,6 +7,8 @@
 #include "mjson.h"
 #include "string.h"
 
+#include "controller_rapi_msg.h"
+
 Task_Result
 rss_task_1(Controller *ctrl, OCPP_MessageID t_id)
 {

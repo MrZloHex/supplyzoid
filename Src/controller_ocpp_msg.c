@@ -185,11 +185,11 @@ void
 ocpp_meter_values_req
 (
 	Controller_OCPP *ocpp,
-	uint32_t *wh
+	uint32_t *wh,
+	uint32_t *amps,
+	uint32_t *volts
 )
 {
-	#warning TODO: ADD ANOTHER MEASUREMENTS
-
 	char time[25] = {0};
 	get_rtc_time(ocpp->rtc, time);
 
@@ -197,7 +197,7 @@ ocpp_meter_values_req
 	mjson_snprintf
 	(
 		payload, PAYLOAD_LEN,
-		"{%Q:%d,%Q:[{%Q:%Q,%Q:[{%Q:%ld,%Q:%Q}]}]}",
+		"{%Q:%d,%Q:[{%Q:%Q,%Q:[{%Q:%ld,%Q:%Q},{%Q:%ld,%Q:%Q},{%Q:%ld,%Q:%Q},{%Q:%ld,%Q:%Q}]}]}",
 		"connectorId",
 		1,
 		"meterValue",
@@ -205,7 +205,13 @@ ocpp_meter_values_req
 		time,
 		"sampledValue",
 		"value", *wh,
-		"unit", "Wh"
+		"unit", "Wh",
+		"value", *amps,
+		"unit", "A",
+		"value", *volts,
+		"unit", "V",
+		"value", (*amps)*(*volts),
+		"unit", "W"
 	);
 
 	ocpp->message.type = CALL;

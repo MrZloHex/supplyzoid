@@ -127,3 +127,35 @@ _rapi_set_auth_lock_req
 	strcpy(rapi->transmitter_buffer, payload);
 	_rapi_append_chksum(rapi);
 }
+
+void
+_rapi_get_charging_current_voltage_req(Controller_RAPI *rapi)
+{
+	char payload[RAPI_BUF_LEN];
+	mjson_snprintf
+	(
+		payload, RAPI_BUF_LEN,
+		"$%s^",
+		"GG"
+	);
+	
+	strcpy(rapi->transmitter_buffer, payload);
+	_rapi_append_chksum(rapi);
+}
+
+void
+_rapi_get_charging_current_voltage_resp
+(
+	Controller_RAPI *rapi,
+	uint32_t *volts,
+	uint32_t *amps
+)
+{
+	if (rapi->token_index < 3)
+		return;
+
+	if (amps != NULL)
+		charset_to_uint32(amps, rapi->tokens[1]);
+	if (volts != NULL)
+		charset_to_uint32(volts, rapi->tokens[2]);
+}

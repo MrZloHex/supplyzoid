@@ -155,7 +155,7 @@ _controller_ocpp_process_income
 }
 
 Controller_Protocol_Result
-_controller_ocpp_make_msg(Controller_OCPP *ocpp, OCPP_CallAction req, void *kwarg1, void *kwarg2)
+_controller_ocpp_make_msg(Controller_OCPP *ocpp, OCPP_CallAction req, void *kwarg1, void *kwarg2, void *kwarg3)
 {
 	switch (req)
 	{
@@ -204,7 +204,7 @@ _controller_ocpp_make_msg(Controller_OCPP *ocpp, OCPP_CallAction req, void *kwar
 			break;
 
 		case ACT_METER_VALUES:
-			ocpp_meter_values_req(ocpp, (uint32_t *)kwarg1);
+			ocpp_meter_values_req(ocpp, (uint32_t *)kwarg1, (uint32_t *)kwarg2, (uint32_t *)kwarg3);
 			break;
 
 		case ACT_HEARTBEAT:

@@ -36,7 +36,7 @@ rss_task_4(Controller *ctrl, OCPP_MessageID t_id)
     ctrl->memory.in_transaction = true;
     _controller_memory_store(&(ctrl->memory));
 
-    _controller_ocpp_make_msg(&(ctrl->ocpp), ACT_START_TRANSACTION, &wh, NULL);
+    _controller_ocpp_make_msg(&(ctrl->ocpp), ACT_START_TRANSACTION, &wh, NULL, NULL);
     _controller_ocpp_send_req(&(ctrl->ocpp), ACT_START_TRANSACTION);
 
     res.task.task.id = ctrl->ocpp.id_msg -1;

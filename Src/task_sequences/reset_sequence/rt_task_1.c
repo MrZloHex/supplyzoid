@@ -37,7 +37,7 @@ rt_task_1(Controller *ctrl, OCPP_MessageID t_id)
     uprintf(DBUG_UART, 1000, 100, "%u %s\r", r, status);
     #endif
     
-    _controller_ocpp_make_msg(&(ctrl->ocpp), ACT_RESET, &r, NULL);
+    _controller_ocpp_make_msg(&(ctrl->ocpp), ACT_RESET, &r, NULL, NULL);
     _controller_ocpp_send_resp(&(ctrl->ocpp), CALLRESULT, t_id);
     if (!r)
         return res;

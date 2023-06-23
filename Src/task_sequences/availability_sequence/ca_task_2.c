@@ -26,7 +26,7 @@ ca_task_2(Controller *ctrl, OCPP_MessageID t_id)
 
     OCPP_ChargePointErrorCode error = CPEC_NoError;
     OCPP_ChargePointStatus status = t_id[0] ? CPS_Available : CPS_Unavailable;
-    _controller_ocpp_make_msg(&(ctrl->ocpp), ACT_STATUS_NOTIFICATION, &status, &error);
+    _controller_ocpp_make_msg(&(ctrl->ocpp), ACT_STATUS_NOTIFICATION, &status, &error, NULL);
     _controller_ocpp_send_req(&(ctrl->ocpp), ACT_STATUS_NOTIFICATION);
 
     Task_Result r =

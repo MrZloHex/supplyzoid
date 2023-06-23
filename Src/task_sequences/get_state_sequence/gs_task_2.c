@@ -56,7 +56,7 @@ gs_task_2(Controller *ctrl, OCPP_MessageID _id)
     ctrl->memory.status = status;
     _controller_memory_store(&(ctrl->memory));
 
-    _controller_ocpp_make_msg(&(ctrl->ocpp), ACT_STATUS_NOTIFICATION, &status, &error);
+    _controller_ocpp_make_msg(&(ctrl->ocpp), ACT_STATUS_NOTIFICATION, &status, &error, NULL);
     _controller_ocpp_send_req(&(ctrl->ocpp), ACT_STATUS_NOTIFICATION);
 
     Task_Result res =
