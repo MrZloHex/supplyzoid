@@ -2,6 +2,7 @@
 #include "controller_lcd.h"
 #include "serial.h"
 #include "timer.h"
+#include "controller_temperature.h"
 
 #include "task_sequences/remote_start_sequence/rss_task_1.h"
 #include "task_sequences/meter_values_sequence/mv_task_1.h"
@@ -35,6 +36,7 @@ controller_initialize
 
 	_controller_lcd_init(controller, i2c);
 	_controller_memory_init(&(controller->memory), i2c);
+	_controller_temp_init(i2c);
 
 	// BASE TASKS
 

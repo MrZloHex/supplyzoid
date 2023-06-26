@@ -2,6 +2,7 @@
 
 #include "mjson.h"
 #include "time.h"
+#include "controller_temperature.h"
 
 void
 ocpp_authorize_req
@@ -197,7 +198,7 @@ ocpp_meter_values_req
 	mjson_snprintf
 	(
 		payload, PAYLOAD_LEN,
-		"{%Q:%d,%Q:[{%Q:%Q,%Q:[{%Q:%ld,%Q:%Q},{%Q:%ld,%Q:%Q},{%Q:%ld,%Q:%Q},{%Q:%ld,%Q:%Q}]}]}",
+		"{%Q:%d,%Q:[{%Q:%Q,%Q:[{%Q:%ld,%Q:%Q},{%Q:%ld,%Q:%Q},{%Q:%ld,%Q:%Q},{%Q:%ld,%Q:%Q},{%Q:%ld,%Q:%Q}]}]}",
 		"connectorId",
 		1,
 		"meterValue",
@@ -211,7 +212,9 @@ ocpp_meter_values_req
 		"value", *volts,
 		"unit", "V",
 		"value", (*amps)*(*volts),
-		"unit", "W"
+		"unit", "W",
+		"value", (uint32_t)_controller_temp_get_temp(),
+		"unit", "Celsius"
 	);
 
 	ocpp->message.type = CALL;
