@@ -162,7 +162,7 @@ typedef struct Controller_OCPP_S
 
 	OCPP_IdTag idtag;
 
-	uint32_t wh;
+	double wh;
 
 	OCPP_AuthorizationList list;
 

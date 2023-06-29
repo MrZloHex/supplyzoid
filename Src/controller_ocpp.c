@@ -204,7 +204,7 @@ _controller_ocpp_make_msg(Controller_OCPP *ocpp, OCPP_CallAction req, void *kwar
 			break;
 
 		case ACT_METER_VALUES:
-			ocpp_meter_values_req(ocpp, (uint32_t *)kwarg1, (uint32_t *)kwarg2, (uint32_t *)kwarg3);
+			ocpp_meter_values_req(ocpp, (double *)kwarg1, (double *)kwarg2, (double *)kwarg3);
 			break;
 
 		case ACT_HEARTBEAT:

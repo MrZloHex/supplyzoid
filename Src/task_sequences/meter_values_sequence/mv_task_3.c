@@ -33,7 +33,7 @@ mv_task_3(Controller *ctrl, OCPP_MessageID t_id)
 
     uint32_t mamps, mvolts;
     _rapi_get_charging_current_voltage_resp(&(ctrl->rapi), &mvolts, &mamps);
-    uint32_t amps = mamps / 1000, volts = mvolts / 1000;
+    double amps = mamps / 1000.0f, volts = mvolts / 1000.0f;
 
     _controller_ocpp_make_msg(&(ctrl->ocpp), ACT_METER_VALUES, &(ctrl->ocpp.wh), &amps, &volts);
     _controller_ocpp_send_req(&(ctrl->ocpp), ACT_METER_VALUES);

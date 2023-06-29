@@ -31,7 +31,7 @@ mv_task_2(Controller *ctrl, OCPP_MessageID t_id)
     
     uint32_t ws;
 	_rapi_get_energy_usage_resp(&(ctrl->rapi), &ws, NULL);
-	uint32_t wh = ws / 3600;
+	double wh = ws / 3600.0f;
 	ctrl->ocpp.wh = wh;
 
     _rapi_get_charging_current_voltage_req(&(ctrl->rapi));

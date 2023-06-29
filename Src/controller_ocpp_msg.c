@@ -186,9 +186,9 @@ void
 ocpp_meter_values_req
 (
 	Controller_OCPP *ocpp,
-	uint32_t *wh,
-	uint32_t *amps,
-	uint32_t *volts
+	double *wh,
+	double *amps,
+	double *volts
 )
 {
 	char time[25] = {0};
@@ -198,7 +198,7 @@ ocpp_meter_values_req
 	mjson_snprintf
 	(
 		payload, PAYLOAD_LEN,
-		"{%Q:%d,%Q:[{%Q:%Q,%Q:[{%Q:%ld,%Q:%Q},{%Q:%ld,%Q:%Q},{%Q:%ld,%Q:%Q},{%Q:%ld,%Q:%Q},{%Q:%ld,%Q:%Q}]}]}",
+		"{%Q:%d,%Q:[{%Q:%Q,%Q:[{%Q:%g,%Q:%Q},{%Q:%g,%Q:%Q},{%Q:%g,%Q:%Q},{%Q:%g,%Q:%Q},{%Q:%ld,%Q:%Q}]}]}",
 		"connectorId",
 		1,
 		"meterValue",
