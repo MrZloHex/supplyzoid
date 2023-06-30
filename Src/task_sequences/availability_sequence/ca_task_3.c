@@ -21,13 +21,27 @@ ca_task_3(Controller *ctrl, OCPP_MessageID t_id)
             {
                 .func = ca_task_3,
                 .genesis_time = HAL_GetTick(),
-                .func_timeout = ca_task_3
+                .func_timeout = ca_task_3,
+                .id = 69
             }
         }
     };
 
     if (ctrl->memory.in_transaction)
         return res;
+
+    if (t_id[0])
+    {
+        ctrl->memory.available = false;
+        ctrl->memory.status = CPS_Available;
+    }
+    else
+    {
+        ctrl->memory.available = true;
+        ctrl->memory.status = CPS_Unavailable;
+    }
+
+    _controller_memory_store(&(ctrl->memory));
 
     OCPP_ChargePointErrorCode error = CPEC_NoError;
     OCPP_ChargePointStatus status = t_id[0] ? CPS_Available : CPS_Unavailable;

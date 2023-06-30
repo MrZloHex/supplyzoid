@@ -271,6 +271,8 @@ controller_update(Controller *controller)
 		// __debug_taskset_print(&(controller->task_set));
 		if (task_wrap.task.func == NULL)
 		{
+			uprintf(DBUG_UART, 100, 100, "SUKA\r");
+			uprintf(DBUG_UART, 100, 100, "%u\r", task_wrap.task.id);
 			CONTROLLER_ERROR(CTRL_TSET_ERR, tset_err, CTRL_SET_NULLPTR);
 		}
 
@@ -284,7 +286,7 @@ controller_update(Controller *controller)
 				_controller_taskset_esc_iter(&(controller->task_set));
 				CONTROLLER_ERROR(CTRL_TSET_ERR, tset_err, tres);
 			}
-			// __debug_taskset_print(&(controller->task_set));
+			__debug_taskset_print(&(controller->task_set));
 			break;
 		}
 	}
