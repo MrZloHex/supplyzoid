@@ -14,9 +14,9 @@
 #include "usart.h"
 #include "stdbool.h"
 
-#define VENDOR "EV Solutions"
+#define VENDOR "E-Mobility"
 // #define VENDOR "Mother"
-#define MODEL  "PROTOTYPE"
+#define MODEL  "Proto-EVSE"
 // #define MODEL  "Fucker"
 
 

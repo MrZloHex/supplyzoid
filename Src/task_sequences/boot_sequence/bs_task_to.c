@@ -1,4 +1,5 @@
 #include "task_sequences/boot_sequence/bs_task_to.h"
+#include "task_sequences/boot_sequence/bs_task_1.h"
 
 #include "serial.h"
 
@@ -13,7 +14,14 @@ bs_task_to(Controller *ctrl, OCPP_MessageID t_id)
         .type = TRES_NEXT,
         .task =
         {
-            .type = WRAP_FINISHED,
+            .type = WRAP_IN_PROGRESS,
+            .task =
+            {
+                .func = bs_task_1,
+                .func_timeout = bs_task_to,
+                .genesis_time = HAL_GetTick(),
+                .type = TASK_TRIGGER
+            }
         }
     };
 

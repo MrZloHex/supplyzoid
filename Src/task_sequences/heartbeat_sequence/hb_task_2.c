@@ -22,6 +22,15 @@ hb_task_2(Controller *ctrl, OCPP_MessageID t_id)
             }
         }
     };
+
+	char time[25];
+	int res_time = mjson_get_string(ctrl->ocpp.message.data.call_result.payload, strlen(ctrl->ocpp.message.data.call_result.payload), "$.currentTime", time, 25);
+	if (res_time == -1)
+		return res;
+
+
+	adjust_rtc_time(ctrl->ocpp.rtc, time);
+
     return res;
 }
 
