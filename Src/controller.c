@@ -125,8 +125,8 @@ controller_update(Controller *controller)
 				CONTROLLER_RAPI_ERROR((Controller_Protocol_Result)ures)
 			}
 			Controller_Protocol_Result res = _controller_rapi_process_income(&(controller->rapi), &wrap);
-			// if (res == CTRL_PTCL_RESPONSE || res == CTRL_PTCL_NON_VALID_MSG) { ; }
-			if (res == CTRL_PTCL_RESPONSE) { ; }
+			if (res == CTRL_PTCL_RESPONSE || res == CTRL_PTCL_NON_VALID_MSG) { ; }
+			// if (res == CTRL_PTCL_RESPONSE) { ; }
 			else if (res != CTRL_PTCL_OK)
 			{
 				CONTROLLER_RAPI_ERROR(res);
@@ -271,8 +271,8 @@ controller_update(Controller *controller)
 		// __debug_taskset_print(&(controller->task_set));
 		if (task_wrap.task.func == NULL)
 		{
-			uprintf(DBUG_UART, 100, 100, "SUKA\r");
-			uprintf(DBUG_UART, 100, 100, "%u\r", task_wrap.task.id);
+			// uprintf(DBUG_UART, 100, 100, "SUKA\r");
+			// uprintf(DBUG_UART, 100, 100, "%u\r", task_wrap.task.id);
 			CONTROLLER_ERROR(CTRL_TSET_ERR, tset_err, CTRL_SET_NULLPTR);
 		}
 
@@ -286,7 +286,7 @@ controller_update(Controller *controller)
 				_controller_taskset_esc_iter(&(controller->task_set));
 				CONTROLLER_ERROR(CTRL_TSET_ERR, tset_err, tres);
 			}
-			__debug_taskset_print(&(controller->task_set));
+			// __debug_taskset_print(&(controller->task_set));
 			break;
 		}
 	}

@@ -53,9 +53,6 @@
 
 /* USER CODE BEGIN PV */
 
-#define RAPI_UART huart4
-#define OCPP_UART huart1
-
 static Controller controller = {0};
 
 /* USER CODE END PV */
@@ -238,9 +235,9 @@ int main(void)
 	res = controller_update(&controller);
 	if (res.type != CTRL_OK)
 	{
-		uprintf(DBUG_UART, 1000, 100, "ERR: %u\r", res.type);
-		uprintf(DBUG_UART, 1000, 100, "PTCL ERR: %u\r", res.errors.ocpp_err);
-		uprintf(DBUG_UART, 1000, 100, "TSET ERR: %u\r", res.errors.tset_err);
+		uprintf(&OCPP_UART, 1000, 100, "ERR: %u\n", res.type);
+		uprintf(&OCPP_UART, 1000, 100, "PTCL ERR: %u\n", res.errors.ocpp_err);
+		uprintf(&OCPP_UART, 1000, 100, "TSET ERR: %u\n", res.errors.tset_err);
 		Error_Handler_with_err("FAILED IN LOOP");
 	}
 	res.type = 0;

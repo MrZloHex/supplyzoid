@@ -4,6 +4,7 @@
 #include "serial.h"
 #include "convert.h"
 
+#include "controller_types.h"
 #include "task_sequences/boot_sequence/bs_task_1.h"
 #include "task_sequences/status_sequence/sn_task_1.h"
 
@@ -68,6 +69,7 @@ _controller_rapi_process_income
 
 	if (!_rapi_msg_validator(rapi))
 	{
+uprintf(&OCPP_UART, 100, RAPI_BUF_LEN, "%s\n", rapi->processive_buffer);
 		return CTRL_PTCL_NON_VALID_MSG;
 	}
     rapi->_started = true;

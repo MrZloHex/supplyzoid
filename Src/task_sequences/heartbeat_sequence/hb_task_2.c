@@ -3,6 +3,7 @@
 #include "serial.h"
 #include "mjson.h"
 #include "string.h"
+#include "time.h"
 
 Task_Result
 hb_task_2(Controller *ctrl, OCPP_MessageID t_id)

@@ -10,6 +10,8 @@
 
 #define DEBUG
 #define DBUG_UART &huart2
+#define RAPI_UART huart4
+#define OCPP_UART huart1
 
 #include "ocpp_types.h"
 #include "stdbool.h"
