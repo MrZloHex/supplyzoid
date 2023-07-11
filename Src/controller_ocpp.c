@@ -12,6 +12,7 @@
 #include "task_sequences/reset_sequence/rt_task_1.h"
 #include "task_sequences/send_local_sequence/sll_task_1.h"
 #include "task_sequences/get_verlist_sequence/gvl_task_1.h"
+#include "task_sequences/data_transfer_sequence/dt_task_1.h"
 
 
 const static char	k_ACT_BOOT_NOTIFICATION[]	= "BootNotification";
@@ -108,7 +109,7 @@ _controller_ocpp_process_income
 		return CTRL_PTCL_NON_VALID_MSG;
 	}
 
-	// uprintf(DBUG_UART, 1000, 1000, "GOT `%s`\r", ocpp->processive_buffer);
+	uprintf(DBUG_UART, 1000, 1000, "GOT `%s`\r", ocpp->processive_buffer);
 
 	// IF MSG IS RESPONSE
 	if (ocpp->message.type != CALL)
@@ -146,6 +147,10 @@ _controller_ocpp_process_income
 
 		case ACT_GET_LOCAL_LIST_VERSION:
 			GVL_TASK_WRAP(wrap, ocpp->message.id);
+			break;
+
+		case ACT_DATA_TRANSFER:
+			DT_TASK_WRAP(wrap, ocpp->message.id);
 			break;
 
 		default: { return CTRL_PTCL_NO_SUCH_MSG; }
@@ -209,6 +214,10 @@ _controller_ocpp_make_msg(Controller_OCPP *ocpp, OCPP_CallAction req, void *kwar
 
 		case ACT_HEARTBEAT:
 			ocpp_heartbeat_req(ocpp);
+			break;
+
+		case ACT_DATA_TRANSFER:
+			ocpp_data_transfer_conf(ocpp, (OCPPDataTransferStatus *)kwarg1, (char *)kwarg2);
 			break;
 
 		default:;
@@ -364,6 +373,8 @@ _ocpp_get_action(Controller_OCPP *ocpp)
 		ocpp->message.data.call.action = ACT_SEND_LOCAL_LIST;
 	else if (strcmp(buf, k_ACT_GET_LOCAL_LIST_VERSION) == 0)
 		ocpp->message.data.call.action = ACT_GET_LOCAL_LIST_VERSION;
+	else if (strcmp(buf, k_ACT_DATA_TRANSFER) == 0)
+		ocpp->message.data.call.action = ACT_DATA_TRANSFER;
 	else
 		return false;
 	

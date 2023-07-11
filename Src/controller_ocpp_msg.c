@@ -388,3 +388,26 @@ ocpp_get_local_list_version_conf(Controller_OCPP *ocpp)
 	ocpp->message.type = CALLRESULT;
 	strcpy(ocpp->message.data.call_result.payload, payload);
 }
+
+const static char *k_DTS_STRINGS[] = { "Accepted", "Rejected", "UnknownMessageId", "UnknownRejectedId" };
+
+void
+ocpp_data_transfer_conf
+(
+	Controller_OCPP *ocpp,
+	OCPPDataTransferStatus *status,
+	char *data
+)
+{
+	char payload[PAYLOAD_LEN];
+	mjson_snprintf
+	(
+		payload, PAYLOAD_LEN,
+		"{%Q:%Q,%Q:%Q}",
+		"status", k_DTS_STRINGS[*status],
+		"data", data
+	);
+
+	ocpp->message.type = CALLRESULT;
+	strcpy(ocpp->message.data.call_result.payload, payload);
+}

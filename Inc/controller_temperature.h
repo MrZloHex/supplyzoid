@@ -16,5 +16,8 @@ _controller_temp_init(I2C_HandleTypeDef *i2c);
 float
 _controller_temp_get_temp();
 
+float
+_controller_temp_get_hum();
+
 #endif /* __CONTROLLER_TEMPERATURE_H__ */
 

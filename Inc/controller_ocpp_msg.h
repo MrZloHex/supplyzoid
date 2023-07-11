@@ -102,5 +102,12 @@ ocpp_send_local_list_conf
 void
 ocpp_get_local_list_version_conf(Controller_OCPP *ocpp);
 
+void
+ocpp_data_transfer_conf
+(
+	Controller_OCPP *ocpp,
+	OCPPDataTransferStatus *status,
+	char *data
+);
 
 #endif /* __CONTROLLER_OCPP_MESSAGES_H__ */

@@ -20,6 +20,7 @@
         "rss_task_7.h": "c",
         "hb_task_1.h": "c",
         "sht2x_for_stm32_hal.h": "c",
-        "rtc.h": "c"
+        "rtc.h": "c",
+        "dt_task_1.h": "c"
     }
 }

@@ -62,6 +62,14 @@ typedef enum OCPPUpdateStatus_E
 	US_VersionMismatch = 0x3U
 } OCPP_UpdateStatus;
 
+typedef enum OCPPDataTransferStatus_E
+{
+	DTS_Accepted			= 0x0U,
+	DTS_Rejected			= 0x1U,
+	DTS_UnknownMessageId	= 0x2U,
+	DTS_UnknownVendorId		= 0x3U
+} OCPPDataTransferStatus;
+
 
 #define IS_OCPP_OPERATIVE(__MEM__)	(__MEM__->status != CPS_Unavailable && __MEM__->status != CPS_Faulted)
 

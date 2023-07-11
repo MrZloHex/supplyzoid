@@ -14,3 +14,9 @@ _controller_temp_get_temp()
 {
     return SHT2x_GetTemperature(1);
 }
+
+float
+_controller_temp_get_hum()
+{
+    return SHT2x_GetRelativeHumidity(1);
+}
