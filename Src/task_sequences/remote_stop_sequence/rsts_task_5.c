@@ -29,6 +29,10 @@ rsts_task_5(Controller *ctrl, OCPP_MessageID t_id)
 		uprintf(DBUG_UART, 1000, 64, "TRANSACTION FINISHED\n");
         #endif
 
+
+    UNUSED(ctrl);
+    UNUSED(t_id);
+
     return res;
 }
 

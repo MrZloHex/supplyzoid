@@ -122,7 +122,7 @@ ocpp_stop_transaction_req
 	strcpy(ocpp->message.data.call.payload, payload);
 }
 
-const static char *ChargePointErrorCode[] = {
+static const char *ChargePointErrorCode[] = {
 	"NoError",
 	"ConnectorLockFailure",
 	"EVCommunicationError",
@@ -141,7 +141,7 @@ const static char *ChargePointErrorCode[] = {
 	"WeakSignal"
 };
 
-const static char *ChargePointStatus[] = {
+static const char *ChargePointStatus[] = {
 	"",
 	"Available",
 	"Preparing",
@@ -289,10 +289,10 @@ ocpp_remote_stop_transaction_conf
 	strcpy(ocpp->message.data.call_result.payload, payload);
 }
 
-const static char k_AS_ACCEPTED[]  = "Accepted";
-const static char k_AS_REJECTED[]  = "Rejected";
-const static char k_AS_SCHEDULED[] = "Scheduled";
-const static char *k_AS_STRINGS[3] = { k_AS_ACCEPTED, k_AS_REJECTED, k_AS_SCHEDULED };
+static const char k_AS_ACCEPTED[]  = "Accepted";
+static const char k_AS_REJECTED[]  = "Rejected";
+static const char k_AS_SCHEDULED[] = "Scheduled";
+static const char *k_AS_STRINGS[3] = { k_AS_ACCEPTED, k_AS_REJECTED, k_AS_SCHEDULED };
 
 void
 ocpp_change_availabilty_conf
@@ -347,11 +347,11 @@ ocpp_reset_conf
 	strcpy(ocpp->message.data.call_result.payload, payload);
 }
 
-const static char k_US_ACCEPTED[]			= "Accepted";
-const static char k_US_FAILED[]  			= "Rejected";
-const static char k_US_NOT_SUPPORTED[]		= "NotSupported";
-const static char k_US_VERSION_MISMATCH[]	= "VersionMismatch";
-const static char *k_US_STRINGS[4] = { k_US_ACCEPTED, k_US_FAILED, k_US_NOT_SUPPORTED, k_US_VERSION_MISMATCH };
+static const char k_US_ACCEPTED[]			= "Accepted";
+static const char k_US_FAILED[]  			= "Rejected";
+static const char k_US_NOT_SUPPORTED[]		= "NotSupported";
+static const char k_US_VERSION_MISMATCH[]	= "VersionMismatch";
+static const char *k_US_STRINGS[4] = { k_US_ACCEPTED, k_US_FAILED, k_US_NOT_SUPPORTED, k_US_VERSION_MISMATCH };
 
 void
 ocpp_send_local_list_conf
@@ -389,7 +389,7 @@ ocpp_get_local_list_version_conf(Controller_OCPP *ocpp)
 	strcpy(ocpp->message.data.call_result.payload, payload);
 }
 
-const static char *k_DTS_STRINGS[] = { "Accepted", "Rejected", "UnknownMessageId", "UnknownRejectedId" };
+static const char *k_DTS_STRINGS[] = { "Accepted", "Rejected", "UnknownMessageId", "UnknownRejectedId" };
 
 void
 ocpp_data_transfer_conf

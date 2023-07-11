@@ -25,6 +25,8 @@ gs_task_3(Controller *ctrl, OCPP_MessageID t_id)
         }
     };
 
+    UNUSED(t_id);
+
     return res;
 }
 

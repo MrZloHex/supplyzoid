@@ -32,6 +32,8 @@ hb_task_2(Controller *ctrl, OCPP_MessageID t_id)
 
 	adjust_rtc_time(ctrl->ocpp.rtc, time);
 
+    UNUSED(t_id);
+
     return res;
 }
 

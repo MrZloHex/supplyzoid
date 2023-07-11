@@ -77,5 +77,7 @@ gs_task_2(Controller *ctrl, OCPP_MessageID _id)
         }
     };
 
+    UNUSED(_id);
+
     return res;
 }

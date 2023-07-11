@@ -39,6 +39,9 @@ mv_task_3(Controller *ctrl, OCPP_MessageID t_id)
     _controller_ocpp_send_req(&(ctrl->ocpp), ACT_METER_VALUES);
 
     res.task.task.id = ctrl->ocpp.id_msg -1;
+
+    UNUSED(t_id);
+
     return res;
 }
 

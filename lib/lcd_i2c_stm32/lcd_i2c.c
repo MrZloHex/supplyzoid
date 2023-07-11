@@ -60,8 +60,8 @@ lcd_i2c_init
 void
 lcd_i2c_set_cursor(LCD_I2C *lcd, uint8_t x, uint8_t y)
 {
-	const static uint8_t k_lcd_16_y[4] = {0x00, 0x40, 0x10, 0x50};
-	const static uint8_t k_lcd_20_y[4] = {0x00, 0x40, 0x14, 0x54};
+	static const uint8_t k_lcd_16_y[4] = {0x00, 0x40, 0x10, 0x50};
+	static const uint8_t k_lcd_20_y[4] = {0x00, 0x40, 0x14, 0x54};
 
 	if (y >= 4)
 		return;

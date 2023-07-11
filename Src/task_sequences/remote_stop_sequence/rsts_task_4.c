@@ -39,6 +39,8 @@ rsts_task_4(Controller *ctrl, OCPP_MessageID t_id)
     res.task.task.id = ctrl->ocpp.id_msg -1;
     res.task.task.func_timeout = rsts_task_to;
     res.task.task.genesis_time = HAL_GetTick();
+
+    UNUSED(t_id);
         
     return res;
 }

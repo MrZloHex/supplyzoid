@@ -28,6 +28,7 @@ rss_task_to_1(Controller *ctrl, OCPP_MessageID t_id)
     ctrl->memory.status = CPS_Faulted;
     _controller_memory_store(&(ctrl->memory));
 
+    UNUSED(t_id);
 
     return res;
 }

@@ -36,6 +36,8 @@ mv_task_1(Controller *ctrl, OCPP_MessageID t_id)
         res.task.task.func = mv_task_1;
     }
 
+    UNUSED(t_id);
+
     return res;
 }
 

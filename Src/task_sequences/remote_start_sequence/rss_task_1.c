@@ -69,6 +69,8 @@ rss_task_1(Controller *ctrl, OCPP_MessageID t_id)
 
     #endif
 
+    UNUSED(t_id);
+
     return res;
 }
 

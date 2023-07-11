@@ -62,5 +62,8 @@ bs_task_2(Controller *ctrl, OCPP_MessageID t_id)
     res.type = TRES_NEXT;
     res.task.type = WRAP_FINISHED;
     res.task.task.func = NULL;
+
+    UNUSED(t_id);
+
     return res;
 }

@@ -15,21 +15,21 @@
 #include "task_sequences/data_transfer_sequence/dt_task_1.h"
 
 
-const static char	k_ACT_BOOT_NOTIFICATION[]	= "BootNotification";
-const static char	k_ACT_START_TRANSACTION[]	= "StartTransaction";
-const static char	k_ACT_STOP_TRANSACTION[]         = "StopTransaction";
-const static char	k_ACT_STATUS_NOTIFICATION[]      = "StatusNotification";
-const static char	k_ACT_METER_VALUES[]             = "MeterValues";
-const static char	k_ACT_HEARTBEAT[]                = "Heartbeat";
-const static char	k_ACT_DATA_TRANSFER[]            = "DataTransfer";
-const static char	k_ACT_AUTHORIZE[]                = "Authorize";
-const static char 	k_ACT_RESET[]				     = "Reset";
-const static char	k_ACT_REMOTE_START_TRANSACTION[] = "RemoteStartTransaction";
-const static char	k_ACT_REMOTE_STOP_TRANSACTION[]	 = "RemoteStopTransaction";
-const static char	k_ACT_CHANGE_AVAILABILITY[]		 = "ChangeAvailability";
-const static char	k_ACT_SEND_LOCAL_LIST[]			 = "SendLocalList";
-const static char 	k_ACT_GET_LOCAL_LIST_VERSION[]	 = "GetLocalListVersion";
-const static char  *k_ACTIONS_STRINGS[14] =
+static const char	k_ACT_BOOT_NOTIFICATION[]	= "BootNotification";
+static const char	k_ACT_START_TRANSACTION[]	= "StartTransaction";
+static const char	k_ACT_STOP_TRANSACTION[]         = "StopTransaction";
+static const char	k_ACT_STATUS_NOTIFICATION[]      = "StatusNotification";
+static const char	k_ACT_METER_VALUES[]             = "MeterValues";
+static const char	k_ACT_HEARTBEAT[]                = "Heartbeat";
+static const char	k_ACT_DATA_TRANSFER[]            = "DataTransfer";
+static const char	k_ACT_AUTHORIZE[]                = "Authorize";
+static const char 	k_ACT_RESET[]				     = "Reset";
+static const char	k_ACT_REMOTE_START_TRANSACTION[] = "RemoteStartTransaction";
+static const char	k_ACT_REMOTE_STOP_TRANSACTION[]	 = "RemoteStopTransaction";
+static const char	k_ACT_CHANGE_AVAILABILITY[]		 = "ChangeAvailability";
+static const char	k_ACT_SEND_LOCAL_LIST[]			 = "SendLocalList";
+static const char 	k_ACT_GET_LOCAL_LIST_VERSION[]	 = "GetLocalListVersion";
+static const char  *k_ACTIONS_STRINGS[14] =
 {
 	k_ACT_BOOT_NOTIFICATION, k_ACT_START_TRANSACTION, k_ACT_STOP_TRANSACTION,
 	k_ACT_STATUS_NOTIFICATION, k_ACT_METER_VALUES, k_ACT_HEARTBEAT,
@@ -68,7 +68,7 @@ _controller_ocpp_initialize
 
 	ocpp->wh = 0;
 
-	// ocpp_authlist_init(&(ocpp->list), i2c, wp_gpio, wp_pin);
+	ocpp_authlist_init(&(ocpp->list), i2c, wp_gpio, wp_pin);
 
 	ocpp->_started = false;
 

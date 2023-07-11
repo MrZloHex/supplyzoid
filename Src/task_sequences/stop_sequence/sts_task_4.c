@@ -29,6 +29,10 @@ sts_task_4(Controller *ctrl, OCPP_MessageID t_id)
 		uprintf(DBUG_UART, 1000, 64, "TRANSACTION STOPPED\n");
         #endif
 
+
+    UNUSED(ctrl);
+    UNUSED(t_id);
+
     return res;
 }
 

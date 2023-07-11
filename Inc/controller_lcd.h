@@ -10,7 +10,7 @@
 
 #include "controller.h"
 
-const static char *k_ChargePointStatus[] = {
+static const char *k_ChargePointStatus[] = {
 	"",
 	"Available  ",
 	"Connected  ",
@@ -23,7 +23,7 @@ const static char *k_ChargePointStatus[] = {
 	"Faulted    "
 };
 
-const static char *k_station_status[] = {
+static const char *k_station_status[] = {
 	"Offline", "Online "
 };
 

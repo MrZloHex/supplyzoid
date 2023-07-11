@@ -21,6 +21,8 @@ sn_task_to(Controller *ctrl, OCPP_MessageID t_id)
 
     ctrl->ocpp._started = false;
 
+    UNUSED(t_id);
+
     return res;
 }
 

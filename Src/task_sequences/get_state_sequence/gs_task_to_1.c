@@ -19,6 +19,8 @@ gs_task_to_1(Controller *ctrl, OCPP_MessageID t_id)
     };
 
     ctrl->rapi._started = false;
+
+    UNUSED(t_id);
     
     return res;
 }

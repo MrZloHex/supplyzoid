@@ -3,6 +3,8 @@
 #include "mjson.h"
 #include "controller_ocpp.h"
 #include "controller_temperature.h"
+#include "stdio.h"
+#include "serial.h"
 
 void
 _dt_err_resp(Controller *ctrl, OCPP_MessageID t_id)

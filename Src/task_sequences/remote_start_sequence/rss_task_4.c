@@ -43,5 +43,8 @@ rss_task_4(Controller *ctrl, OCPP_MessageID t_id)
     res.task.task.func_timeout = rss_task_to_1;
     res.task.task.genesis_time = HAL_GetTick();
 
+
+    UNUSED(t_id);
+
     return res;
 }

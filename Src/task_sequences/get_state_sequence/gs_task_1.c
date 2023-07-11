@@ -38,6 +38,7 @@ gs_task_1(Controller *ctrl, OCPP_MessageID _id)
         res.task.task.func = gs_task_1;
     }
 
+    UNUSED(_id);
 
     return res;
 }

@@ -42,6 +42,8 @@ rsts_task_3(Controller *ctrl, OCPP_MessageID t_id)
         res.task.task.func = rsts_task_3;
     }
 
+    UNUSED(t_id);
+
     return res;
 }
 

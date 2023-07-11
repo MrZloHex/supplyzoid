@@ -25,6 +25,9 @@ sts_task_to(Controller *ctrl, OCPP_MessageID t_id)
         }
     };
 
+    UNUSED(ctrl);
+    UNUSED(t_id);
+
     return res;
 }
 

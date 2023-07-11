@@ -20,5 +20,7 @@ gs_task_to_2(Controller *ctrl, OCPP_MessageID t_id)
 
     ctrl->ocpp._started = false;
     
+    UNUSED(t_id);
+
     return res;
 }

@@ -77,6 +77,9 @@ rss_task_5(Controller *ctrl, OCPP_MessageID t_id)
         res.type = TRES_WAIT;
         res.task.task.func = rss_task_5;
     }
+
+
+    UNUSED(t_id);
     
 
     return res;
