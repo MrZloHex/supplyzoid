@@ -68,7 +68,7 @@ _controller_ocpp_initialize
 
 	ocpp->wh = 0;
 
-	ocpp_authlist_init(&(ocpp->list), i2c, wp_gpio, wp_pin);
+	// ocpp_authlist_init(&(ocpp->list), i2c, wp_gpio, wp_pin);
 
 	ocpp->_started = false;
 

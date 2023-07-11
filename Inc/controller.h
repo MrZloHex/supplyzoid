@@ -12,6 +12,7 @@
 #include "controller_ocpp.h"
 #include "controller_rapi.h"
 #include "controller_memory.h"
+#include "logger.h"
 
 #include "lcd_i2c.h"
 
@@ -33,6 +34,8 @@ typedef struct Controller_S
 	uint8_t e_s;
 
 	uint32_t seq_timer_var;
+
+	Logger logger;
 } Controller;
 
 Controller_Result

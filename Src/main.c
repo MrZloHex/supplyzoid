@@ -218,6 +218,7 @@ int main(void)
   );
   if (res.type != CTRL_OK)
   {
+    logger_fatal_error(&(controller.logger), res);
 	  Error_Handler_with_err("FAILED ON INITIALIZATION");
   }
 
@@ -235,6 +236,8 @@ int main(void)
 	res = controller_update(&controller);
 	if (res.type != CTRL_OK)
 	{
+    logger_fatal_error(&(controller.logger), res);
+
 		uprintf(&OCPP_UART, 1000, 100, "ERR: %u\n", res.type);
 		uprintf(&OCPP_UART, 1000, 100, "PTCL ERR: %u\n", res.errors.ocpp_err);
 		uprintf(&OCPP_UART, 1000, 100, "TSET ERR: %u\n", res.errors.tset_err);

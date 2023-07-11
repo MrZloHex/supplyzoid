@@ -26,6 +26,7 @@ controller_initialize
 )
 {
 	Controller_TaskSet_Result res = _controller_taskset_initialize(&(controller->task_set), MAX_TASKSET_CAPACITY);
+	LOGGER_LOG(&(controller->logger), res, "Initialized TASK CONTROLLER");
 	if (res != CTRL_SET_OK)
 	{
 		CONTROLLER_ERROR(CTRL_TSET_ERR, tset_err, res);
@@ -43,6 +44,7 @@ controller_initialize
 	Controller_TaskWrap wr;
 	BS_TASK_WRAP((&wr));
 	res = _controller_taskset_push(&(controller->task_set), wr);
+	LOGGER_LOG(&(controller->logger), res, "Added BOOT NOTIFICATION task");
 	if (res != CTRL_SET_OK)
 	{
 		CONTROLLER_ERROR(CTRL_TSET_ERR, tset_err, res);
@@ -50,6 +52,7 @@ controller_initialize
 
 	GS_TASK_WRAP((&wr));
 	res = _controller_taskset_push(&(controller->task_set), wr);
+	LOGGER_LOG(&(controller->logger), res, "Added GET STATE task");
 	if (res != CTRL_SET_OK)
 	{
 		CONTROLLER_ERROR(CTRL_TSET_ERR, tset_err, res);
@@ -60,6 +63,7 @@ controller_initialize
 	{
 		STS_TASK_WRAP((&wr));
 		res = _controller_taskset_push(&(controller->task_set), wr);
+		LOGGER_LOG(&(controller->logger), res, "Added STOP TRANSACTION task");
 		if (res != CTRL_SET_OK)
 		{
 			CONTROLLER_ERROR(CTRL_TSET_ERR, tset_err, res);
