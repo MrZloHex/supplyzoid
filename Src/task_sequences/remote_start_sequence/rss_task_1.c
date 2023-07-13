@@ -12,6 +12,8 @@
 Task_Result
 rss_task_1(Controller *ctrl, OCPP_MessageID t_id)
 {
+    LOGGER_LOG(&(ctrl->logger), LT_TRACE, "Task RSS 1");
+
     Task_Result res =
     {
         .type = TRES_NEXT,
@@ -24,10 +26,7 @@ rss_task_1(Controller *ctrl, OCPP_MessageID t_id)
             }
         }
     };
-#ifdef DEBUG
-    uprintf(DBUG_UART, 1000, 10, "RSS_1\r");
-    uprintf(DBUG_UART, 1000, 100,  "`%s`\r", ctrl->ocpp.message.data.call.payload);
-#endif
+
 
     OCPP_IdTag id_tag;
 	int res_id = mjson_get_string(ctrl->ocpp.message.data.call.payload, strlen(ctrl->ocpp.message.data.call.payload), P_ID_TAG, id_tag, OCPP_IdTag_Len-1);

@@ -8,9 +8,7 @@ Task_Result
 ca_task_2(Controller *ctrl, OCPP_MessageID t_id)
 {
     // there is  a problem with svcheduling and overflowing the task buffer
-#ifdef DEBUG
-    uprintf(DBUG_UART, 1000, 10, "CA_2\r");
-#endif
+    LOGGER_LOG(&(ctrl->logger), LT_TRACE, "Task CA 2");
 
     OCPP_ChargePointErrorCode error = CPEC_NoError;
     OCPP_ChargePointStatus status = t_id[0] ? CPS_Available : CPS_Unavailable;

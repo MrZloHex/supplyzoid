@@ -5,9 +5,8 @@
 Task_Result
 rsts_task_to(Controller *ctrl, OCPP_MessageID t_id)
 {
-#ifdef DEBUG
-    uprintf(DBUG_UART, 1000, 10, "RSTS_TO\r");
-#endif
+    LOGGER_LOG(&(ctrl->logger), LT_TRACE, "Task RSTS TO");
+
     Task_Result res =
     {
         .type = TRES_NEXT,

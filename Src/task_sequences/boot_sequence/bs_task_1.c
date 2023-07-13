@@ -8,7 +8,7 @@
 Task_Result
 bs_task_1(Controller *ctrl, OCPP_MessageID t_id)
 {
-    LOGGER_LOG(&(ctrl->logger), LT_INFO, "Task BS 1");
+    LOGGER_LOG(&(ctrl->logger), LT_TRACE, "Task BS 1");
 
     _controller_ocpp_make_msg(&(ctrl->ocpp), ACT_BOOT_NOTIFICATION, NULL, NULL, NULL);
     _controller_ocpp_send_req(&(ctrl->ocpp), ACT_BOOT_NOTIFICATION);

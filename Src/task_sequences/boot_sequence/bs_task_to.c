@@ -6,7 +6,7 @@
 Task_Result
 bs_task_to(Controller *ctrl, OCPP_MessageID t_id)
 {
-    LOGGER_LOG(&(ctrl->logger), LT_INFO, "Task BS TO");
+    LOGGER_LOG(&(ctrl->logger), LT_TRACE, "Task BS TO");
 
     Task_Result res =
     {

@@ -9,6 +9,7 @@
 Task_Result
 rt_task_1(Controller *ctrl, OCPP_MessageID t_id)
 {
+    LOGGER_LOG(&(ctrl->logger), LT_TRACE, "Task RT 1");
     Task_Result res =
     {
         .type = TRES_NEXT,
@@ -21,9 +22,7 @@ rt_task_1(Controller *ctrl, OCPP_MessageID t_id)
             }
         }
     };
-#ifdef DEBUG
-    uprintf(DBUG_UART, 1000, 10, "RT_1\r");
-#endif
+
 	char status[8];
 	int res_st = mjson_get_string(ctrl->ocpp.message.data.call_result.payload, strlen(ctrl->ocpp.message.data.call_result.payload), P_RESET_TYPE, status, 8);
     bool r = res_st == -1 ? false : true;

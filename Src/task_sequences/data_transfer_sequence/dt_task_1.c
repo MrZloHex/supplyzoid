@@ -18,9 +18,7 @@ _dt_err_resp(Controller *ctrl, OCPP_MessageID t_id)
 Task_Result
 dt_task_1(Controller *ctrl, OCPP_MessageID _id)
 {
-#ifdef DEBUG
-	uprintf(DBUG_UART, 1000, 10, "DT_1\n");
-#endif
+    LOGGER_LOG(&(ctrl->logger), LT_TRACE, "Task DT 1");
 
 	Task_Result res =
 	{

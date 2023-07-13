@@ -10,7 +10,7 @@
 Task_Result
 gs_task_2(Controller *ctrl, OCPP_MessageID _id)
 {
-    LOGGER_LOG(&(ctrl->logger), LT_INFO, "Task GS 2");
+    LOGGER_LOG(&(ctrl->logger), LT_TRACE, "Task GS 2");
 
     Task_Result rres =
     {

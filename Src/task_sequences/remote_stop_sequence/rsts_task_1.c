@@ -11,6 +11,8 @@
 Task_Result
 rsts_task_1(Controller *ctrl, OCPP_MessageID t_id)
 {
+    LOGGER_LOG(&(ctrl->logger), LT_TRACE, "Task RSTS 1");
+
     Task_Result res =
     {
         .type = TRES_NEXT,
@@ -24,9 +26,6 @@ rsts_task_1(Controller *ctrl, OCPP_MessageID t_id)
         }
     };
 
-#ifdef DEBUG
-    uprintf(DBUG_UART, 1000, 10, "RSTS_1\r");
-#endif
 	double transaction_id_d;
 	int res_id = mjson_get_number(ctrl->ocpp.message.data.call.payload, strlen(ctrl->ocpp.message.data.call.payload), P_TRANSACTION_ID, &transaction_id_d);
 	if (res_id == 0 || (uint32_t)transaction_id_d != ctrl->memory.transaction_id)

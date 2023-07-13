@@ -11,9 +11,8 @@
 Task_Result
 sn_task_1(Controller *ctrl, OCPP_MessageID t_id)
 {
-#ifdef DEBUG
-    uprintf(DBUG_UART, 1000, 10, "SN_1\r");
-#endif
+    LOGGER_LOG(&(ctrl->logger), LT_TRACE, "Task SN 1");
+
     Task_Result rres =
     {
         .type = TRES_NEXT,

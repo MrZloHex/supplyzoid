@@ -12,9 +12,8 @@ Task_Result
 ca_task_1(Controller *ctrl, OCPP_MessageID t_id)
 {
     // there is  a problem with svcheduling and overflowing the task buffer
-#ifdef DEBUG
-    uprintf(DBUG_UART, 1000, 10, "CA_1\r");
-#endif
+    LOGGER_LOG(&(ctrl->logger), LT_TRACE, "Task CA 1");
+
     Task_Result res =
     {
         .type = TRES_NEXT,

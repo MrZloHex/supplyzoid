@@ -6,9 +6,7 @@
 Task_Result
 sn_task_to(Controller *ctrl, OCPP_MessageID t_id)
 {
-#ifdef DEBUG
-    uprintf(DBUG_UART, 1000, 10, "SN_TO\r");
-#endif
+    LOGGER_LOG(&(ctrl->logger), LT_TRACE, "Task SN TO");
 
     Task_Result res =
     {

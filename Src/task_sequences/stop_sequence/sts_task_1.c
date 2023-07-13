@@ -11,6 +11,8 @@
 Task_Result
 sts_task_1(Controller *ctrl, OCPP_MessageID t_id)
 {
+    LOGGER_LOG(&(ctrl->logger), LT_TRACE, "Task ST 1");
+
     Task_Result res =
     {
         .type = TRES_NEXT,
@@ -27,9 +29,6 @@ sts_task_1(Controller *ctrl, OCPP_MessageID t_id)
             }
         }
     };
-#ifdef DEBUG
-    uprintf(DBUG_UART, 1000, 10, "STS_1\r");
-#endif
 
     _rapi_set_auth_lock_req(&(ctrl->rapi), AUTH_LOCKED);
     if (_rapi_send_req(&(ctrl->rapi)) == CTRL_PTCL_PENDING)

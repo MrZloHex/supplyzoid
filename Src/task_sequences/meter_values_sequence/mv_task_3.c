@@ -9,9 +9,7 @@
 Task_Result
 mv_task_3(Controller *ctrl, OCPP_MessageID t_id)
 {
-#ifdef DEBUG
-    uprintf(DBUG_UART, 1000, 10, "MV_3\r");
-#endif
+    LOGGER_LOG(&(ctrl->logger), LT_TRACE, "Task MV 3");
 
     Task_Result res =
     {

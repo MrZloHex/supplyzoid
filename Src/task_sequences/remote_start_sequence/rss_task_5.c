@@ -11,9 +11,8 @@
 Task_Result
 rss_task_5(Controller *ctrl, OCPP_MessageID t_id)
 {
-#ifdef DEBUG
-    uprintf(DBUG_UART, 1000, 10, "RSS_5\r");
-#endif
+    LOGGER_LOG(&(ctrl->logger), LT_TRACE, "Task RSS 5");
+
     Task_Result res =
     {
         .type = TRES_NEXT,
