@@ -14,11 +14,12 @@
 	default:  logger_log \
 	)(L, R, C, __FILE__, __LINE__)
 
+
 typedef enum LogType_E
 {
-    LT_INFO,
-    LT_ERROR,
     LT_FATAL,
+    LT_ERROR,
+    LT_INFO,
     LT_WARN,
     LT_DEBUG,
     LT_TRACE
@@ -40,13 +41,14 @@ typedef struct Logger_S
 {
     RTC_HandleTypeDef *rtc;
 
+    LogType level;
     Log logs[MAX_LOGS];
     uint8_t log_index;
     Controller_Result fatal_error;
 } Logger;
 
 void
-logger_init(Logger *log, RTC_HandleTypeDef *rtc);
+logger_init(Logger *log, RTC_HandleTypeDef *rtc, LogType level);
 
 void
 logger_log_task_set

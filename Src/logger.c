@@ -4,10 +4,11 @@
 #include "stdio.h"
 
 void
-logger_init(Logger *log, RTC_HandleTypeDef *rtc)
+logger_init(Logger *log, RTC_HandleTypeDef *rtc, LogType level)
 {
     log->rtc = rtc;
     log->log_index = 0;
+    log->level = level;
 
     uprintf(DBUG_UART, 100, 10, "\r\n\r\n");
 }
@@ -21,6 +22,9 @@ logger_log_task_set
     char *ok_comment, char *file, int line
 )
 {
+    LogType type = res == CTRL_SET_OK ? LT_INFO : LT_ERROR;
+    if (type > log->level)  return;
+
 	HAL_RTC_GetTime
 	(
 		log->rtc,
@@ -31,7 +35,7 @@ logger_log_task_set
     log->logs[log->log_index].file = file;
     log->logs[log->log_index].line = line;
     log->logs[log->log_index].comment = ok_comment;
-    log->logs[log->log_index].type = res == CTRL_SET_OK ? LT_INFO : LT_ERROR;
+    log->logs[log->log_index].type = type;
     log->logs[log->log_index].err_code = (int)res;
     log->log_index++;
 }
@@ -43,6 +47,16 @@ logger_log_protocol
     char *ok_comment, char *file, int line
 )
 {
+    LogType type;
+    if (res == CTRL_OK || res == CTRL_PTCL_RESPONSE)
+        type = LT_INFO;
+    else if (res == CTRL_PTCL_NO_SUCH_MSG || res == CTRL_PTCL_NON_VALID_MSG)
+        type = LT_WARN;
+    else
+        type = LT_ERROR;
+
+    if (type > log->level)  return;
+
 	HAL_RTC_GetTime
 	(
 		log->rtc,
@@ -53,13 +67,7 @@ logger_log_protocol
     log->logs[log->log_index].file = file;
     log->logs[log->log_index].line = line;
     log->logs[log->log_index].comment = ok_comment;
-    if (res == CTRL_OK || res == CTRL_PTCL_RESPONSE)
-        log->logs[log->log_index].type = LT_INFO;
-    else if (res == CTRL_PTCL_NO_SUCH_MSG || res == CTRL_PTCL_NON_VALID_MSG)
-        log->logs[log->log_index].type = LT_WARN;
-    else
-        log->logs[log->log_index].type = LT_ERROR;
-
+    log->logs[log->log_index].type = type;
     log->logs[log->log_index].err_code = (int)res;
     log->log_index++;
 }
@@ -72,6 +80,9 @@ logger_log_hal
     char *ok_comment, char *file, int line
 )
 {
+    LogType type = res == HAL_OK ? LT_INFO : LT_ERROR;
+    if (type > log->level)  return;
+
 	HAL_RTC_GetTime
 	(
 		log->rtc,
@@ -81,8 +92,8 @@ logger_log_hal
 
     log->logs[log->log_index].file = file;
     log->logs[log->log_index].line = line;
+    log->logs[log->log_index].type = type;
     log->logs[log->log_index].comment = ok_comment;
-    log->logs[log->log_index].type = res == HAL_OK ? LT_INFO : LT_ERROR;
     log->logs[log->log_index].err_code = (int)res;
     log->log_index++;
 }
@@ -94,6 +105,8 @@ logger_log
     char *comment, char *file, int line
 )
 {
+    if (type > log->level) return;
+
 	HAL_RTC_GetTime
 	(
 		log->rtc,
@@ -138,7 +151,7 @@ logger_log_fatal
 
 static const char *k_LOG_TYPES[] =
 {
-    "INFO", "ERROR", "FATAL", "WARNING", "DEBUG", "TRACE"
+    "FATAL", "ERROR", "INFO", "WARNING", "DEBUG", "TRACE"
 };
 
 void
