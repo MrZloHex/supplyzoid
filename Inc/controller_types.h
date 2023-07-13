@@ -8,7 +8,7 @@
 #ifndef __CONTROLLER_TYPES_H__
 #define __CONTROLLER_TYPES_H__
 
-#define DEBUG
+#define LOG_LEVEL LT_DEBUG
 #define DBUG_UART &huart2
 #define RAPI_UART huart4
 #define OCPP_UART huart1

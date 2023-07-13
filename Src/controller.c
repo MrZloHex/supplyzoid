@@ -25,7 +25,7 @@ controller_initialize
 	uint16_t 	  wp_pin
 )
 {
-	logger_init(&(controller->logger), rtc, LT_INFO);
+	logger_init(&(controller->logger), rtc, LOG_LEVEL);
 	LOGGER_LOG(&(controller->logger), LT_INFO, "Initialized LOGGER");
 
 	Controller_TaskSet_Result res = _controller_taskset_initialize(&(controller->task_set), MAX_TASKSET_CAPACITY);
