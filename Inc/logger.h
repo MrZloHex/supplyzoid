@@ -4,10 +4,13 @@
 #include "controller_types.h"
 #include "time.h"
 
+#include "main.h"
 
 #define LOGGER_LOG(L, R, C) _Generic((R), \
 	Controller_TaskSet_Result:  logger_log_task_set,        \
 	Controller_Protocol_Result: logger_log_protocol,        \
+    HAL_StatusTypeDef:  logger_log_hal,  \
+    Controller_Result: logger_log_fatal, \
 	default:  logger_log \
 	)(L, R, C, __FILE__, __LINE__)
 
@@ -60,22 +63,25 @@ logger_log_protocol
 );
 
 void
+logger_log_hal
+(
+    Logger *log, HAL_StatusTypeDef res,
+    char *ok_comment, char *file, int line
+);
+
+void
+logger_log_fatal
+(
+    Logger *log, Controller_Result res,
+    char *comment, char *file, int line
+);
+
+void
 logger_log
 (
     Logger *log, LogType type,
     char *comment, char *file, int line
 );
-
-
-void
-logger_error
-(
-    Logger *log, char *res,
-    char *ok_comment, char *file, int line
-);
-
-void
-logger_fatal_error(Logger *log, Controller_Result err);
 
 void
 logger_dump(Logger *log);

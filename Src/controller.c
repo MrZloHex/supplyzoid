@@ -95,6 +95,7 @@ controller_update(Controller *controller)
 	// UPDATE MESSAGES ON OCPP UART
 	if (controller->ocpp.it_error != CTRL_PTCL_OK)
 	{
+		LOGGER_LOG(&(controller->logger), controller->ocpp.it_error, "OCPP INTRERUPT ERROR");
 		CONTROLLER_OCPP_ERROR(controller->ocpp.it_error);
 	}
 
@@ -105,11 +106,12 @@ controller_update(Controller *controller)
 			HAL_StatusTypeDef ures = HAL_UART_Receive_IT(controller->ocpp.uart, (uint8_t *)&(controller->ocpp.accumulative_buffer[0]), 1);
 			if (ures != HAL_OK)
 			{
+				LOGGER_LOG(&(controller->logger), ures, "Failed to reinit OCPP receiving");
 				CONTROLLER_OCPP_ERROR((Controller_Protocol_Result)ures);
 			}
 			Controller_Protocol_Result res = _controller_ocpp_process_income(&(controller->ocpp), &wrap);
 			LOGGER_LOG(&(controller->logger), res, "Got MSG from OCPP");
-			LOGGER_LOG(&(controller->logger), LT_TRACE, controller->ocpp.processive_buffer);
+			LOGGER_LOG(&(controller->logger), LT_DEBUG, controller->ocpp.processive_buffer);
 			if (res == CTRL_PTCL_RESPONSE || res == CTRL_PTCL_NON_VALID_MSG || res == CTRL_PTCL_NO_SUCH_MSG) { ; }
 			else if (res != CTRL_PTCL_OK)
 			{
@@ -120,6 +122,7 @@ controller_update(Controller *controller)
 				tres = _controller_taskset_push(&(controller->task_set), wrap);
 				if (tres != CTRL_SET_OK)
 				{
+					LOGGER_LOG(&(controller->logger), tres, "Failed to add task");
 					CONTROLLER_ERROR(CTRL_TSET_ERR, tset_err, tres);
 				}
 			}
@@ -129,6 +132,7 @@ controller_update(Controller *controller)
 	// UPDATE MESSAGES ON RAPI UART
 	if (controller->rapi.it_error != CTRL_PTCL_OK)
 	{
+		LOGGER_LOG(&(controller->logger), controller->ocpp.it_error, "RAPI INTRERUPT ERROR");
 		CONTROLLER_RAPI_ERROR(controller->rapi.it_error)
 	}
 
@@ -139,11 +143,12 @@ controller_update(Controller *controller)
 			HAL_StatusTypeDef ures = HAL_UART_Receive_IT(controller->rapi.uart, (uint8_t *)&(controller->rapi.accumulative_buffer[0]), 1);
 			if (ures != HAL_OK)
 			{
+				LOGGER_LOG(&(controller->logger), ures, "Failed to reinit RAPI receiving");
 				CONTROLLER_RAPI_ERROR((Controller_Protocol_Result)ures)
 			}
 			Controller_Protocol_Result res = _controller_rapi_process_income(&(controller->rapi), &wrap);
 			LOGGER_LOG(&(controller->logger), res, "Got MSG from RAPI");
-			LOGGER_LOG(&(controller->logger), LT_TRACE, controller->rapi.processive_buffer);
+			LOGGER_LOG(&(controller->logger), LT_DEBUG, controller->rapi.processive_buffer);
 			if (res == CTRL_PTCL_RESPONSE || res == CTRL_PTCL_NON_VALID_MSG) { ; }
 			// if (res == CTRL_PTCL_RESPONSE) { ; }
 			else if (res != CTRL_PTCL_OK)
@@ -155,6 +160,7 @@ controller_update(Controller *controller)
 				tres = _controller_taskset_push(&(controller->task_set), wrap);
 				if (tres != CTRL_SET_OK)
 				{
+					LOGGER_LOG(&(controller->logger), tres, "Failed to add task");
 					CONTROLLER_ERROR(CTRL_TSET_ERR, tset_err, tres);
 				}
 			}
@@ -173,11 +179,13 @@ controller_update(Controller *controller)
 
 	if (timer_timeout(&mv_timer))
 	{
+		LOGGER_LOG(&(controller->logger), LT_TRACE, "Added MV task");
 		Controller_TaskWrap mv_wrap;
 		MV_TASK_WRAP((&mv_wrap));
 		tres = _controller_taskset_push(&(controller->task_set), mv_wrap);
 		if (tres != CTRL_SET_OK)
 		{
+			LOGGER_LOG(&(controller->logger), tres, "Failed to add task");
 			CONTROLLER_ERROR(CTRL_TSET_ERR, tset_err, tres);
 		}
 	}
@@ -193,11 +201,13 @@ controller_update(Controller *controller)
 
 	if (timer_timeout(&sn_timer))
 	{
+		LOGGER_LOG(&(controller->logger), LT_TRACE, "Added SN task");
 		Controller_TaskWrap sn_wrap;
 		GS_TASK_WRAP((&sn_wrap));
 		tres = _controller_taskset_push(&(controller->task_set), sn_wrap);
 		if (tres != CTRL_SET_OK)
 		{
+			LOGGER_LOG(&(controller->logger), tres, "Failed to add task");
 			CONTROLLER_ERROR(CTRL_TSET_ERR, tset_err, tres);
 		}
 	}
@@ -216,9 +226,15 @@ controller_update(Controller *controller)
 
 	if (timer_timeout(&charged_timer))
 	{
+		LOGGER_LOG(&(controller->logger), LT_TRACE, "Added ST task");
 		Controller_TaskWrap sts_wrap;
 		STS_TASK_WRAP((&sts_wrap));
-		_controller_taskset_push(&(controller->task_set), sts_wrap);
+		tres = _controller_taskset_push(&(controller->task_set), sts_wrap);
+		if (tres != CTRL_SET_OK)
+		{
+			LOGGER_LOG(&(controller->logger), tres, "Failed to add task");
+			CONTROLLER_ERROR(CTRL_TSET_ERR, tset_err, tres);
+		}
 	}
 
 	#endif
@@ -231,11 +247,13 @@ controller_update(Controller *controller)
 
 	if (timer_timeout(&hb_timer))
 	{
+		LOGGER_LOG(&(controller->logger), LT_TRACE, "Added HB task");
 		Controller_TaskWrap hb_wrap;
 		HB_TASK_WRAP((&hb_wrap));
 		tres = _controller_taskset_push(&(controller->task_set), hb_wrap);
 		if (tres != CTRL_SET_OK)
 		{
+			LOGGER_LOG(&(controller->logger), tres, "Failed to add task");
 			CONTROLLER_ERROR(CTRL_TSET_ERR, tset_err, tres);
 		}
 	}
@@ -251,6 +269,7 @@ controller_update(Controller *controller)
 	tres = _controller_taskset_iterate(&(controller->task_set));
 	if (tres != CTRL_SET_OK)
 	{
+		LOGGER_LOG(&(controller->logger), tres, "Failed TSET to go into ITER MODE");
 		CONTROLLER_ERROR(CTRL_TSET_ERR, tset_err, tres);
 	}
 
@@ -261,6 +280,7 @@ controller_update(Controller *controller)
 		tres = _controller_taskset_next(&(controller->task_set), &task_wrap);
 		if (tres != CTRL_SET_OK)
 		{
+			LOGGER_LOG(&(controller->logger), tres, "Failed TSET to get task");
 			_controller_taskset_esc_iter(&(controller->task_set));
 			CONTROLLER_ERROR(CTRL_TSET_ERR, tset_err, tres);
 		}
@@ -270,6 +290,7 @@ controller_update(Controller *controller)
 		#define K_TASK_TIMEOUT 10000
 		if (task_wrap.task.genesis_time + K_TASK_TIMEOUT <= HAL_GetTick())
 		{
+			LOGGER_LOG(&(controller->logger), LT_DEBUG, "TIMEOT TASK");
 			task_wrap.type = WRAP_TIMEOUT;
 			task_wrap.task.func = task_wrap.task.func_timeout;
 			task_wrap.task.type = TASK_TIMEOUT;
@@ -290,8 +311,7 @@ controller_update(Controller *controller)
 		// __debug_taskset_print(&(controller->task_set));
 		if (task_wrap.task.func == NULL)
 		{
-			// uprintf(DBUG_UART, 100, 100, "SUKA\r");
-			// uprintf(DBUG_UART, 100, 100, "%u\r", task_wrap.task.id);
+			LOGGER_LOG(&(controller->logger), LT_ERROR, "Task funciton is NULL");
 			CONTROLLER_ERROR(CTRL_TSET_ERR, tset_err, CTRL_SET_NULLPTR);
 		}
 
@@ -302,6 +322,7 @@ controller_update(Controller *controller)
 			tres = _controller_taskset_update_task(&(controller->task_set), task_res.task);
 			if (tres != CTRL_SET_OK)
 			{
+				LOGGER_LOG(&(controller->logger), tres, "Failed TSET to update task");
 				_controller_taskset_esc_iter(&(controller->task_set));
 				CONTROLLER_ERROR(CTRL_TSET_ERR, tset_err, tres);
 			}
@@ -315,6 +336,7 @@ controller_update(Controller *controller)
 	tres = _controller_taskset_pop(&(controller->task_set));
 	if (tres != CTRL_SET_OK)
 	{
+		LOGGER_LOG(&(controller->logger), tres, "Failed TSET to collect garbadge");
 		CONTROLLER_ERROR(CTRL_TSET_ERR, tset_err, tres);
 	}
 

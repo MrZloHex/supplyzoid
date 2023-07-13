@@ -200,7 +200,7 @@ int main(void)
   /* USER CODE BEGIN 2 */
 
 #ifdef DEBUG
-  uprintf(DBUG_UART, 100, 20, "DEBUG START\r");
+  // uprintf(DBUG_UART, 100, 20, "DEBUG START\r");
 	// uprintf(&huart1, 100, 20, "hello ocpp\n");
 #endif
 
@@ -218,8 +218,8 @@ int main(void)
   );
   if (res.type != CTRL_OK)
   {
-    logger_fatal_error(&(controller.logger), res);
-	  Error_Handler_with_err("FAILED ON INITIALIZATION");
+    LOGGER_LOG(&(controller.logger), res, "Initialized CONTROLLER Failed");
+    Error_Handler();
   }
 
   controller.ocpp.it_error = (Controller_Protocol_Result)HAL_UART_Receive_IT(&OCPP_UART, (uint8_t *)&(controller.ocpp.accumulative_buffer[0]), 1);
@@ -236,12 +236,8 @@ int main(void)
 	res = controller_update(&controller);
 	if (res.type != CTRL_OK)
 	{
-    logger_fatal_error(&(controller.logger), res);
-
-		uprintf(&OCPP_UART, 1000, 100, "ERR: %u\n", res.type);
-		uprintf(&OCPP_UART, 1000, 100, "PTCL ERR: %u\n", res.errors.ocpp_err);
-		uprintf(&OCPP_UART, 1000, 100, "TSET ERR: %u\n", res.errors.tset_err);
-		Error_Handler_with_err("FAILED IN LOOP");
+    LOGGER_LOG(&(controller.logger), res, "Loop CONTROLLER Failed");
+    Error_Handler();
 	}
 	res.type = 0;
 	res.errors.ocpp_err = 0;
@@ -304,7 +300,7 @@ void
 Error_Handler_with_err(const char * err)
 {
   #ifndef NODEBUG
-  uprintf(DBUG_UART, 1000, 256, "ERROR: %s\r", err);
+  // uprintf(DBUG_UART, 1000, 256, "ERROR: %s\r", err);
   #endif
   Error_Handler();
 }
