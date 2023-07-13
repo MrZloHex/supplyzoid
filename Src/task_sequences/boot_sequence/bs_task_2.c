@@ -9,9 +9,8 @@
 Task_Result
 bs_task_2(Controller *ctrl, OCPP_MessageID t_id)
 {
-#ifdef DEBUG
-    uprintf(DBUG_UART, 1000, 10, "BS_2\r");
-#endif
+    LOGGER_LOG(&(ctrl->logger), LT_INFO, "Task BS 2");
+
     Task_Result res =
     {
         .type = TRES_NEXT,
@@ -51,10 +50,7 @@ bs_task_2(Controller *ctrl, OCPP_MessageID t_id)
 	if (res_time == -1)
 		return res;
 
-#ifdef DEBUG
-	uprintf(DBUG_UART, 1000, 10,"BOOTED\r");
-    uprintf(DBUG_UART, 100, 100, "TIME: %s\r", time);
-#endif
+    LOGGER_LOG(&(ctrl->logger), LT_DEBUG, "BOOTED");
 	adjust_rtc_time(ctrl->ocpp.rtc, time);
 
     ctrl->ocpp._started = true;

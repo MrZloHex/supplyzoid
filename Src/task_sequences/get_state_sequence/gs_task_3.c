@@ -6,9 +6,7 @@
 Task_Result
 gs_task_3(Controller *ctrl, OCPP_MessageID t_id)
 {
-#ifdef DEBUG
-    uprintf(DBUG_UART, 1000, 10, "GS_3\r");
-#endif
+    LOGGER_LOG(&(ctrl->logger), LT_INFO, "Task GS 3");
 
     ctrl->ocpp._started = true;
 

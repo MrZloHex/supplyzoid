@@ -69,7 +69,7 @@ _controller_rapi_process_income
 
 	if (!_rapi_msg_validator(rapi))
 	{
-uprintf(&OCPP_UART, 100, RAPI_BUF_LEN, "%s\n", rapi->processive_buffer);
+// uprintf(&OCPP_UART, 100, RAPI_BUF_LEN, "%s\n", rapi->processive_buffer);
 		return CTRL_PTCL_NON_VALID_MSG;
 	}
     rapi->_started = true;

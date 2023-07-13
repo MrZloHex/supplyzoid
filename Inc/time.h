@@ -17,4 +17,7 @@ get_rtc_time
     char time[25]
 );
 
+void
+time_to_str(RTC_TimeTypeDef time, char str[9]);
+
 #endif /* __TIME_H__ */

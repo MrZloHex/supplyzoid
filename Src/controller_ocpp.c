@@ -109,7 +109,7 @@ _controller_ocpp_process_income
 		return CTRL_PTCL_NON_VALID_MSG;
 	}
 
-	uprintf(DBUG_UART, 1000, 1000, "GOT `%s`\r", ocpp->processive_buffer);
+	// uprintf(DBUG_UART, 1000, 1000, "GOT `%s`\r", ocpp->processive_buffer);
 
 	// IF MSG IS RESPONSE
 	if (ocpp->message.type != CALL)

@@ -5,10 +5,8 @@
 Task_Result
 gs_task_to_2(Controller *ctrl, OCPP_MessageID t_id)
 {
+    LOGGER_LOG(&(ctrl->logger), LT_INFO, "Task GS TO 2");
 
-#ifdef DEBUG
-    uprintf(DBUG_UART, 1000, 10, "GS_TO_2\r");
-#endif
     Task_Result res =
     {
         .type = TRES_NEXT,

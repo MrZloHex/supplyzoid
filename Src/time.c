@@ -108,3 +108,16 @@ get_rtc_time
 		zero_2_int, time.Seconds
 	);
 }
+
+void
+time_to_str(RTC_TimeTypeDef time, char str[9])
+{
+	mjson_snprintf
+	(
+		str, 9,
+		"%M:%M:%M",
+		zero_2_int, time.Hours,
+		zero_2_int, time.Minutes,
+		zero_2_int, time.Seconds
+	);
+}

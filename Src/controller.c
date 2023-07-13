@@ -25,6 +25,9 @@ controller_initialize
 	uint16_t 	  wp_pin
 )
 {
+	logger_init(&(controller->logger), rtc);
+	LOGGER_LOG(&(controller->logger), LT_INFO, "Initialized LOGGER");
+
 	Controller_TaskSet_Result res = _controller_taskset_initialize(&(controller->task_set), MAX_TASKSET_CAPACITY);
 	LOGGER_LOG(&(controller->logger), res, "Initialized TASK CONTROLLER");
 	if (res != CTRL_SET_OK)
@@ -33,11 +36,17 @@ controller_initialize
 	}
 
 	_controller_ocpp_initialize(&(controller->ocpp), ocpp_uart, ocpp_tim, rtc, i2c, wp_gpio, wp_pin);
+	LOGGER_LOG(&(controller->logger), LT_INFO, "Initialized OCPP");
+
 	_controller_rapi_initialize(&(controller->rapi), rapi_uart, rapi_tim);
+	LOGGER_LOG(&(controller->logger), LT_INFO, "Initialized RAPI");
 
 	_controller_lcd_init(controller, i2c);
+	LOGGER_LOG(&(controller->logger), LT_INFO, "Initialized LCD");
 	_controller_memory_init(&(controller->memory), i2c);
+	LOGGER_LOG(&(controller->logger), LT_INFO, "Initialized FRAM");
 	_controller_temp_init(i2c);
+	LOGGER_LOG(&(controller->logger), LT_INFO, "Initialized SHT2");
 
 	// BASE TASKS
 
@@ -76,6 +85,8 @@ controller_initialize
 Controller_Result
 controller_update(Controller *controller)
 {
+	logger_dump(&(controller->logger));
+
 	_controller_lcd_update(controller);
 
 	Controller_TaskSet_Result tres;
@@ -97,6 +108,8 @@ controller_update(Controller *controller)
 				CONTROLLER_OCPP_ERROR((Controller_Protocol_Result)ures);
 			}
 			Controller_Protocol_Result res = _controller_ocpp_process_income(&(controller->ocpp), &wrap);
+			LOGGER_LOG(&(controller->logger), res, "Got MSG from OCPP");
+			LOGGER_LOG(&(controller->logger), LT_TRACE, controller->ocpp.processive_buffer);
 			if (res == CTRL_PTCL_RESPONSE || res == CTRL_PTCL_NON_VALID_MSG || res == CTRL_PTCL_NO_SUCH_MSG) { ; }
 			else if (res != CTRL_PTCL_OK)
 			{
@@ -129,6 +142,8 @@ controller_update(Controller *controller)
 				CONTROLLER_RAPI_ERROR((Controller_Protocol_Result)ures)
 			}
 			Controller_Protocol_Result res = _controller_rapi_process_income(&(controller->rapi), &wrap);
+			LOGGER_LOG(&(controller->logger), res, "Got MSG from RAPI");
+			LOGGER_LOG(&(controller->logger), LT_TRACE, controller->rapi.processive_buffer);
 			if (res == CTRL_PTCL_RESPONSE || res == CTRL_PTCL_NON_VALID_MSG) { ; }
 			// if (res == CTRL_PTCL_RESPONSE) { ; }
 			else if (res != CTRL_PTCL_OK)

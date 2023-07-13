@@ -10,9 +10,7 @@
 Task_Result
 gs_task_1(Controller *ctrl, OCPP_MessageID _id)
 {
-    #ifdef DEBUG
-        uprintf(DBUG_UART, 100, 10, "GS_1\r");
-    #endif
+    LOGGER_LOG(&(ctrl->logger), LT_INFO, "Task GS 1");
 
     Task_Result res =
     {
